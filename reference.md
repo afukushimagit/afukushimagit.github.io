@@ -278,6 +278,40 @@ for( int iX=0; iX<width; iX+=30 )
 ```
 <img src="images/loop/repeat.png" alt="repeat" style="zoom:100%;" />
 ***
+#### 振動
+```java
+int iAmplitudeL = 80;  // 振幅（大きな波の高さ）
+int iAmplitudeS = 40;  // 振幅（小さな波の高さ）
+ 
+size( 400,200 );
+colorMode( HSB, 360, 1.0, 1.0, 1.0 );
+ 
+// 大きな波形(cos).
+strokeWeight( 8 );
+for( int iX=0; iX < width; iX++ )
+{
+  int iAngle0 = iX*4;
+  int iAngle1 = (iX+1)*4;
+   
+  stroke( iAngle0%360, 1.0, 1.0 );  // a%b:aをbで割った余り.
+  line( iX, height/2 + iAmplitudeL*cos( radians(iAngle0) ),
+        iX, height/2 + iAmplitudeL*cos( radians(iAngle1+1) ) );
+}
+ 
+// 小さな波形(sin).
+strokeWeight( 8 );
+for( int iX=0; iX < width; iX++ )
+{
+  int iAngle0 = iX*4;
+  int iAngle1 = (iX+1)*4;
+  
+  stroke( iAngle0%360, 1.0, 1.0, 0.2 );
+  line( iX, height/2 + iAmplitudeS*sin( radians(iAngle0) ),
+        iX, height/2 + iAmplitudeS*sin( radians(iAngle1+1) ) );
+}
+```
+<img src="images/loop/wave.png" alt="wave" style="zoom:100%;" />
+***
 #### 遷移
 ```java
 size(400,200);
