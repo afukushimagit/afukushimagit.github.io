@@ -5,7 +5,7 @@
 
 <img src="images/loop/flow_chart.png" alt="flow_chart" style="zoom:60%;" />
 
-### 条件式
+## 条件式
 - プログラムの実行の流れを決める重要な要素，'判断'のパーツ．
 <img src="images/loop/hishigata.png" alt="hishigata" style="zoom:60%;" />
 
@@ -17,7 +17,7 @@
 - 計算結果（式が返す値）
 	- 真(true)
 	- 偽(false)
-#### 条件式（比較演算子）
+### 条件式（比較演算子）
 以下の条件を満たしたとき，式の結果は真(true)となり，
 そうでなければ偽(false)となる．
 
@@ -38,7 +38,7 @@ size(400, 400);
  
 for(int iIdx=0; iIdx<400; iIdx++)
 {
-circle( random(width), random(height), 20 );
+	circle( random(width), random(height), 20 );
 }
 ```
 <img src="images/loop/merit_01.png" alt="merit_01" style="zoom:80%;" />
@@ -75,46 +75,66 @@ for( 繰り返し用変数の宣言・初期化; 繰り返し条件式; 繰り�
 #### 処理の流れ
 
 ```java
-for(int iIdx=0; iIdx<400; iIdx++)
+// 点をランダムに100個打つ
+for(int iPointIdx=0; iPointIdx<400; iPointIdx++)
 {
-  fill( 170 + random(80), 100 + random(50), 200 );
-  circle( iIdx, random(height), 10 + random(15) );	// {}内で繰り返し用変数を使える.
+  point( random(100), random(100) );
 }
 ```
+<img src="images/loop/point_random.png" alt="point_random" style="zoom:100%;" />
+
 1. 繰り返し用変数の宣言と初期化．
 
 ```java
-int iIdx=0;
+int iPointIdx=0;
 ```
 
-2. 繰り返し条件式の評価.
+2. 繰り返し条件式の評価（計算）.
 
 ```java
-iIdx<400	// 変数iIdxの値が400未満か
+iPointIdx<400	// 変数iPointIdxの値が400未満か
 ```
 ​	結果が '真' なら，手順3へ.
-​	結果が '偽' なら，繰り返し終了し，{}の次の行に処理を移す.
+​	結果が '偽' なら，**繰り返し終了**し，{}の次の行に処理を移す.
 
 3. {}内の(命令)文を実行.
 ```java
-  fill( 170 + random(80), 100 + random(50), 200 );
-  circle( iIdx, random(height), 10 + random(15) );
+point( random(100), random(100) );
 ```
 4.  繰り返し用変数の更新
 
 ```java
-iIdx++		// 変数iIdxの値をインクリメント(1を足す)
+iPointIdx++		// 変数iPointIdxの値をインクリメント(1を足す)
 ```
 ​	手順2へ戻る.
 
-#### 例：星空を描く
+#### 星空のような図の描画
+前述の点を打つプログラムを加工して星空を描いてみましょう．
+ゼロから書くのが難しい場合，以下のサンプルをアレンジしてみましょう．
+
+- 星の数を増やす.
+- 色や明るさを変える
 ```java
+size( 400, 400);
+background( 0, 10, 20 );  // 背景.
+ 
+for(int iPointIdx=0; iPointIdx<400; iPointIdx++)
+{
+  stroke( 255, 255, 255 );
+  point( random(400), random(400) );
+}
+```
+<img src="images/loop/hoshizora_simple.png" alt="hoshizora_simple" style="zoom:100%;" />
+
+### 星空のような図の描画（point()の代わりにcircle()を使用）
+```java
+// 星空のような図の描画（point()の代わりにcircle()を使用）
 size(400, 400);
 colorMode( HSB, 360, 1.0, 1.0, 1.0 ); // HSBA
 background( 220, 0.1, 0.1 );          // 背景色
 noStroke();                           // 線無し
  
-for(int iIdx=0; iIdx<400; iIdx++)     // 400回繰り返す.
+for(int iStarIdx=0; iStarIdx<400; iStarIdx++)     // 400回繰り返す.
 {
   fill( random(360),          // H
         0.1 + random(0.4),    // S
@@ -124,11 +144,7 @@ for(int iIdx=0; iIdx<400; iIdx++)     // 400回繰り返す.
   circle( random(width), random(height), 1 + random(3) );
 }
 ```
-<img src="images/loop/hoshizora.png" alt="hoshizora" style="zoom:80%;" />
-アレンジしてみましょう．
-
-- 星の数を増やす.
-- 色や明るさ，大きさを変える
+<img src="images/loop/hoshizora.png" alt="hoshizora" style="zoom:100%;" />
 
 ### for中における変数の使用
 繰り返し用変数は{}の中でも使うことができる．
@@ -143,26 +159,69 @@ for(int iX=0; iX<100; iX++)
 ```
 <img src="images/loop/var_in_loop.png" alt="var_in_loop" style="zoom:100%;" />
 
-### forのネスティング
-forの中で，さらにforを使うことができる．
-これは何段階でも使用でき，複雑な繰り返し処理が可能となる．
+### for()の様々な書き方
 ```java
-// グラデーションのカラーチャート.
+// iXにX座標の0~スクリーン端の座標値を(昇順で)代入しながら繰り返す
+for( int iX=0; iX<width; iX++ )
+{
+    //（命令）文;
+}
+// iYにY座標の0~スクリーン端の座標値を(昇順で)代入しながら繰り返す
+for( int iY=0; iY<height; iY++ )
+{
+    //（命令）文;
+}
+```
+```java
+// iXにX座標のスクリーン端~0座標値を(降順で)代入しながら繰り返す
+for( int iX=width-1; iX>=0; iX-- )
+{
+    //（命令）文;
+}
+// iYにY座標のスクリーン端~0の座標値を(降順で)代入しながら繰り返す
+for( int iY=height-1; iY>=0; iY-- )
+{
+    //（命令）文;
+}
+```
+### forのネスティング
+- forの中で，さらにforを使うことができる．
+- これは何段階でも使用でき，増やすたびに次元が増えるイメージ．
+  →2つのforで二次元的な表現に向く
+
+```java
+// グラデーションのカラーチャート(矩形)
 size(200, 200);
 colorMode(HSB, 100);
 background(99);
  
-for(int iY=0; iY<10; iY++)        // Y軸方向への処理
+for(int iSatIdx=0; iSatIdx<10; iSatIdx++)        // 彩度(Y軸方向)
 {
-  for(int iX=0; iX<10; iX++)      // X軸方向への処理
+  for(int iHueIdx=0; iHueIdx<10; iHueIdx++)      // 色相(X軸方向)
   {
-    fill( iX*10, 10+iY*10, 99 );
-    rect( iX*20, iY*20, 10, 10 );
+    fill( iHueIdx*10, 10+iSatIdx*10, 99 );
+    rect( iHueIdx*20, iSatIdx*20, 10, 10 );
   }
 }
 ```
 <img src="images/loop/nesting.png" alt="nesting" style="zoom:100%;" />
 
+```java
+// グラデーションのカラーチャート(ドット)
+size(200,200);
+noStroke();
+colorMode(HSB, 200); // カラーモード:HSB, 各値の最大値200
+ 
+for ( int iY = 0; iY < height; iY++ )    // 彩度(Y軸方向)
+{
+    for ( int iX = 0; iX < width; iX++ ) // 色相(X軸方向)
+    {
+        stroke( iX, iY, 200);
+        point( iX, iY);
+    }
+}
+```
+<img src="images/loop/nesting_xy.png" alt="nesting_xy" style="zoom:100%;" />
 ### while文
 
 - 英語の接続詞while（〜の間ずっと）から由来．
@@ -186,14 +245,117 @@ int iCount = 0;
 while( 40*iCount < width )  // スクリーン右端まで処理を続ける
 {
   rect( 40*iCount, 80, 20, 20 );
-  
+ 
   iCount++;  // iCountのインクリメント.
 }
  
 print( "描画した矩形の数は" + iCount + "個" );
- 
+
 // コンソール表示：描画した矩形の数は10個
 ```
 
 **本授業では基本的にforを使うことを推奨**
 
+### 繰り返しによる表現
+***
+#### 反復
+```java
+size(400,200);
+noStroke();
+colorMode( HSB,360, width-40, 1.0 );
+ 
+for( int iX=0; iX<width; iX+=30 )
+{
+  fill( 180, iX+40, 1 );
+  rect( iX,    50,    8, height );  // 矩形:長
+  
+  fill( 300, iX+40, 1 );
+  rect( iX+10, 50+40, 8, height );  // 矩形:中
+  
+  fill( 60,  iX+40, 1 );
+  rect( iX+20, 50+80, 8, height );  // 矩形:短
+}
+```
+<img src="images/loop/repeat.png" alt="repeat" style="zoom:100%;" />
+***
+#### 遷移
+```java
+size(400,200);
+noStroke();
+colorMode( HSB,width, 1.0, 1.0 );
+ 
+for( int iX=0; iX<width; iX+=10 )
+{
+  fill( iX, 1, 1 );
+  rect( iX, iX*height/width, 8, height );  // 矩形
+}
+```
+<img src="images/loop/transition.png" alt="transition" style="zoom:100%;" />
+
+***
+#### 乱雑さ
+```java
+size(400,200);
+noStroke();
+colorMode( HSB, width, height, 1.0 );
+ 
+for( int iX=0; iX<width; iX+=10 )
+{
+  float fY = 20 + random(height-20);  // Y座標値を表す変数．
+  fill( iX, height-fY+20, 1 );
+  rect( iX, fY, 8, height );  // 矩形
+}
+```
+<img src="images/loop/random.png" alt="random" style="zoom:100%;" />
+
+***
+#### モアレ
+```java
+size(400,200);
+background(0, 0, 0);
+ 
+noStroke();
+colorMode( HSB, width, height, 1.0 );
+ 
+for( int iY=3; iY<height; iY+=12 )
+{
+  for( int iX=3; iX<width; iX+=12 )
+  {
+    fill( iX, height, 1 );
+    circle( iX, iY, 6 );  // 円
+  }
+}
+ 
+pushMatrix();  // 念のため移動する前の座標系を記憶.
+ 
+translate( width/3, -height/2 );  // 座標系を平行移動
+rotate( radians(45) );            // 座標系を45度回転
+ 
+for( int iY=3; iY<height; iY+=12 )
+{
+  for( int iX=3; iX<width; iX+=12 )
+  {
+    fill( iX, height, 1 );
+    circle( iX, iY, 6 );  // 円
+  }
+}
+ 
+popMatrix();   // 座標系を戻す.
+```
+<img src="images/loop/moire.png" alt="moire" style="zoom:100%;" />
+
+***
+### その他，身近にある「繰り返し」を観察してみましょう
+<img src="images/loop/rep_cloud.png" alt="rep_cloud" style="zoom:100%;" />
+
+<img src="images/loop/rep_flower.jpg" alt="rep_flower" style="zoom:100%;" />
+
+<img src="images/loop/rep_lenga.png" alt="rep_lenga" style="zoom:100%;" />
+
+<img src="images/loop/rep_tile.png" alt="rep_tile" style="zoom:100%;" />
+
+<img src="images/loop/rep_tree.png" alt="rep_tree" style="zoom:100%;" />
+
+<img src="images/loop/rep_kaidan.jpg" alt="rep_kaidan" style="zoom:100%;" />
+
+<img src="images/loop/rep_mansion.jpg" alt="rep_mansion" style="zoom:100%;" />
