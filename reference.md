@@ -1587,7 +1587,10 @@ popMatrix();   // 座標系を戻す.
 ```
 <img src="images/loop/moire.png" alt="moire" style="zoom:100%;" />
 
+***
+
 #### 回転対称
+
 ```java
 int iDiamondTotal = 9;  // ひし形の数.
 int iRotDeg = 40;       // 回転させる角度.
