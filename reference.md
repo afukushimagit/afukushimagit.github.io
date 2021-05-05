@@ -1615,8 +1615,49 @@ for( int iDiamondIdx = 0; iDiamondIdx < iDiamondTotal; iDiamondIdx++ )
 ```
 
 ![synmetry_rot](images/loop/synmetry_rot.png)
+***
+#### 並進対称
+```java
+int iColumnRepeat = 7;
 
+size(400,400);
 
+colorMode( HSB, 10, iColumnRepeat+2, 1 );
+noStroke();
+
+translate( -40, 0);  // スクリーンを充填するため，最初に少しずらす．
+for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
+{
+  // 原点座標の位置(左端)を記憶.
+  pushMatrix();
+  
+  // 横にiColumnRepeatセットの三角形ペアを描画.
+  for( int iColumnIdx = 0; iColumnIdx < iColumnRepeat; iColumnIdx++ )
+  {
+    fill( iRowIdx, iColumnIdx+2, 1 );
+    
+    // 下向きの三角.
+    triangle( 0, 0,
+              80, 0,
+              40, 40 );
+    fill( iRowIdx+1, iColumnIdx+2, 1 );
+    
+    // 上向きの三角.
+    triangle( 40, 40,
+              80, 0,
+              120, 40 );
+    
+    translate( 80, 0 );  // 右にずらす.
+  }
+  
+  // 原点座標を左端に戻す.
+  popMatrix();
+  
+  // 原点座標を一段下げる.
+  translate( 0, 40 );
+}
+```
+![synmetry_trl](images/loop/synmetry_trl.png)
 ***
 ### その他，身近にある「繰り返し」を観察してみましょう
 <img src="images/loop/rep_cloud.png" alt="rep_cloud" style="zoom:100%;" />
