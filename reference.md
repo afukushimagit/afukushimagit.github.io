@@ -1618,13 +1618,13 @@ for( int iDiamondIdx = 0; iDiamondIdx < iDiamondTotal; iDiamondIdx++ )
 ***
 #### 並進対称
 ```java
-int iColumnRepeat = 7;
-
+int iColumnRepeat = 7; // 横に繰り返す回数.
+ 
 size(400,400);
-
+ 
 colorMode( HSB, 10, iColumnRepeat+2, 1 );
 noStroke();
-
+ 
 translate( -40, 0);  // スクリーンを充填するため，最初に少しずらす．
 for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 {
