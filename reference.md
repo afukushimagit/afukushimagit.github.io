@@ -56,13 +56,13 @@ print(w, "x", h);
 ```
 ```java
 print("begin- ");
-
+ 
 float f = 0.3;
 int i = 1024;
 print("f is " + f + " and i is " + i);
-
+ 
 println("-end");
-
+ 
 // コンソールには以下のように出力される:
 // begin- f is 0.3 and i is 1024 -end
 ```
@@ -323,10 +323,10 @@ line(30, 20, 85, 75);
 ```java
 stroke(255,0,0);        // R
 line( 20, 20, 40, 40 );
-
+ 
 stroke(0,255,0);        // G
 line( 40, 40, 50, 70 );	// 一つ目の線の終わりの点からスタート
-
+ 
 stroke(0,0,255);        // B
 line( 50, 70, 80, 80 );	// 二つ目の線の終わりの点からスタート
 ```
@@ -594,7 +594,7 @@ rect(20, 20, 40, 40);
 // 平行移動前
 size(400, 100);
 background(255); 
-
+ 
 triangle(15, 0, 0, 15, 30, 15);
 rect(0, 15, 30, 30);
 rect(12, 30, 10, 15);
@@ -606,21 +606,21 @@ rect(12, 30, 10, 15);
 ```java
 size(400, 100);
 background(255); 
-
+ 
 // 一つ目
 triangle(15, 0, 0, 15, 30, 15);
 rect(0, 15, 30, 30);
 rect(12, 30, 10, 15);
-
+ 
 translate(40, 0); // x軸方向に40移動
-
+ 
 // 二つ目
 triangle(15, 0, 0, 15, 30, 15);
 rect(0, 15, 30, 30);
 rect(12, 30, 10, 15);
-
+ 
 translate(40, 0); // x軸方向にさらに40移動
-
+ 
 // 三つ目
 triangle(15, 0, 0, 15, 30, 15);
 rect(0, 15, 30, 30);
@@ -648,11 +648,11 @@ rotate( radians( 角度 ) );  // 度数法をラジアンに変換
 ```java
 size(200, 200);
 background(255);
-
+ 
 fill(192);
 noStroke();
 rect(40, 40, 40, 40);
-
+ 
 rotate(radians(45));    // 45°時計回りに回転
 fill(0);
 rect(40, 40, 40, 40);
@@ -668,14 +668,14 @@ rect(40, 40, 40, 40);
 ```java
 size(200, 200);
 background(255); 
-
+ 
 fill(192);
 noStroke();
 rect(40, 40, 40, 40);
-
+ 
 translate(40, 40);  // 原点を矩形の左上に移動
 rotate(radians(45));
-
+ 
 fill(0);
 rect(0, 0, 40, 40); // 原点に二つ目の矩形を描画
 ```
@@ -696,10 +696,10 @@ scale( x拡大率, y拡大率 );
 ```java
 size(200,200);
 background(255);
-
+ 
 stroke(128);
 rect(20, 20, 40, 40);
-
+ 
 stroke(0);
 scale(2.0);
 rect(20, 20, 40, 40);
@@ -868,7 +868,7 @@ int a=1+1;  // 数式を代入してもよい
 ```java
 int a;      // 変数aの宣言
 int b = 3;  // 変数bの宣言と初期化
-
+ 
 a = 5;      // 変数aへの値の代入（初期化）
 a = b + 2;  // 変数aへの値の代入（上書き）
 ```
@@ -928,33 +928,33 @@ Index, Idx   // (特定の)番号
 変数によって各部のサイズ・色を変えられる家の描画
 ```java
 int iHouseWidth  = 60;  // 家の幅
-
+ 
 int iRoofHeight  = 15;  // 屋根の高さ
-
+ 
 int iWallHeight  = 30;  // 壁の高さ
-
+ 
 int iDoorWidth   = 10;  // 扉の幅
 int iDoorHeight  = 15;  // 扉の高さ
 int iDoorX       = 40;  // 扉のX座標
-
+ 
 float fRoofR = 1.0;     //  屋根のRGB
 float fRoofG = 0.1;
 float fRoofB = 0.3;
-
+ 
 size(100, 100);
 background(255);
 colorMode(RGB, 1.0);
-
+ 
 // 屋根
 fill( fRoofR, fRoofG, fRoofB );                // 屋根色
 triangle( iHouseWidth/2, 0,                    // 上
           0,             iRoofHeight,          // 左下
           iHouseWidth,   iRoofHeight );        // 右下
-
+ 
 // 壁
 fill( 1.0 );
 rect(0, iRoofHeight, iHouseWidth, iWallHeight);
-
+ 
 // 扉
 fill( 1.0 );
 rect(iDoorX, iRoofHeight+iWallHeight-iDoorHeight, iDoorWidth, iDoorHeight);
@@ -1064,31 +1064,31 @@ sin( radians(45) )  // 45度をラジアンに変換してサイン値を求め�
 座標変換を使わず，三角関数で回転を表す．
 ```java
 size( 400, 400 );
-
+ 
 strokeWeight(1);
 line( width/2,
       height/2,
       width/2  + cos( radians(0) )*width/2,
       height/2 + sin( radians(0) )*height/2 );
-
+ 
 strokeWeight(3);
 line( width/2,
       height/2,
       width/2  + cos( radians(60) )*width/2,
       height/2 + sin( radians(60) )*height/2 );
-
+ 
 strokeWeight(6);
 line( width/2,
       height/2,
       width/2  + cos( radians(145) )*width/2,
       height/2 + sin( radians(145) )*height/2 );
-
+ 
 strokeWeight(9);
 line( width/2,
       height/2,
       width/2  + cos( radians(210) )*width/2,
       height/2 + sin( radians(210) )*height/2 );
-
+ 
 strokeWeight(12);
 line( width/2,
       height/2,
@@ -1101,7 +1101,7 @@ line( width/2,
 
 ```java
 size(400,400);
-
+ 
 // 円の描画をiPointIdxをインクリメントしながら200回繰り返す.
 for(int iPointIdx = 0; iPointIdx < 200; iPointIdx++ )
 {
@@ -1177,7 +1177,7 @@ point(random(200), 50);  // X座標を0〜200の間の乱数で決定し，点�
 #### 例2
 ```java
 size(200,200);
-
+ 
 for (int iX = 0; iX < width; iX++)  // 以下の処理をiX:0~widthまで繰り返す．
 {
   stroke(5);
@@ -1191,7 +1191,7 @@ for (int iX = 0; iX < width; iX++)  // 以下の処理をiX:0~widthまで繰り�
 ```java
 size(400,200);
 colorMode(RGB,1.0);
-
+ 
 for (int iX = 0; iX < width; iX+=15)  // 以下の処理をiX:0~widthまで15ピクセルおきに繰り返す．
 {
   fill( 1.0, 0.3, 0.5, random(1.0) ); // 塗りつぶしのαをランダム.
@@ -1242,7 +1242,7 @@ https://processing.org/reference/random_.html
 ### できること
 
 - 大量の図形を描画する
-​```java
+```java
 size(400, 400);
 
 for(int iIdx=0; iIdx<400; iIdx++)
@@ -1254,7 +1254,7 @@ for(int iIdx=0; iIdx<400; iIdx++)
 
 - 大量のプロパティ(座標，サイズ，色など)を変更する
 
-  ```java
+```java
   size(400, 400);
    
   for(int iIdx=0; iIdx<400; iIdx++)
@@ -1594,13 +1594,12 @@ popMatrix();   // 座標系を戻す.
 ```java
 int iDiamondTotal = 9;  // ひし形の数.
 int iRotDeg = 40;       // 回転させる角度.
-
+ 
 size(400,400);
 colorMode( HSB, 3, 1, 1 );
-
-
+ 
 translate( width/2, height/2 );  // 原点座標をスクリーン中心へ移動.
-
+ 
 // ひし形の数だけ繰り返す.
 for( int iDiamondIdx = 0; iDiamondIdx < iDiamondTotal; iDiamondIdx++ )
 {
