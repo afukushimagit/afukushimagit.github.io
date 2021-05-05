@@ -72,11 +72,17 @@ Processingでは左上を原点（0, 0）とし，右下に向かって座標値
 
 ![screen_01](images/general/screen_01.png)
 
+https://processing.org/tutorials/drawing/
+
 ## 画面のサイズを決める
+
 ```java
 size( 横のピクセル数, 縦のピクセル数 );
 ```
+https://processing.org/reference/size_.html
+
 ## 画面のサイズを取得する
+
 必ずsize()記述以後に記述する必要がある．
 ### 例
 ```java
@@ -84,6 +90,11 @@ width   // 横のピクセル数
 height  // 縦のピクセル数
 ```
 ![window_size](images/general/window_size.png)
+
+https://processing.org/reference/width.html
+https://processing.org/reference/height.html
+
+
 
 ## 色を扱う
 
@@ -152,6 +163,8 @@ for (int i = 0; i < 100; i++)
 ```
 ![hue_sat](images/general/hue_sat.png)
 
+https://processing.org/reference/colorMode_.html
+
 ## 背景に色を付ける
 
 ```java
@@ -163,6 +176,8 @@ background(255, 204, 0);
 ```
 ![background_1](images/general/background_1.png)
 
+https://processing.org/reference/background_.html
+
 ## アンチエイリアスをかける
 
 ```java
@@ -172,6 +187,8 @@ smooth();
 ```java
 noSmooth();
 ```
+https://processing.org/reference/smooth_.html
+
 
 
 ***
@@ -188,6 +205,8 @@ rect(30, 20, 55, 55);
 ```
 ![](images/draw/stroke_1.png)
 
+https://processing.org/reference/stroke_.html
+
 ## 線を消去する
 
 ```java
@@ -199,6 +218,8 @@ noStroke();
 rect(30, 20, 55, 55);
 ```
 ![noStroke_](images/draw/noStroke_.png)
+
+https://processing.org/reference/noStroke_.html
 
 ## 線の太さを設定する
 
@@ -216,6 +237,8 @@ strokeWeight(10);  // Beastly
 line(20, 70, 80, 70);
 ```
 ![strokeWeight_](images/draw/strokeWeight_.png)
+
+https://processing.org/reference/strokeWeight_.html
 
 ## 図形の塗りつぶし色を設定する
 
@@ -252,6 +275,8 @@ rect(30, 20, 55, 55);
 ```
 ![rect_02](images/draw/rect_02.png)
 
+https://processing.org/reference/fill_.html
+
 ## 塗りつぶしを消去する
 
 ```java
@@ -262,6 +287,8 @@ noFill();
 rect(30, 20, 55, 55);
 ```
 ![noFill_](images/draw/noFill_.png)
+
+https://processing.org/reference/noFill_.html
 
 ## 点を描画する
 
@@ -278,6 +305,8 @@ point( 51,51 );
 ```
 ![dot_colored](images/draw/dot_colored.png)
 
+https://processing.org/reference/point_.html
+
 ## 線を描画する
 
 ```java
@@ -289,19 +318,21 @@ line(30, 20, 85, 75);
 ```
 ![line_0](images/draw/line_0.png)
 
-### 例2
+### 例2 連続した線
 
 ```java
 stroke(255,0,0);        // R
 line( 20, 20, 40, 40 );
 
 stroke(0,255,0);        // G
-line( 40, 40, 50, 70 );
+line( 40, 40, 50, 70 );	// 一つ目の線の終わりの点からスタート
 
 stroke(0,0,255);        // B
-line( 50, 70, 80, 80 );
+line( 50, 70, 80, 80 );	// 二つ目の線の終わりの点からスタート
 ```
 ![line_three](images/draw/line_three.png)
+
+https://processing.org/reference/line_.html
 
 ## 三角形を描画する
 
@@ -313,6 +344,8 @@ triangle( 頂点1のx値, 頂点1のy値, 頂点2のx値, 頂点2のy値, 頂点
 triangle(30, 75, 58, 20, 86, 75);
 ```
 ![triangle_](images/draw/triangle_.png)
+
+https://processing.org/reference/triangle_.html
 
 ## 矩形（長方形）を描画する
 
@@ -347,7 +380,11 @@ rect(30, 20, 55, 55);
 ```
 ![rect_0](images/draw/rect_0.png)
 
- 関連する命令：正方形の描画
+https://processing.org/reference/rect_.html
+関連する命令：正方形の描画
+https://processing.org/reference/square_.html
+
+
 
 ## 四辺形を描画する
 自由な四辺形を描くことができる．
@@ -363,13 +400,19 @@ quad(38, 31, 86, 20, 69, 63, 30, 76);
 ```
 ![quad_](images/draw/quad_.png)
 
-#### 円の中心と縦横の直径を指定
+https://processing.org/reference/quad_.html
+
+
+
+## 円・楕円を描画する
+
+### 中心座標と直径を指定
 
 ```java
 ellipseMode(CENTER); // 他にellipseMode()を使用している箇所が無ければ，不要
 ellipse( 中心のx座標, 中心のy座標, 横の直径, 縦の直径 );
 ```
-### 円の中心と縦横の半径を指定
+### 中心座標と半径を指定
 ```java
 ellipseMode(RADIUS);
 ellipse( 中心のx座標, 中心のy座標, 横の半径, 縦の半径 );
@@ -381,7 +424,11 @@ ellipse(56, 46, 55, 55);
 ```
 ![ellipse_](images/draw/ellipse_.png)
 
+https://processing.org/reference/ellipse_.html
 関連する命令：正円の描画
+https://processing.org/reference/circle_.html
+
+
 
 ## 円弧を描画する
 度（度数法）をラジアン（弧度法）に変換する方法
@@ -427,6 +474,13 @@ arc(50, 50, 80, 80, 0, PI+QUARTER_PI, PIE);
 ```
 ![arc_4](images/draw/arc_4.png)
 
+https://processing.org/reference/radians_.html
+https://processing.org/reference/PI.html
+https://processing.org/reference/arc_.html
+
+
+
+
 ## 曲線を描画する
 
 4点を結ぶ曲線の中間2点間が描画される（スプライン曲線）
@@ -448,6 +502,10 @@ curve(73, 24, 73, 61, 15, 65, 15, 65);
 ```
 ![curve_](images/draw/curve_.png)
 
+https://processing.org/reference/curve_.html
+
+
+
 ## ベジェ曲線を描画する
 
 ```java
@@ -466,6 +524,10 @@ stroke(0, 0, 0);
 bezier(85, 20, 10, 10, 90, 90, 15, 80);   // 得られた曲線(黒)
 ```
 ![bezier_0](images/draw/bezier_0.png)
+
+https://processing.org/reference/bezier_.html
+
+
 
 ## 多角形を描画する
 
@@ -491,6 +553,10 @@ endShape(CLOSE);
 ```
 ![beginShape_10](images/draw/beginShape_10.png)
 
+https://processing.org/reference/beginShape_.html
+https://processing.org/reference/vertex_.html
+https://processing.org/reference/endShape_.html
+
 
 
 ***
@@ -502,32 +568,30 @@ endShape(CLOSE);
 - Processingでは初期座標がスクリーン左上(0,0)に設定されている．
 - この座標を移動，回転，拡大縮小することを座標変換という．
 公式チュートリアル
+https://processing.org/tutorials/transform2d/
 
 ## 平行移動
 ```java
 translate( x移動量, y移動量 );
 ```
 ### 例
-平行移動させる前
 ```java
+// 平行移動させる前
 rect(20, 20, 40, 40 );
 ```
 ![original](images/transform/original.png)
 
-平行移動後
-
 ```java
-translate(60, 80);
+translate(60, 80);	// 平行移動
 rect(20, 20, 40, 40);
 ```
 ![new_coords](images/transform/new_coords.png)
 
 ### 利点
-
 入れ子状の構造の繰り返しがシンプルにできる
-#### 例
-家のような図の描画
+#### 例1　家のような図の描画（平行移動前）
 ```java
+// 平行移動前
 size(400, 100);
 background(255); 
 
@@ -537,7 +601,7 @@ rect(12, 30, 10, 15);
 ```
 ![house_01](images/transform/house_01.png)
 
-家のような図の複数描画
+#### 例2　家のような図の複数描画（平行移動後）
 
 ```java
 size(400, 100);
@@ -564,6 +628,10 @@ rect(12, 30, 10, 15);
 ```
 ![house_02](images/transform/house_02.png)
 
+https://processing.org/reference/translate_.html
+
+
+
 ## 回転
 
 座標を原点を中心に時計回りに回転する．
@@ -574,7 +642,7 @@ rotate( 角度 );  // 単位：ラジアン
 ```java
 rotate( radians( 角度 ) );  // 度数法をラジアンに変換
 ```
-※wiki:図形描画の円弧の項目も参照してください
+※図形描画の円弧のセクションも参照してください
 ### 例1
 矩形を45°回転させる（スクリーン左上を中心に回転してしまっている例）
 ```java
@@ -613,6 +681,10 @@ rect(0, 0, 40, 40); // 原点に二つ目の矩形を描画
 ```
 ![correct_rotate_grid](images/transform/correct_rotate_grid.png)
 
+https://processing.org/reference/rotate_.html
+
+
+
 ## 拡大縮小
 
 ```java
@@ -633,6 +705,10 @@ scale(2.0);
 rect(20, 20, 40, 40);
 ```
 ![scale1](images/transform/scale1.png)
+
+https://processing.org/reference/scale_.html
+
+
 
 ## 座標系の保存と復帰
 
@@ -658,6 +734,11 @@ popMatrix(); 			// 座標系を元に戻す
 rect(0, 0, 50, 50);     // スクリーン左上に描画されるはず
 ```
 ![pushMatrix01](images/transform/pushMatrix01.png)
+
+https://processing.org/reference/pushMatrix_.html
+https://processing.org/reference/popMatrix_.html
+
+
 
 ***
 
@@ -894,7 +975,20 @@ a++;
 a--;
 --a;
 ```
+### 剰余算
+「割り算の余り」を求める記述
+```java
+a % b	// aをbで割ったときの余り
+```
+#### 例
+```java
+print( 445 % 200 );
+// コンソール表示：45
+```
+
+
 「変数aに2を足す」記述
+
 ```java
 a = a + 2;
 a += 2;     // こちらも同じ意味
@@ -914,7 +1008,16 @@ a *= 2;     // こちらも同じ意味
 a = a / 2;
 a /= 2;     // こちらも同じ意味
 ```
+https://processing.org/reference/increment.html
+https://processing.org/reference/decrement.html
+https://processing.org/reference/addassign.html
+https://processing.org/reference/subtractassign.html
+
+
+
+
 ### 計算を行う関数
+
 変数や数値を参照する(渡す)ことにより，複雑な計算を行う命令．
 #### べき乗，平方根の計算を行う関数
 
@@ -935,16 +1038,22 @@ print( "4の平方根は" );
 println( sqrt( 4 ) );
 // コンソール出力：4の平方根は2.0
 ```
+https://processing.org/reference/pow_.html
+https://processing.org/reference/sqrt_.html
+
+
+
 #### 三角関数
+
 サイン、コサイン、タンジェントなどの値を求める関数
 |算法|コード記述|算術表記|
 | ---- | ---- | ---- |
-|サイン（正弦）|`sin( α：角度のラジアン値 )`|![sin_exp](images/calv_variable/sin_exp.png)|
-|コサイン（余弦）|`cos( α：角度のラジアン値 )`|![cos_exp](images/calv_variable/cos_exp.png)|
-|タンジェント（正接）|`tan( α：角度のラジアン値 )`|![tan_exp](images/calv_variable/tan_exp.png)|
+|サイン（正弦）|`sin( α：角度のラジアン値 )`|<img src="images/calv_variable/sin_exp.png" alt="sin_exp" style="zoom: 67%;" />|
+|コサイン（余弦）|`cos( α：角度のラジアン値 )`|<img src="images/calv_variable/cos_exp.png" alt="cos_exp" style="zoom: 67%;" />|
+|タンジェント（正接）|`tan( α：角度のラジアン値 )`|<img src="images/calv_variable/tan_exp.png" alt="tan_exp" style="zoom: 67%;" />|
 
 ####　三角比と三角関数
-![triangle_func_def](images/calv_variable/triangle_func_def.png)
+<img src="images/calv_variable/triangle_func_def.png" alt="triangle_func_def" style="zoom: 67%;" />
 
 #### 例1
 
@@ -998,12 +1107,18 @@ for(int iPointIdx = 0; iPointIdx < 200; iPointIdx++ )
 {
   circle( width/2  + pow( 1.1,iPointIdx*0.2 )*cos( radians(10*iPointIdx) )*10,   // X座標
           height/2 + pow( 1.1,iPointIdx*0.2 )*sin( radians(10*iPointIdx) )*10,   // Y座標
-          pow( 1.1,iPointIdx*0.2)*1.7 );                                          // 円の大きさ
+          pow( 1.1,iPointIdx*0.2)*1.7 );                                         // 円の大きさ
 
 }
 ```
 
 ![rasen01](images/calv_variable/rasen01.png)
+
+https://processing.org/reference/sin_.html
+https://processing.org/reference/cos_.html
+https://processing.org/reference/tan_.html
+
+
 
 ### その他便利関数
 
@@ -1049,7 +1164,7 @@ https://processing.org/reference/round_.html
 
 ### 乱数を生成する関数
 - 乱数とは，ランダムな値のことをいう．
-- Processingではrandomという命令で乱数を用いることができる．
+- Processingでは`random()`という命令で乱数を用いることができる．
 - 乱数は，あらゆる命令の引数として使用できる．
 - この乱数をうまく組み合わせることで，人間の手作業では難しい事象を表現できる．
 ```java
@@ -1471,6 +1586,34 @@ for( int iY=3; iY<height; iY+=12 )
 popMatrix();   // 座標系を戻す.
 ```
 <img src="images/loop/moire.png" alt="moire" style="zoom:100%;" />
+
+#### 回転対称
+```java
+int iDiamondTotal = 9;  // ひし形の数.
+int iRotDeg = 40;       // 回転させる角度.
+
+size(400,400);
+colorMode( HSB, 3, 1, 1 );
+
+
+translate( width/2, height/2 );  // 原点座標をスクリーン中心へ移動.
+
+// ひし形の数だけ繰り返す.
+for( int iDiamondIdx = 0; iDiamondIdx < iDiamondTotal; iDiamondIdx++ )
+{
+  fill( iDiamondIdx % 3, 1, 1 );  // 3種類の色相を交互に.
+  
+  quad( 0,     0,
+        100, -15,
+        200,   0,
+        100,  15 );            // ひし形の描画.
+  
+  rotate( radians(iRotDeg) );  // 座標系の回転.
+}
+```
+
+![synmetry_rot](images/loop/synmetry_rot.png)
+
 
 ***
 ### その他，身近にある「繰り返し」を観察してみましょう
