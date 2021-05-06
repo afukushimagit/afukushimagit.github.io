@@ -349,7 +349,10 @@ https://processing.org/reference/triangle_.html
 
 ## 矩形（長方形）を描画する
 
+主に三種類のやり方があるが，自分の実現したいことに適した方法を選ぶとよい．
+
 ### 左上の座標と大きさを指定（初期設定）
+
 ```java
 rectMode(CORNER); // 他にrectMode()を使用している箇所が無ければ，不要
 rect( 左上x座標, 左上y座標, 矩形の幅, 矩形の高さ );
@@ -478,6 +481,18 @@ https://processing.org/reference/radians_.html
 https://processing.org/reference/PI.html
 https://processing.org/reference/arc_.html
 
+### 例: 月の満ち欠けのような描画
+
+```java
+size( 400, 200 );
+ 
+arc( 50,     100, 80, 80, radians(120), radians(420), CHORD );
+arc( 50+100, 100, 80, 80, radians(135), radians(405), CHORD );
+arc( 50+200, 100, 80, 80, radians(175), radians(365), CHORD );
+arc( 50+300, 100, 80, 80, radians(190), radians(350), CHORD );
+```
+
+![arc_moon](images/draw/arc_moon.png)
 
 
 
@@ -694,7 +709,7 @@ scale( x拡大率, y拡大率 );
 ### 例
 矩形の大きさだけでなく，x,y座標値も拡大されていることに注目
 ```java
-size(200,200);
+![transform_01](images/transform/transform_01.png)size(200,200);
 background(255);
  
 stroke(128);
@@ -705,6 +720,34 @@ scale(2.0);
 rect(20, 20, 40, 40);
 ```
 ![scale1](images/transform/scale1.png)
+
+### 例: 時計の針のような描画
+```java
+size( 300, 300 );
+ 
+translate( width/2, height/2 );  // 原点をスクリーン中心に移動.
+ 
+strokeWeight(1);
+line( 0, 0, 100, 0 );
+ 
+rotate( radians(30) );    // 30度回転.
+strokeWeight(4);
+line( 0, 0, 100, 0 );
+ 
+rotate( radians(50) );    // 50度回転.
+strokeWeight(6);
+line( 0, 0, 100, 0 );
+ 
+rotate( radians(70) );    // 80度回転.
+strokeWeight(8);
+line( 0, 0, 100, 0 );
+ 
+rotate( radians(80) );    // 90度回転.
+strokeWeight(10);
+line( 0, 0, 100, 0 );
+```
+
+![](images/transform/transform_01.png)
 
 https://processing.org/reference/scale_.html
 
@@ -1304,18 +1347,18 @@ int iPointIdx=0;
 iPointIdx<400	// 変数iPointIdxの値が400未満か
 ```
 	結果が '真' なら，手順3へ.
-​	結果が '偽' なら，**繰り返し終了**し，{}の次の行に処理を移す.
+	結果が '偽' なら，**繰り返し終了**し，{}の次の行に処理を移す.
 
-3. {}内の(命令)文を実行.
-​```java
+3. `{}`内の(命令)文を実行.
+```java
 point( random(100), random(100) );
 ```
 4.  繰り返し用変数の更新
 
-​```java
+```java
 iPointIdx++		// 変数iPointIdxの値をインクリメント(1を足す)
 ```
-​	手順2へ戻る.
+手順2へ戻る.
 
 #### 星空のような図の描画
 前述の点を打つプログラムを加工して星空を描いてみましょう．
