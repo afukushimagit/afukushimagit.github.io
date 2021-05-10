@@ -721,7 +721,7 @@ rect(20, 20, 40, 40);
 ```
 ![scale1](images/transform/scale1.png)
 
-### 例: 時計の針のような描画
+## 例: 時計の針のような描画
 ```java
 size( 300, 300 );
  
@@ -827,7 +827,9 @@ a = a + 1;  // 命令文
 |引き算|減算|`a - b`|マイナス|
 |かけ算|乗算|`a * b`|アスタリスク|
 |割り算|除算|`a / b`|スラッシュ|
+
 #### 例
+
 ```java
 print("answer=");
 println(1+2);
@@ -838,7 +840,28 @@ println(1+2);
 (6-4)/(2+3)
 (2*(3+7))/5     // 乗算*は省略できないことに注意
 ```
+### 剰余算
+
+「割り算の余り」を求める記述
+
+```java
+a % b	// aをbで割ったときの余り
+```
+
+#### 例
+
+```java
+// 偶数と奇数を判別する．
+
+int iA = 234;
+if( iA%2 == 0 )	// もし変数iAが偶数だったら．
+{
+    // 命令
+}
+```
+
 ### 演算優先順位
+
 算数の四則計算に準じる
 左から逐次実行されるわけではない
 
@@ -851,15 +874,17 @@ println(1+2);
 |低|減算|`-`|
 
 ## 変数
-- 変数とは，数値などのデータを入れて保持しておくための入れ物であり，現実世界の保管箱のようなものである．
+- 変数とは，数値などのデータを入れて保持しておくための入れ物であり，現実世界の保管箱のようなもの．
 - 関数や式に組み込むことで，中の値を参照したり書き換えたりすることができる．
+- 使う前に，準備（宣言）する必要がある．
 ### 変数の要素
 - 型
 - 変数名
 - 値
 ### 型
 データ型とも言う．
-変数は決められた型を持ち，入れられるデータの種類が決まっている．
+変数は決められた型を持ち，**入れられるデータの種類が決まっている**．
+
 - 整数型 Integer
 値として小数は持てない整数の型
 ```java
@@ -878,8 +903,8 @@ double  // 3.40282347E+38 ~ -3.40282347E+38 64bit,  float型より広い範囲�
 - 変数名の決定
 - 初期値の代入（必須ではない）
 ```java
-型␣変数名;              // 宣言のみ
-型␣変数名 = 値 or 数式;  // 宣言+初期化型
+型 変数名;              // 宣言のみ
+型 変数名 = 値 or 数式;  // 宣言+初期化型
 ```
 ### 変数名
 - 変数は，変数名によって，その中に入っている値を参照することができる．
@@ -939,18 +964,19 @@ float fWidth, fHeight;
 名前の後ろの方につけるのが好ましい．
 ```java
 // よく使われる記述
-X            // X座標
-Y            // Y座標
-Width        // 幅
-Height       // 高さ
-Radius       // 半径
-Diameter     // 直径
-Degree, Deg  // 角度°
-Radian, Rad  // 角度ラジアン
-Minute       // 分
-Second, Sec  // 秒
-Ratio        // 比，率
-R,G,B        // RGBカラー
+X             // X座標
+Y             // Y座標
+Position, Pos // 位置，座標
+Width         // 幅
+Height        // 高さ
+Radius        // 半径
+Diameter      // 直径
+Degree, Deg   // 角度°
+Radian, Rad   // 角度ラジアン
+Minute        // 分
+Second, Sec   // 秒
+Ratio         // 比，率
+R,G,B         // RGBカラー
 ```
 #### 計算値による修飾子
 名前の最後につけるのがよい．
@@ -1018,12 +1044,8 @@ a++;
 a--;
 --a;
 ```
-### 剰余算
-「割り算の余り」を求める記述
-```java
-a % b	// aをbで割ったときの余り
-```
 #### 例
+
 ```java
 print( 445 % 200 );
 // コンソール表示：45
@@ -1212,10 +1234,13 @@ https://processing.org/reference/round_.html
 - この乱数をうまく組み合わせることで，人間の手作業では難しい事象を表現できる．
 ```java
 random( 最大値 )      // 0~最大値で設定した値の間で，ランダムな値を生成する
+random( 最小値， 最大値 )
 ```
 #### 例1
 ```java
 point(random(200), 50);  // X座標を0〜200の間の乱数で決定し，点をうつ
+
+
 ```
 #### 例2
 ```java
@@ -1243,13 +1268,31 @@ for (int iX = 0; iX < width; iX+=15)  // 以下の処理をiX:0~widthまで15ピ
 ```
 ![random02](images/calv_variable/random02.png)
 
+#### 変数への代入する際の注意点
+
+`random()`からは実数（小数有り）が得られるため，変数への代入の際は以下のどちらかの処理を行う．
+
+- **実数型**`float`などの変数に代入する．
+- `floor()`などをつかって小数部を処理し，整数型`int`などの変数に代入する．
+
+##### 例
+
+```java
+float fRandom = random( 100 );	// float型の変数fRandomにランダムな値を代入.
+
+//int iRandom = random( 100 );	// これだとエラーが出る
+int iRandom = floor( random(100) );	// int型の変数iRandomに，ランダムな値を小数点以下を切り捨てて代入．
+```
+
+
+
 https://processing.org/reference/random_.html
 
 
 
 ***
 
-# プログラムの実行(流れ)の制御
+# 制御文
 
 ## フローチャート(流れ図)
 プログラムの実行（手続き）の流れは，制御することができる．
@@ -1258,6 +1301,7 @@ https://processing.org/reference/random_.html
 <img src="images/loop/flow_chart.png" alt="flow_chart" style="zoom:60%;" />
 
 ## 条件式
+
 - プログラムの実行の流れを決める重要な要素，'判断'のパーツ．
 <img src="images/loop/hishigata.png" alt="hishigata" style="zoom:60%;" />
 
@@ -1273,15 +1317,29 @@ https://processing.org/reference/random_.html
 以下の条件を満たしたとき，式の結果は真(true)となり，
 そうでなければ偽(false)となる．
 
-|条件式|条件|
-| ---- | ---- |
-|`a < b`|aがbより小さい|
-|`a <= b`|aよりb以下|
-|`a > b`|aがbより大きい|
-|`a == b`|aとbが等しい|
-|`a != b`|aがbが等しくない|
+|条件式|演算子|条件|
+| ---- |----| ---- |
+|`a < b`|`<`|aがbより小さい|
+|`a <= b`|`<=`|aがb以下|
+|`a > b`|`>`|aがbより大きい|
+|`a == b`|`==`|aとbが等しい|
+|`a != b`|`!=`|aがbが等しくない|
+### 条件式（論理演算子）
+基本的には比較演算式による条件式を組み合わせ，より複雑な条件を課す場合に用いる．
+以下の条件を満たしたとき，式の結果は真(true)となり，
+そうでなければ偽(false)となる．
 
-## 繰り返し文
+|条件式|演算子|条件|
+| ---- |----| ---- |
+|`条件式A && 条件式B`|`&&`|条件式Aが真，なおかつ条件式Bが真|
+|`条件式A || 条件式B`|`||`|条件式Aが真，もしくは条件式Bが真|
+
+------
+
+
+
+## 繰り返し
+
 ### できること
 
 - 大量の図形を描画する
@@ -1319,7 +1377,7 @@ for(int iIdx=0; iIdx<400; iIdx++)
 for( 繰り返し用変数の宣言・初期化; 繰り返し条件式; 繰り返し用変数の更新式 )	 //セミコロン(；)無し
 {
 	(命令)文（複数書いてよい）;	// ←ここが繰り返される
-    // インデント(字下げ)はエディタが自動で行ってくれる．
+    // インデント(字下げ)はエディタが自動で行ってくれる．|
     // 手動で行う場合はTabキーを使う．
 }
 ```
@@ -1716,3 +1774,1384 @@ for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 <img src="images/loop/rep_kaidan.jpg" alt="rep_kaidan" style="zoom:100%;" />
 
 <img src="images/loop/rep_mansion.jpg" alt="rep_mansion" style="zoom:100%;" />
+
+------
+
+
+
+## 条件分岐
+
+フローチャートの判断のパーツと同等の処理を行う．
+ある条件に基づき，実行する命令を選択し，プログラムの流れを分岐させる．
+これを用いることで，現在の状況に応じ，様々なふるまいが表現できる．
+
+![if_flow](images/if_switch/if_flow.png)
+
+### if文
+
+#### if
+
+特定の条件を満たした場合，結果は真(True)となり，特定の（命令）文を実行する．
+満たさなかった場合，結果は偽(False)となり，命令は実行されない．
+for文と違い，繰り返しは起きない．
+条件として，基本的には**条件式**を用いる．
+
+![if_flow_02](images/if_switch/if_flow_02.png)
+
+##### 書式
+
+```java
+if( 条件式 ) //								[条件]
+{
+    // 条件を満たした場合実行する(命令)文;			[処理]
+    // for文の時と同様，インデントする．
+}
+```
+
+##### 例
+
+if文はもちろんfor文の中に記述することができる．
+その場合，さらにインデントを追加する必要がある．
+
+```java
+// スクリーンの一定範囲にだけランダムドットを打つ．
+size(400,200);
+ 
+for( int iPointIdx=0; iPointIdx < 3000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+  if( fX + fY < 300 )  // もしX値とY値の合計が300以下なら.
+  {
+    point( fX,fY );
+  }
+}
+```
+![if_sample](images/if_switch/if_sample.png)
+
+### よく使われる技術
+#### 剰余算
+※演算と変数/算術式のセクションにも記載済み．
+「割り算の余り」を求める記述
+
+```java
+a % b	// aをbで割ったときの余り
+```
+
+```java
+// 偶数と奇数を判別する．
+
+int iA = 234;
+if( iA%2 == 0 )	// もし変数iAが偶数だったら．
+{
+    // 命令
+}
+```
+#### 論理演算子
+※制御文/条件式のセクションにも記載済み．
+基本的には比較演算式による条件式を組み合わせ，より複雑な条件を課す場合に用いる．
+以下の条件を満たしたとき，式の結果は真(true)となり，
+そうでなければ偽(false)となる．
+
+| 条件式               | 演算子 | 条件                                   |
+| -------------------- | ------ | -------------------------------------- |
+| `条件式A && 条件式B` | `&&`   | 条件式Aが真，なおかつ条件式Bが真( and) |
+| `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真(or)   |
+
+
+
+### if else
+
+if文に対し，条件を満たさなかった場合にも特定の処理を行わせる．
+
+![if_else_flow](images/if_switch/if_else_flow.png)
+
+##### 書式
+
+`else{}`の部分は必ず`if(){}`とセットで記述すること．
+
+```java
+if( 条件 ) //                              [条件]
+{
+    // 条件を満たした場合実行する(命令)文;       [処理A]
+    // for文の時と同様，インデントする．
+}
+else
+{
+    // 条件を満たさなかった場合実行する(命令)文;  [処理B]
+}
+```
+
+##### 例1: ランダムドット日の丸模様
+
+```java
+size(400,200);
+background( 0, 0, 0 );
+ 
+translate( width/2, height/2 );  // 原点をスクリーン中心に移動．
+ 
+for( int iPointIdx=0; iPointIdx < 5000; iPointIdx++ )
+{
+  float fX = random( -width/2,  width/2 );  // Xのランダム値( -width/2～width/2).
+  float fY = random( -height/2, height/2 ); // Yのランダム値( -height/2～height/2).
+  
+  // (X,Y)座標値が円の内部に有れば.
+  // 円の公式 Xの二乗 + yの二乗 = 半径の二乗
+  if( pow(fX,2) + pow(fY,2) < pow(height/2,2) )
+  {
+    stroke( 255,0, 0 );		// R
+  }
+  else	// 条件を満たさなかった場合．
+  {
+    stroke( 255,255, 255 );	// White
+  }
+  point( fX,fY );
+}
+```
+
+![if_else_flow_sample01](images/if_switch/if_else_flow_sample01.png)
+
+##### 例2: 市松模様
+
+```java
+int iCellSize = 40;                  // セル(四角)のサイズ.
+ 
+size(400,400);
+colorMode(RGB,16,16,16);
+ 
+int iColumnTotal = width/iCellSize;  // 列(横軸)の総数.
+int iRowTotal = height/iCellSize;    // 行(横軸)の総数.
+ 
+noStroke();
+ 
+for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )  // 列の繰り返し
+{
+  for( int iRowIdx=0; iRowIdx < iRowTotal; iRowIdx++ )            // 行の繰り返し
+  {
+    int iX = iColumnIdx*iCellSize;                                // 矩形の座標iX,iY
+    int iY = iRowIdx*iCellSize;
+    
+    if( iColumnIdx%2 == 0 && iRowIdx%2 == 0 ||                    // 列番号が偶数かつ行番号が偶数の時，もしくは，
+        iColumnIdx%2 == 1 && iRowIdx%2 == 1 )                     // 列番号が奇数かつ行番号が奇数の時
+    {
+      fill(0, 8, 6);      // 緑模様.
+    }
+    else
+    {
+      fill(0, 0, 0 );     // 黒.
+    }
+    
+    rect( iX, iY, iCellSize, iCellSize );
+  }
+}
+```
+
+![example02](images/if_switch/example02.png)
+
+##### 演習
+
+1. 100個の円をランダムな位置に描画
+
+```java
+size(200,200);
+　
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+    
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice01_01](images/if_switch/practice01_01.png)
+
+2. 条件分岐を追加．
+
+	- もしXの値が100未満であれば色を赤に設定
+	- そうでなければ色を青に設定．
+	
+	下の答えを見る前にまずやってみましょう．
+
+![practice01_02](images/if_switch/practice01_02.png)
+
+```java
+size(200,200);
+
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+
+  if( fX < 100 )	// もしfXの値が100未満なら
+  {
+    fill( 255, 0, 0);  // R
+  }
+  else				// そうでなければ
+  {
+    fill( 0, 0, 255);  // B
+  }
+
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+
+
+### else if
+
+最初の条件を満たさなかった場合にも，二つ目以降の条件を課し，それを満たした場合特定の処理を行わせる．
+`else␣if`は**複数加えることができ，細かく条件を加えて分岐させることができる**．
+
+![if_else_if_flow](images/if_switch/if_else_if_flow.png)
+
+##### 書式
+
+```java
+if( 条件式 )	//							  [条件A]
+{
+    // 条件Aを満たした場合実行する(命令)文;       [処理A]
+    // for文の時と同様，インデントする．
+}
+else if( 条件式 )	//						  [条件B]
+{
+    // 条件Bを満たした場合実行する(命令)文;       [処理B]
+    // for文の時と同様，インデントする．
+}
+```
+
+### else if else
+
+一見ややこしいが，`else if`の最後に`else{}`を加え，全ての条件を満たさなかった場合にも特定の処理を行わせる方式． 
+
+![if_else_if_else_flow](images/if_switch/if_else_if_else_flow.png)
+
+##### 書式
+
+```java
+if( 条件式 )	//							  [条件A]
+{
+    // 条件Aを満たした場合実行する(命令)文;       [処理A]
+    // for文の時と同様，インデントする．
+}
+else if( 条件式 )	//						  [条件B]
+{
+    // 条件Bを満たした場合実行する(命令)文;       [処理B]
+    // for文の時と同様，インデントする．
+}
+else
+{
+    // 条件を満たさなかった場合実行する(命令)文;   [処理C]
+}
+```
+
+##### 例: ランダムドット4つの領域分け
+
+```java
+size(400,200);
+
+for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+
+  if( fX < 100 )
+  {
+    stroke( 255,0, 0 ); 	//R
+  }
+  else if( fX < 200 )
+  {
+    stroke( 0,255, 0 );  	//G
+  }
+  else if( fX < 300 )
+  {
+    stroke( 0,0, 255 );  	//B
+  }
+  else
+  {
+    stroke( 255,255, 255 );	//White
+  }
+
+  point( fX,fY );
+}
+```
+![if_sample02](images/if_switch/if_sample02.png)
+
+##### 演習
+
+1. 100個の円をランダムな位置に描画 (※ウィンドウサイズ300*200)
+
+```java
+size(300,200);
+
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+
+  ellipse( fX, fY, 20, 20 );
+}
+```
+![practice02_01](images/if_switch/practice02_01.png)
+
+2.  条件分岐を追加．
+	- もしXの値が100未満であれば色を赤に設定
+	- もしXの値が200未満であれば色を緑に設定
+	- そうでなければ色を青に設定．
+	
+	  下の答えを見る前にまずやってみましょう．
+
+```java
+size(300,200);
+
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+
+  if( fX < 100 )  		// もしfXの値が100未満なら
+  {
+    fill( 255, 0, 0);   // R
+  }
+  else if( fX < 200 )	// もしfXの値が200未満なら
+  {
+    fill( 0, 255, 0);   // G
+  }
+  else        			// そうでなければ
+  {
+    fill( 0, 0, 255);   // B
+  }
+
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice02_02](images/if_switch/practice02_02.png)
+
+
+
+#### ifのネスティング
+
+if文はfor文と同様に，入れ子に（ネスティング）することができる．
+`else if` を単純に追加するだけでは難しい処理も，こちらで容易に行える場合がある．
+
+##### 例: if else のネスティング
+
+![if_nest_flow](images/if_switch/if_nest_flow.png)
+
+```java
+if( 条件式 )	//							       [条件A]
+{   
+    // 条件Aを満たした場合,このブロックへ処理が移る．
+    
+
+    if( 条件式 )	//						 	   [条件B]
+    {
+        // 条件Bを満たした場合，実行する(命令)文;       [処理A]
+        // 二段階インデントされる．
+    }
+    else
+    {
+        // 条件Bを満たさなかった場合，実行する(命令)文;  [処理B]
+    }
+}
+else
+{
+    // 条件Aを満たさなかった場合,このブロックへ処理が移る．
+    
+    if( 条件式 )	//						 	   [条件C]
+    {
+        // 条件Cを満たした場合，実行する(命令)文;       [処理C]
+    }
+    else
+    {
+        // 条件Cを満たさなかった場合，実行する(命令)文;  [処理D]
+    }
+}
+```
+
+##### 例
+
+```java
+// ランダムドットを4つの領域で塗り分ける．(縦2×横2)
+size(300,300);
+ 
+for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+  
+  if( fX < width/2 )
+  {
+    if( fY < height/2 )
+    {
+      stroke( 255,0, 0 );      //R
+    }
+    else
+    {
+      stroke( 0,255, 0 );      //G  
+    }  
+  }
+  else
+  {
+    if( fY < height/2 )
+    {
+      stroke( 0,0, 255 );      //B
+    }
+    else
+    {
+      stroke( 255,255, 255 );  //White
+    }
+  }
+  
+  point( fX,fY );
+}
+```
+
+![if_nest](images/if_switch/if_nest.png)
+
+##### 演習
+
+1. 100個の円をランダムな位置に描画 (※if else の演習ステップ1と同じ )
+
+```java
+size(200,200);
+　
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+    
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice01_01](images/if_switch/practice01_01.png)
+
+2. 条件分岐を追加．
+	- もしXの値が100未満で，
+		- Yの値が100未満なら，色を赤に設定
+		- そうでなければ，黒に設定
+	- Xの値が100未満ではなく，
+		- Yの値が100未満なら色を青に設定
+		- そうでなければ白に設定
+	
+	  下の答えを見る前にまずやってみましょう．
+
+![practice03_02](images/if_switch/practice03_02.png)
+
+```java
+size(200,200);
+ 
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  
+  if( fX < 100 )  // もしfXの値が100未満なら
+  {
+    if( fY < 100 )
+    {
+      fill( 255, 0, 0);      // R
+    }
+    else
+    {
+      fill( 0, 0, 0 );       // Black
+    }
+  }
+  else        // そうでなければ
+  {
+    if( fY < 100 )
+    {
+      fill( 0, 0, 255);      // B
+    }
+    else
+    {
+      fill( 255, 255, 255);  // White
+    }
+  }
+  
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+
+
+
+### switch文
+
+Switch文は分岐の判断に**条件式を用いない**．
+ある式（変数も可）の返す値を読み取り，その値と等しいラベルの箇所の処理が行われる．
+if文の`else if`とほぼ同様の役割を果たすが，こちらのほうがより適している場合もある．
+
+比較的難解であるので，本授業では無理に使う必要はない．
+活用できる者は活用してもよい．
+
+![switch_flow](images/if_switch/switch_flow.png)
+
+#### 書式
+
+ラベル(`case 値;`)は`else if`とほぼ同様の役割を果たし，複数記述可能．
+`default:`は`else`とほぼ同様の役割を果たし，記述は任意．
+
+```java
+switch( 式 )	//													  [式]
+{
+  case 値A:	//								　　					 [ラベルA]
+        
+     // 式の値が値Aと等しい場合，実行する(命令)文;	  					   [処理A]
+     // 二段階インデントされる．
+     
+     break;	// break; が有れば，即Switch文の処理を終了し，ブロックの外へ処理を移す．
+     // ※break; が無ければ，続けて下のラベルB内の処理へと進む．
+  case 値B:	//								  					  [ラベルB]
+     // 式の値が値Bと等しい場合，実行する(命令)文;	    				   [処理B]
+        
+     break; // break;の記述は任意.
+  default:
+        
+     // 式の値が全てのラベルの値と等しくなかった場合，実行する(命令)文;	    [処理C]
+}
+```
+
+#### 例
+
+```java
+// 4色が交互に出現するストライプの描画．
+int iLineWeight = 8;  // 一本の縦線の太さ.
+ 
+size(400,200);
+ 
+strokeWeight( iLineWeight );
+ 
+for( int iLineIdx=0; iLineIdx < 50; iLineIdx++ )  // 50本の線を繰り返し描画.
+{
+  int iModLineIdx4 = iLineIdx%4;                  // iLineIdxを4で割った余り(剰余)(0~3)
+  
+  switch( iModLineIdx4 )
+  {
+    case 0:
+        stroke( 255, 0, 0 );      // R
+        break;
+    case 1:
+        stroke( 0, 255, 0 );      // G
+        break;
+    case 2:
+        stroke( 0, 0, 255 );      // b
+        break;
+    case 3:
+        stroke( 255, 255, 255 );  // White
+        break;
+    default:
+  }
+  line( iLineIdx*iLineWeight, 0, iLineIdx*iLineWeight, height );
+}
+```
+
+![switch_sample](images/if_switch/switch_sample.png)
+
+#### 
+
+# 配列
+
+## 配列( array )とは
+
+- **同一の型**のデータ（変数）をメモリ上に並べたもの．
+- 違う型のデータは混在できない．
+
+<img src="images/array/concept01.png" alt="concept01" style="zoom:85%;" />
+
+- 並んでいる各データ（変数）を**要素（element）**という．
+- 各要素は，**要素番号（index）**という番号で参照できる．
+- 配列には，その配列全体を指すための名前（**配列名**）がついている。
+- 配列のもつ要素の総数を**要素数**という．
+  - 配列の最後の要素番号は`要素数-1`であることに注意．
+
+<img src="images/array/concept02.png" alt="concept02" style="zoom:90%;" />
+
+### 宣言
+
+変数と同じく，配列も宣言文によって配列の宣言を行う必要がある．
+書式が変数の場合とかなり異なる点に注意．
+
+```java
+要素のデータ型[] 配列名 = new 要素のデータ型[要素数];              // 宣言のみ
+```
+
+##### 例
+
+```java
+int[] iA = new int[10];		// int型（整数型）の要素を10個持つ，名前がiAの配列の宣言
+
+float[] fB = new float[4];	// float型（実数型）の要素を4個持つ，名前がfBの配列の宣言
+```
+
+### 宣言＋初期化
+
+宣言と同時に初期化することもできる．
+調整用のパラメータなど，値を手入力する場合などに有効．
+
+```java
+int[] iParams = { 0, 106, 24, 16, 8, 112 };	// int型（整数型）の名前がiParamsの配列の宣言・初期化
+```
+
+### 初期化
+
+基本的に**全ての要素にアクセスし，一つ一つ値を代入**する必要がある．
+
+#### 一つの要素への値の代入
+
+```java
+配列名[ 要素番号 ] = 値;	// 要素番号のアドレスの要素に値を代入する．
+```
+
+##### 例
+
+```java
+int[] iA = new int[4]; // 配列iAを宣言
+iA[0] = 0;	// 要素番号0に値0を代入．
+iA[1] = 0;	// 要素番号1に値0を代入．
+iA[2] = 0;	// 要素番号2に値0を代入．
+iA[3] = 0;	// 要素番号3に値0を代入．
+```
+
+#### for文を使った初期化
+
+特に要素数が多い場合，for文を使って初期化すると楽．
+その際，繰り返し回数として，**要素数を取得**し設定するとより確実．
+（配列外の要素を間違って参照しようとしてしまうエラーの回避）
+
+##### 要素数の取得
+
+```java
+配列名.length
+```
+
+##### for文を使った基本的な初期化
+
+```java
+for( int iIdx=0; iIdx < 変数名.length; iIdx++ )
+{
+	配列名[ iIdx ] = 値;
+}
+```
+
+##### 例
+
+```java
+int[] iA = new int[10];						// 配列iAを宣言
+for( int iIdx=0; iIdx < iA.length; iIdx++ )	// 初期化(全ての要素に0を代入)
+{
+	iA[ iIdx ] = 0;
+}
+```
+
+### 要素の参照
+
+配列名と要素番号を組み合わせることで，配列の一つの要素を**変数と同じように使用できる**．
+変数と同様に式に組み込むこともできる．
+
+```java
+配列名[ 要素番号 ]			 // 一つの要素の参照.
+```
+
+初期化の項で述べたように，ある配列の要素へは以下の書式で値を代入でき，これは初期化後もいつでも行える．
+
+##### 一つの要素への値の代入
+
+```java
+配列名[ 要素番号 ] = 値;	// 要素番号のアドレスの要素に値を代入する．
+```
+
+### 例1
+
+```java
+// 矩形の高さリスト（配列）から，矩形を描画する．
+ 
+int iRectWidth = 12;  // 矩形の幅.
+ 
+size( 200, 200 );
+ 
+int[] iRectHeight = new int[16];                           // 配列iRectHeightを宣言(矩形の高さのリスト)
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )       // 初期化
+{
+  iRectHeight[ iIdx ] = 10 + iIdx*10;                      // 10,20,30....と代入.
+}
+ 
+colorMode( HSB, 3, iRectHeight.length, 1 );				   // 彩度のMaxを配列の要素数に
+ 
+// 矩形リストを昇順に描画.
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )       // 要素番号順に繰り返し(0~max)
+{
+  fill( 0, iIdx, 1 );  // R,彩度=要素番号
+  rect( 0, height-iRectHeight[iIdx], iRectWidth, iRectHeight[iIdx] );
+  translate( iRectWidth, 0 );
+}
+```
+
+![example01](images/array/example01.png)
+
+### 例2
+
+```java
+![practive01_01](LS-WVLB3C/nas/work/musabi/afukushimagit.github.io/images/array/practive01_01.png)// 矩形の高さリスト（配列）から，矩形を描画する．(3パターン)
+ 
+int iRectWidth = 8;  // 矩形の幅.
+ 
+size( 208, 100 );
+ 
+int[] iRectHeight = new int[8];                            // 配列iRectHeightを宣言(矩形の高さのリスト)
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )       // 初期化
+{
+  iRectHeight[ iIdx ] = 10 + iIdx*10;                      // 10,20,30....と代入.
+}
+　
+colorMode( HSB, 3, iRectHeight.length, 1 );				   // 彩度のMaxを配列の要素数に
+　
+// 矩形リストを昇順に描画.
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )       // 要素番号順に繰り返し(0~max)
+{
+  fill( 0, iIdx, 1 );  // R,彩度=要素番号
+  rect( 0, height-iRectHeight[iIdx], iRectWidth, iRectHeight[iIdx] );
+  translate( iRectWidth, 0 );
+}
+ 
+translate( iRectWidth, 1 );
+ 
+// 矩形リストを降順に描画.
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
+{
+  int iReverseIdx = iRectHeight.length - iIdx - 1;         // 要素番号を逆転(max~0)
+  
+  fill( 1, iIdx, 1 );  // G,彩度=要素番号
+  rect( 0, height-iRectHeight[iReverseIdx], iRectWidth, iRectHeight[iReverseIdx] );
+  translate( iRectWidth, 0 );
+}
+ 
+translate( iRectWidth, 1 );
+ 
+// 矩形リストをランダム順に描画.
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
+{
+  int iRandIdx = floor( random( iRectHeight.length ) );   // 要素番号をランダムに, floor():小数点切り捨て
+  
+  fill( 2, iIdx, 1 );  // B,彩度=要素番号
+  rect( 0, height-iRectHeight[iRandIdx], iRectWidth, iRectHeight[iRandIdx] );
+  translate( iRectWidth, 0 );
+}
+```
+
+![example02](images/array/example02.png)
+
+### 演習
+
+1. 　角度を5°ずつ足しながら，スクリーン中心からランダムな長さの線を12本描画
+
+```java
+size(300,300);
+ 
+translate( width/2, height/2 );        // 原点をスクリーン中心に移動
+ 
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+![practive01_01](images/array/practive01_01.png)
+
+2. 　12本の線の長さを`float`で保存する配列を用意する（宣言だけ）．
+    下の答えを見る前にやってみましょう．
+
+```java
+size(300,300);
+ 
+float[] fLineLength = new float[12];   // 12本の線の長さを保存する配列
+ 
+translate( width/2, height/2 );        // 原点をスクリーン中心に移動
+
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+3. 　配列に線の長さの値を代入し，初期化しましょう．
+      	線の長さ: ` 20 + random( 100 ) `
+
+   下の答えを見る前にやってみましょう．
+
+```java
+![practive01_02](LS-WVLB3C/nas/work/musabi/afukushimagit.github.io/images/array/practive01_02.png)size(300,300);
+ 
+float[] fLineLength = new float[12];                               // 12本の線の長さを保存する配列
+for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
+{
+  fLineLength[iLineIdx] = 20 + random( 100 );
+}
+ 
+translate( width/2, height/2 );        // 原点をスクリーン中心に移動
+ 
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+4. 　線の描画命令`line()`を，配列の要素を参照するよう変更し，
+   12本繰り返すfor文全体を，さらに6回繰り返すよう変更しましょう（for文のネスティング）．
+
+   正しく完成すると下の図のようになる．
+   
+
+   下のプログラムの答えを見る前にやってみましょう．
+
+![practive01_02](images/array/practive01_02.png)
+
+```java
+size(300,300);
+ 
+float[] fLineLength = new float[12];                               // 12本の線の長さを保存する配列
+for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
+{
+  fLineLength[iLineIdx] = 20 + random( 100 );
+}
+ 
+translate( width/2, height/2 );                // 原点をスクリーン中心に移動
+ 
+for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
+{
+  for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )  // 線12本分繰り返す
+  {    
+    line( 0, 0, fLineLength[iLineIdx], 0 );		   // 配列を参照.
+    rotate( radians(5) );                          // 5°回転
+  }
+}
+```
+
+
+
+## ２次元配列
+
+これまで説明したのは１次元の配列．
+２次元の配列は特に画像を扱うのに適している．
+実際のメモリ上での配置は以下の図の通り．
+
+![concept03](images/array/concept03.png)
+
+しかし，人にとっては表のイメージで考えた方が分かりやすい場合がある．
+
+![concept04](images/array/concept04.png)
+
+
+
+### 宣言
+
+```java
+要素のデータ型[][] 配列名 = new 要素のデータ型[行数][列数];              // 宣言のみ
+```
+
+#### 例
+
+```java
+int[][] iA = new int[3][4];				// 行数3,列数4の２次元配列iAの宣言
+
+float[][] fColor = new float[300][200];	// 行数300,列数200の２次元配列iColorの宣言
+```
+
+### 初期化+宣言
+
+１次元配列と同様に，２次元配列も初期化と宣言を同時に行うことができる.
+少しややこしいが，`{}`内に列の値を列挙し，さらにそれを`{}`で入れ子にし，
+行ごとに改行しながら行数文増やしていけば理解しやすい．
+
+```java
+// 行数3,列数4の場合
+要素のデータ型[][] 配列名 = { { 列0値, 列1値，列2値，列3値 },	  // 行0
+               			  { 列0値, 列1値，列2値，列3値 },		// 行1
+               			  { 列0値, 列1値，列2値，列3値 } };	// 行2
+```
+
+#### 例
+
+```java
+int[][] iA = { { 0,   1， 2， 3 },
+               { 10, 11，12，13 },
+               { 20, 21，22，23 } };
+
+float[][] fColor = { { 1.0, 0.5, 0.0 },
+                   	 { 1.0, 0.6, 0.1 },
+                     { 0.9, 0.6, 0.3 },
+                     { 0.8, 0.5, 0.5} };
+```
+
+### 初期化
+
+１次元配列と同様に，２次元配列も初期化に際し，基本的にはfor文を使うのが楽．
+ただし，２次元配列を初期化するには，for文のネスティングを行う必要がある．
+
+繰り返し回数として，**要素数を取得**し設定するとより確実だが，
+行数と列数それぞれの要素数を取得する方法が多少紛らわしい点に注意．
+
+#### 要素数の取得
+
+```java
+配列名.length		  // 行の要素数の取得.
+配列名[行番号].length	// 列の要素数の取得(取得する列の行番号を指定する必要がある).
+```
+
+#### for文を使った基本的な初期化
+
+```java
+要素のデータ型[][] 配列名 = new 要素のデータ型[行数][列数];
+
+for( int iRowIdx=0; iRowIdx < 配列名.length; iRowIdx++ )	//行数分繰り返す.
+{
+  for( int iColumnIdx=0; iColumnIdx < 配列名[iRowIdx].length; iColumnIdx++ )	//列数分繰り返す.
+  {
+    配列名[iRowIdx][iColumnIdx] = 0;
+  }
+}
+```
+
+##### 例
+
+```java
+int[][] iA = new int[3][4];
+ 
+for( int iRowIdx=0; iRowIdx < iA.length; iRowIdx++ )
+{
+  for( int iColumnIdx=0; iColumnIdx < iA[iRowIdx].length; iColumnIdx++ )
+  {
+    iA[iRowIdx][iColumnIdx] = 0;
+  }
+}
+```
+
+### 例: 回転対称ランダム多角形
+
+```java
+/*
+fVertexPos配列のイメージ.
+多角形の頂点座標を格納する．
+|　 | 列0 | 列1 |
+|行0| x値 | y値 |
+|行1| x値 | y値 |
+|行2| x値 | y値 |
+|行3| x値 | y値 |
+*/
+// 実行する度にランダムな図形が描画される.
+ 
+int iRepeatTotal = 12;  // 多角形繰り返しの数.
+ 
+size( 300, 300 );
+ 
+float[][] fVertexPos = new float[4][2];                                // 配列[頂点][座標値x,y]
+for( int iVertexIdx=0; iVertexIdx < fVertexPos.length; iVertexIdx++ )  // 配列初期化
+{
+  fVertexPos[iVertexIdx][0] = random( width/3 );	// スクリーンサイズの三分の一までの値からランダム.
+  fVertexPos[iVertexIdx][1] = random( height/3 );
+}
+ 
+colorMode( HSB, iRepeatTotal, 1, 1 );                                 // 色相の最大値を多角形繰り返しの数に設定
+ 
+translate( width/2, height/2 );                                       // 原点をスクリーン中心に移動
+ 
+for( int iRepIdx=0; iRepIdx < iRepeatTotal; iRepIdx++ )               // 回転しながら多角形の繰り返し
+{
+  fill( iRepIdx, 1, 1 );  // 回転毎に色相を変える.
+  
+  beginShape();                                                         // 多角形スタート
+  vertex( 0, 0 );                                                       // 頂点0
+  for( int iVertexIdx=0; iVertexIdx < fVertexPos.length; iVertexIdx++ )  // 頂点の数分繰り返し
+  {
+    vertex( fVertexPos[iVertexIdx][0], fVertexPos[iVertexIdx][1] );      // 頂点
+  }
+  endShape(CLOSE);                                                     // 多角形閉じる.
+  rotate( radians(360/iRepeatTotal) );                                 // 座標系回転 
+}
+```
+
+![example03](images/array/example03.png)
+
+### 演習: ルール９０セル・オートマトン
+
+セル・オートマトンとは，格子状に配置されたセルがそれぞれ状態を持ち，隣接している周囲のセルの状態をもとに，時間とともに状態を遷移させていくモデルです．
+一定のルールを与えることで，規則が単純でも，豊かな結果を得ることができます．
+
+#### 初期状態
+![cell_automaton01_01](images/array/cell_automaton01_01.png)
+
+#### 隣接するセルの合計が次の(行の)値になる
+
+このルールをさらに次の行へと進めていく．
+
+![cell_automaton01_02](images/array/cell_automaton01_02.png)
+
+#### 奇数のセルを描画する
+
+プログラム中では奇数を1，偶数を0として配列に格納している．
+
+<img src="images/array/cell_automaton01_03.png" alt="cell_automaton01_03" style="zoom:115%;" />
+
+#### 制作手順
+
+今回制作するプログラムでは，セル=ピクセルと考える．
+
+1. 二次元配列の宣言，初期化
+   格子状のセルを表す配列を用意しましょう．
+
+```java
+size(500,500);
+ 
+int[][] cell=new int[width][height];       // スクリーンサイズ分の配列.
+ 
+for(int iY=0; iY<cell.length; iY++)  	   // 列の繰り返し
+{
+  for(int iX=0; iX<cell[iY].length; iX++)  // 行の繰り返し  
+  {
+    cell[iX][iY]=0;
+  }
+}
+```
+
+2. 初期状態の入力
+
+   - 最初の行の中心のセルを1，それ以外は0
+   - 初期状態の唯一のセルを描画
+
+   ※ステップ1のプログラムの後に追加
+
+```java
+cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
+point( width/2, 0 );  // 描画.
+```
+
+3. 一行ずつセルの内容を更新して描画
+   ※ステップ2のプログラムの後に追加
+
+```java
+for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
+{
+  for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
+  {
+    // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
+    cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
+    
+    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
+    {
+      point( iX, iY );
+    }
+  }
+}
+```
+
+4. スクリーン両端の処理
+   ステップ3のままだと`iX-1`の値がマイナスになったり，`iX+1`の値が配列の要素番号の最大を超えてしまう．
+   ※ステップ3のプログラムを書き換える．
+
+```java
+for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
+{
+  for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
+  {
+    if( iX == 0 )             // スクリーン左端の処理.
+    {
+      cell[iX][iY] = ( 0 + cell[iX+1][iY-1] )%2;
+    }
+    else if( iX == width-1 )  // スクリーン右端の処理.
+    {
+      cell[iX][iY] = ( cell[iX-1][iY-1] + 0 )%2;
+    }
+    else
+    {
+      // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
+      cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
+    }
+    
+    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
+    {
+      point( iX, iY );
+    }
+  }
+}
+```
+
+#### 完成したプログラム
+
+
+```java
+// シェルピンスキーのギャスケット.
+// 初期状態：最初の行の中心のセルを1，それ以外は0
+size(500, 500);
+ 
+int[][] cell=new int[width][height];       // スクリーンサイズ分の配列.
+ 
+for(int iY=0; iY<cell.length; iY++)  // 列の繰り返し
+{
+  for(int iX=0; iX<cell[iY].length; iX++)        // 行の繰り返し  
+  {
+    cell[iX][iY]=0;
+  }
+}
+ 
+cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
+point( width/2, 0 );  // 初期状態の唯一のセルを描画.
+ 
+for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
+{
+  for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
+  {
+    if( iX == 0 )             // スクリーン左端の処理.
+    {
+      cell[iX][iY] = ( 0 + cell[iX+1][iY-1] )%2;
+    }
+    else if( iX == width-1 )  // スクリーン右端の処理.
+    {
+      cell[iX][iY] = ( cell[iX-1][iY-1] + 0 )%2;
+    }
+    else
+    {
+      // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
+      cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
+    }
+    
+    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
+    {
+      point( iX, iY );
+    }
+  }
+}
+```
+
+![cell_automaton01_04](images/array/cell_automaton01_04.png)
+
+
+
+#### 初期状態（一行目のセルの状態）を変える
+
+```java
+// シェルピンスキーのギャスケット.
+// 初期状態：最初の行のセルの値を全てランダム
+size(500, 500);
+ 
+int[][] cell=new int[width][height];       // スクリーンサイズ分の配列.
+ 
+for(int iY=0; iY<cell.length; iY++)  // 列の繰り返し
+{
+  for(int iX=0; iX<cell[iY].length; iX++)        // 行の繰り返し  
+  {
+    cell[iX][iY]=0;
+  }
+}
+ 
+// 初期状態：最初の行のセルの値を全てランダム
+for(int iX=0; iX<width; iX++)
+{
+  cell[iX][0]= floor( random( 100 ) )%2;
+  if( cell[iX][0] == 1 )    // もしもセルの値が1なら，1行目を描画.
+  {
+    point( iX, 0 );
+  }
+}
+ 
+for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
+{
+  for(int iX=0; iX<width; iX++)
+  {
+    if( iX == 0 )             // スクリーン左端の処理.
+    {
+      cell[iX][iY] = ( 0 + cell[iX+1][iY-1] )%2;
+    }
+    else if( iX == width-1 )  // スクリーン右端の処理.
+    {
+      cell[iX][iY] = ( cell[iX-1][iY-1] + 0 )%2;
+    }
+    else
+    {
+      // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
+      cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
+    }
+    
+    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
+    {
+      point( iX, iY );
+    }
+  }
+}
+```
+
+![cell_automaton01_05](images/array/cell_automaton01_05.png)
+
+
+
+## 多次元配列
+
+配列の次元数は二次元以上にも増やすことができる．
+しかし，次元が増えるほど人にとっては直感的に理解しにくくなる．
+よって，せいぜい２次元配列までに留めることを推奨．
+
+```java
+int [][][] iRGBColor = new int[3][640][480];		// RGBそれぞれのバッファ.
+```
+
+![rgb_buffer](images/array/rgb_buffer.png)
+
+#### 例
+
+```java
+int iColorMax = 100;
+size(400,400);
+ 
+int[][][] iColor = new int[3][width][height];
+ 
+// 初期化
+for(int iRGB = 0; iRGB < iColor.length; iRGB++ )
+{
+  for(int iX = 0; iX < width; iX++ )
+  {
+    for(int iY = 0; iY < height; iY++ )
+    {
+      iColor[iRGB][iX][iY] = 0;
+    }
+  }
+}
+ 
+// 色決定
+for(int iX = 0; iX < width; iX++ )
+{
+  for(int iY = 0; iY < height; iY++ )
+  {
+    if( iX < width / 3 )
+    {
+      iColor[0][iX][iY] = iColorMax; //R
+    }
+    
+    if( iY < height / 3 )
+    {
+      iColor[1][iX][iY] = iColorMax; //G
+    }
+    
+    if( iX + iY > height )
+    {
+      iColor[2][iX][iY] = iColorMax; //B 右下の三角形
+    }
+  }
+}
+ 
+// 全チャンネルを参照し，画素RGB描画
+colorMode(RGB,iColorMax);
+for(int iX = 0; iX < width; iX++ )
+{
+  for(int iY = 0; iY < height; iY++ )
+  {
+    stroke(iColor[0][iX][iY],
+           iColor[1][iX][iY],
+           iColor[2][iX][iY]);
+    point(iX,iY);
+  }
+}
+```
+
+![example04](images/array/example04.png)
+
+
+
+# ジャンクプログラム置き場
+
+講師が作ってみたものの，難易度が高かったり，解説に不向きだったものを一応掲載しています．
+ネタに困ったときなど参照してもらって構いませんが，コメントが少な目です．
+
+### 二次元配列を使った，竹藪のような表現
+
+```java
+int iSectionTotal = 40;
+int iRepeatTotal = 80;
+float fScaleMin = 0.2;
+float fScaleMax = 1.4;
+float fRotateMax = 360;
+ 
+size( 400, 400 );
+colorMode( HSB, 360, fScaleMax, 1 );
+background(0, 0, 0.4);
+stroke(0, 0, 0.2);
+ 
+float[][] fRectColor = new float[3][2];
+for( int iRectIdx=0; iRectIdx < fRectColor.length; iRectIdx++ )
+{
+  fRectColor[iRectIdx][0] = random(360);  //色相
+  fRectColor[iRectIdx][1] = random( 0.6, 1.0);    //明度 
+}
+ 
+for( int iRepeatIdx=0; iRepeatIdx < iRepeatTotal; iRepeatIdx++ )
+{
+  pushMatrix();
+  
+  translate( width/2, height/2 );
+  rotate( radians( random( fRotateMax ) ) );
+  
+  float fScale =  fScaleMin + ( fScaleMax - fScaleMin ) * iRepeatIdx/iRepeatTotal;
+  scale( fScale );
+  translate( random(-width,width/2), random(-height/2,height/2) );
+  
+  for( int iSectionIdx=0; iSectionIdx < iSectionTotal; iSectionIdx++ )
+  {
+    int iRectColorIdx = iSectionIdx%fRectColor.length;
+    
+    fill( fRectColor[iRectColorIdx][0], fScale, fRectColor[iRectColorIdx][1]);
+    rect( 0, 0, 20, 10 );
+  
+    translate( 20, 0 );
+  }
+  popMatrix();
+}
+```
+
+![junk01](images/junk/junk01.png)
+
+### 二次元配列を使ったパッチの繰り返し
+
+```java
+int iRectTotal = 100;  // 矩形の数(１エリア内)
+int iRectSize = 100;   // 矩形のサイズ
+int iRowTotal = 2;     // 繰り返しの行数
+int iColumnTotal = 6;  // 繰り返しの列数
+ 
+size( 600, 200 );
+colorMode(HSB,iRectTotal,1,1,1);
+ 
+float[][] fEllipsePos = new float[iRectTotal][2];
+ 
+for( int iEllipseIdx=0; iEllipseIdx < fEllipsePos.length; iEllipseIdx++ )
+{
+  fEllipsePos[iEllipseIdx][0] = random(100-iRectSize);
+  fEllipsePos[iEllipseIdx][1] = random(100-iRectSize);
+}
+ 
+noStroke();
+ 
+for( int iRowIdx=0; iRowIdx < iRowTotal; iRowIdx++ )
+{
+  pushMatrix();
+  for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )
+  {
+    for( int iEllipseIdx=0; iEllipseIdx < fEllipsePos.length; iEllipseIdx++ )
+    {
+      fill(iEllipseIdx,1,1,0.5);
+      rect( fEllipsePos[iEllipseIdx][0], fEllipsePos[iEllipseIdx][1], iRectSize, iRectSize );
+    }
+    translate( 100, 0 );
+  }
+  popMatrix();
+  translate( 0, 100 );
+}
+```
+
+![junk02](images/junk/junk02.png)
+
+<!--float にしなくてはいけない時，ブロック,ブロック内変数（スコープ）. 数式の組み合わせによる形状記述-->
