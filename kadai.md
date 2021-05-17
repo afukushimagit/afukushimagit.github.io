@@ -1,4 +1,977 @@
+# 課題3	時計のデザイン
+## 課題
+- 新しく斬新な時刻の表示方法をデザインし，それをプログラムで表現しなさい．
+
+## 目的
+- 変数を使ったアニメーションの記述方法に慣れること．
+- 効率的に美しい画像を生成する方法を体験すること．
+
+## 条件
+- 画面の大きさ・縦横比ともに自由とするが，最大1000×1000ピクセル程度が望ましい．
+- 現在時刻の時間，分，秒の値がビジュアルに影響を与えること．
+- 視認性は問わず，どのように時計を読み取るのか一見して分かりにくい表現でも可とする．
+- ただし，あくまで<u>時計のデザイン</u>なので，時間の関数を使えば何でもいいわけではない．
+- 装飾に終始しないこと．単なるアナログ時計風の画像やデジタル時計風の文字が表示されるだけのプログラムは評価の対象とならない．
+- 文字や数字を用いて良いが，単に時刻が数字・文字等で表示されるだけの時計は不可とする．時間情報と組み合わせて表示形式に必ず何らかの工夫を凝らすこと．
+## 提出までの流れ
+
+1. Processingを使用して，pde ファイルを作成，作品を作る．
+   - ファイル名およびpdeファイルの名前は，**クラス+クラス番号_苗字**
+1. 作品が完成したら，スケッチブック(pdeが入ったフォルダ)を**zip形式に圧縮**する.
+1. クラス+クラス番号_苗字.zip が出来上がるはず．
+1. ファイルの提出
+   Teams課題３のページで「+作業の追加」をクリックして，出来上がった以下のファイルをアップロードしてください．
+   - **クラス+クラス番号_苗字.zip**
+
+### 提出ファイルの参考資料
+***
+- クラス+クラス番号_苗字.zip
+<img src="images/kadai2/zip.png" alt="zip" style="zoom:60%;" />
+***
+### 注意事項
+- 工夫が全くなく，単に時刻を数字で表示するだけのプログラムについては０点とする．
+- 類似作品が複数見つかった場合は，盗作の恐れがあるとみなして厳しく調査する．
+- ネット上のサンプルや参考書籍のプログラムを応用する場合は，出典を何らかの形式で明記し，どのように応用しているのか説明すること．盗作が疑われる場合は厳しく対処する．
+- 第６回時点で本科目で教えていない技術を使用しないこと．クラス，インタラクション，サウンド，外部ライブラリ等の使用は不可とする．課題の主目的は表現であり，過度に技術に注力することは避けること．
+- メインは第７回授業だが，**関数の作成，使用は可**．
+- 課題として，何が求められているかを理解して制作すること．
+- スケッチ（.pdeファイル）は一つのみとする．ソースファイルを分割・複数に分割しないこと．
+
+
+
+## サンプル
+
+※ページ軽量化のため，各作品のGIFは解像度を落としてあります．
+
+### sample01
+
+講師（福嶋）制作
+※難しいです．
+
+```java
+// 時間表示のスケール値[（スクリーンの）幅に対する率,高さに対する率]
+final float DIGITS_SCALE[] = { 0.80, 0.60 };
+
+// 各桁間の間隔 一桁分の幅に対する率
+final float DIGIT_INTERVAL = 0.6;
+// コロンの幅 一桁分の幅に対する率
+final float COLON_WIDTH_RATE = 0.1;
+
+// 桁番号 01:23
+// 各桁の座標[桁番号][x,y]
+float fDigitPos[][] = new float[4][2];
+
+// 各桁のサイズ[桁番号][w,h]
+float fDigitSize[][] = new float[4][2];
+
+// コロンの挿入場所(桁番号に対応)
+final int COLON_LOC_IDX = 2;
+
+/** セグメント番号
+     4
+     -
+   0|5|2
+     -
+   1| |3
+     -
+     6
+*/
+// セグメント範囲の左上座標 [セグメント番号][x,y]
+float fSegmentUpperLeft[][] = new float[7][2];
+// セグメント範囲のサイズ [セグメント番号][w,h]
+float fSegmentSize[][] = new float[7][2];
+// セグメント同士の重なり [0-1]
+float fSegmentsLap = 0.5;
+// セグメントの太さ [0-1]
+float fSegmentsThickness[] = { 0.2, 0.1 };
+
+// 数に対して，表示を行うかのフラグ[標示数値] [セグメント番号]
+final boolean[][] DIGIT_DISP_FLG ={{true, true, true, true, true, false,true},   //0
+                                   {false,false,true, true, false,false,false},  //1
+                                   {false,true, true, false,true, true, true},   //2
+                                   {false,false,true, true, true, true, true},   //3
+                                   {true, false,true, true, false,true, false},  //4
+                                   {true, false,false,true, true, true, true},   //5
+                                   {true, true, false,true, true, true, true},   //6
+                                   {true, false,true, true, true, false,false},  //7
+                                   {true, true, true, true, true, true, true},   //8
+                                   {true, false,true, true, true, true, false} };//9
+
+
+void setup()
+{
+  // スクリーンサイズ(※手入力)
+  size( 800, 450 );
+  
+  int iDigitsCount = fDigitPos.length;  // 桁の数
+  
+  // 各桁の座標と幅
+  float fDigitsWidth = width * DIGITS_SCALE[0];
+  float fDigitWidth = fDigitsWidth / (iDigitsCount*(1+DIGIT_INTERVAL)+COLON_WIDTH_RATE);
+  float fDigitHeight = height * DIGITS_SCALE[1];
+  float fDigitInterval = fDigitWidth * DIGIT_INTERVAL;  
+  float fDigitPosX = ( width - fDigitsWidth ) / 2.0;
+  for(int iDigitIdx = 0; iDigitIdx < fDigitPos.length; iDigitIdx++)
+  {
+    // コロンの場所を挿入.
+    if( iDigitIdx == COLON_LOC_IDX)
+    {
+      fDigitPosX += fDigitWidth*COLON_WIDTH_RATE + fDigitInterval;
+    }
+    fDigitPos[iDigitIdx][0] = fDigitPosX;
+    fDigitPos[iDigitIdx][1] = ( height - fDigitHeight ) / 2.0;
+    fDigitSize[iDigitIdx][0] = fDigitWidth;
+    fDigitSize[iDigitIdx][1] = fDigitHeight;
+    fDigitPosX += fDigitWidth + fDigitInterval;
+  }
+  
+  // 縦長と横長のセグメントのサイズ[w,h]
+  float fSegmentSizeV[]  = new float[2]; 
+  float fSegmentSizeH[]  = new float[2];
+  fSegmentSizeV[0] = fSegmentsThickness[0] * fDigitWidth;
+  fSegmentSizeH[1] = fSegmentsThickness[1] * fDigitHeight;
+  fSegmentSizeV[1] = ( fDigitHeight - (1-fSegmentsLap)*(3 * fSegmentSizeH[1]) ) / 2.0;
+  fSegmentSizeH[0] = fDigitWidth - (1-fSegmentsLap)* (2 * fSegmentSizeV[0]);
+  
+  // 各セグメントのローカル座標
+  float fSegmentOfs[] = { ( fDigitWidth - fSegmentSizeH[0] )    / 2.0,
+                          ( fDigitHeight - 2*fSegmentSizeV[1] ) / 3.0 };
+  fSegmentUpperLeft[0][0] = 0.0;
+  fSegmentUpperLeft[1][0] = 0.0;
+  fSegmentUpperLeft[2][0] = fDigitWidth - fSegmentSizeV[0];
+  fSegmentUpperLeft[3][0] = fSegmentUpperLeft[2][0];
+  fSegmentUpperLeft[4][0] = fSegmentOfs[0];
+  fSegmentUpperLeft[5][0] = fSegmentOfs[0];
+  fSegmentUpperLeft[6][0] = fSegmentOfs[0];
+  fSegmentUpperLeft[4][1] = 0;
+  fSegmentUpperLeft[0][1] = fSegmentOfs[1];
+  fSegmentUpperLeft[2][1] = fSegmentOfs[1];
+  fSegmentUpperLeft[5][1] = fDigitHeight / 2.0 - fSegmentSizeH[1] / 2.0;
+  {
+    float fOfsY = fSegmentSizeV[1] + 2 * fSegmentOfs[1];
+    fSegmentUpperLeft[1][1] = fOfsY;
+    fSegmentUpperLeft[3][1] = fOfsY;
+  }
+  fSegmentUpperLeft[6][1] = fDigitHeight - fSegmentSizeH[1];
+  for(int iSegmentIdx = 0; iSegmentIdx <= 3; iSegmentIdx++)
+  {
+    fSegmentSize[iSegmentIdx][0] = fSegmentSizeV[0];
+    fSegmentSize[iSegmentIdx][1] = fSegmentSizeV[1];
+  }
+  for(int iSegmentIdx = 4; iSegmentIdx < fSegmentUpperLeft.length; iSegmentIdx++)
+  {
+    fSegmentSize[iSegmentIdx][0] = fSegmentSizeH[0];
+    fSegmentSize[iSegmentIdx][1] = fSegmentSizeH[1];
+  }
+  
+  background(50,50,50);
+  colorMode(RGB,256);
+  frameRate(12);
+}
+
+void draw()
+{
+/*
+  // test:各桁のマスク表示
+  for(int iDigitIdx = 0; iDigitIdx < fDigitPos.length; iDigitIdx++)
+  {
+    noStroke();
+    fill(255,255,255);
+    rect( fDigitPos[iDigitIdx][0],fDigitPos[iDigitIdx][1],
+          fDigitSize[iDigitIdx][0],fDigitSize[iDigitIdx][1]);
+  }
+*/
+/*
+  // test:セグメントマスク表示
+  for(int iDigitIdx = 0; iDigitIdx < fDigitPos.length; iDigitIdx++)
+  {
+    noStroke();
+    fill(100,100,100);
+    for(int iSegmentIdx = 0; iSegmentIdx < fSegmentUpperLeft.length; iSegmentIdx++)
+    {
+      rect( fSegmentUpperLeft[iSegmentIdx][0]+fDigitPos[iDigitIdx][0],
+            fSegmentUpperLeft[iSegmentIdx][1]+fDigitPos[iDigitIdx][1],
+            fSegmentSize[iSegmentIdx][0],
+            fSegmentSize[iSegmentIdx][1] );
+    }
+  }
+*/
+/*
+  // test:現在時間マスク
+  int iHour = hour() ;
+  int iMinute = minute();
+  int iDispNumbers[] = { iHour/10, iHour%10, iMinute/10, iMinute%10 };
+  noStroke();
+  for(int iDigitIdx = 0; iDigitIdx < fDigitPos.length; iDigitIdx++)
+  {
+    int iDispNumber = iDispNumbers[iDigitIdx];
+    for(int iSegmentIdx = 0; iSegmentIdx < fSegmentUpperLeft.length; iSegmentIdx++)
+    {
+      if( DIGIT_DISP_FLG[iDispNumber][iSegmentIdx] )
+      {
+        fill(255,0,0);
+        rect( fSegmentUpperLeft[iSegmentIdx][0]+fDigitPos[iDigitIdx][0],
+              fSegmentUpperLeft[iSegmentIdx][1]+fDigitPos[iDigitIdx][1],
+              fSegmentSize[iSegmentIdx][0],
+              fSegmentSize[iSegmentIdx][1] );
+      }
+    }
+  }
+*/
+
+  // 点描レンダリング
+  int iHour = hour() ;
+  int iMinute = minute();
+  int iDispNumbers[] = { iHour/10, iHour%10, iMinute/10, iMinute%10 };
+  noStroke();
+  for(int iDigitIdx = 0; iDigitIdx < fDigitPos.length; iDigitIdx++)
+  {
+    int iDispNumber = iDispNumbers[iDigitIdx];
+    for(int iSegmentIdx = 0; iSegmentIdx < fSegmentUpperLeft.length; iSegmentIdx++)
+    {
+      if( DIGIT_DISP_FLG[iDispNumber][iSegmentIdx] )
+      {
+        fill(random(255),random(255),random(255),50);  // 点描
+      }
+      else
+      {
+          fill(50,50,50,50);                          //　徐々にフェードアウト
+      }
+      circle( fSegmentUpperLeft[iSegmentIdx][0]+fDigitPos[iDigitIdx][0] + random(fSegmentSize[iSegmentIdx][0]),
+              fSegmentUpperLeft[iSegmentIdx][1]+fDigitPos[iDigitIdx][1] + random(fSegmentSize[iSegmentIdx][1]),
+              6+random(10))  ;
+    }      
+  }
+
+}
+```
+
+![kadai03_fukushima_01](images/kadai3/kadai03_fukushima_01.gif)
+
+### sample02
+
+```java
+//時間の抽象化
+//大体の時間を知るための時計。
+//視認性をギリギリにするために、背景に線を入れる。
+
+void setup()
+{
+  size(940,380);
+  colorMode(RGB,256);
+}
+
+void draw() 
+{
+  background(20,40,48);
+
+  //円は２４分割が均等ではなかったため、３時、６時、９時、１２時を太線で表す。  
+  stroke(32,64,77);
+  strokeWeight(3);
+  line(0,273,330,273);//3 
+  line(0,257.5,330,257.5);//6
+  line(0,232,330,232); //9
+  line(0,197.5,330,197.5);//12
+  line(0,167.5,330,167.5);//15
+  line(0,137.5,330,137.5);//18 
+  line(0,115,330,115);//21 
+  line(0,100,330,100);//２４
+  
+  for(int i=0;i<=100;i+=30)//円（時間）の後ろの線①
+  {
+    stroke(32,64,77); 
+    strokeWeight(1);
+    line(0,10+i,330,10+i);
+  }
+  
+  for(int i=0;i<=280;i+=30)//円（時間）の後ろの線②
+  {
+    stroke(32,64,77); 
+    strokeWeight(1);
+    line(0,280+i,330,280+i);
+  }
+  
+  //秒・分は１０秒・分単位の線で表現 
+  for(int i=0;i<380;i+=30)//三角と四角の（秒・分の裏） 
+  {
+    stroke(32,64,77);
+    strokeWeight(1);
+    line(330,10+i,940,10+i);
+  }
+
+   //ここから時計本体の事 
+   //時間の事
+  int h = hour();
+  int m = minute();
+  int s = second();
+  println(h+":"+m+":"+s);
+
+  //後ろの影
+  fill(32,64,77);
+  noStroke();
+  triangle(470, 100, 380, 280, 560, 280);
+  rect(660, 100,180, 180);
+  
+  fill(255,211,66);
+  ellipse(190, 190, 180, 180);
+  
+  //時間
+  fill(32,64,77);
+  arc(190,190,180,180,radians((-270)+180/24*h),radians(90-180/24*h),CHORD);
+  //分
+  fill(24,217,178);
+  triangle(470, 280-(180/60*m), 380, 280, 560, 280);
+   //秒
+  fill(237,40,80);
+  rect(660,280,180,-s*(180/60));    
+}
+```
+
+![kadai03_02](images/kadai3/kadai03_02.gif)
+
+### sample03
+
+```java
+   void setup()
+  {
+    size(650,650);
+    colorMode(RGB,256);
+    noFill();
+    //RGB256段階、線のみ
+  }
+  
+  void draw()
+  {
+    background(0);
+    //背景塗りつぶし    
+   
+    float i = millis()/10;
+    float s = second();
+    float m = minute();
+    float h = hour();
+    //1/100秒、１秒、１分、１時間での変化を関数に設定
+  
+      for(int iX=0; iX<100; iX++)//円を１００回描画
+      {
+        stroke(iX*2,255-4*m,255);
+        //分が進むにつれより赤くなる、一時間たつと青に戻る。描画ごとにR値が上がりグラデーション変化
+        strokeWeight(1);
+        ellipse(cos(radians((iX+i)*27))*100+width/2,sin(radians((iX+i)*27))*100+height/2,150+iX+h*2,150+iX-h*2);
+        //回数を重ねるごとに大きくなる円を円状に１００回描画、時間が進むと横につぶれた楕円になる。1/100秒で動きをつける
+       
+        strokeWeight(0.3);
+        ellipse(cos(radians(s*6))*100+width/2,sin(radians((s*6)))*100+height/2,250+h*2,250-h*2);
+        //上記の大きさの変化の中で一番大きな円の座標が秒ごとに回転、一周で６０秒
+      
+      }
+  }
+```
+
+![kadai03_03](images/kadai3/kadai03_03.gif)
+
+### sample04
+
+```java
+void setup()
+{
+    size(700, 600);
+    background(255);
+    smooth();
+    frameRate(30);
+}
+
+
+
+void draw()
+ {  
+    translate(width/2, height/2); // 原点を画面の中心に移動
+    
+    noStroke();//画面をリセット
+    fill(255,50);
+    rect(-350,-300,700,600); 
+    
+    float s = second();//秒数を取得
+    float m = minute();//分
+    float h = hour();//時間
+         
+              
+    
+   //秒針の動きに対応する花弁１を描画する    
+    pushMatrix();//秒針の保存
+    
+    rotate(radians(s*(360/60)));//秒針が動く角度
+      
+    for(int iX=0; iX<500; iX+=5)//楕円を角度ごとに繰り返して花弁を描写
+       {  
+         rotate(radians(20));
+         stroke(255,50);
+         strokeWeight(2);  
+         fill(0,10);
+         ellipse(5,150,60,200); 
+       }
+          
+     popMatrix();//秒針の復元
+         
+    
+ 
+    //分針に対応する花弁２ 
+     pushMatrix();
+     
+     noStroke();
+     for(int iX=0; iX<500; iX+=5)  
+        {         
+          rotate(radians(20));
+          stroke(0,40);
+          strokeWeight(2);        
+          fill(iX,30);
+          ellipse(5,150,60,200);       
+        }
+        
+      popMatrix();
+     
+     
+     
+    //時針に対応する花弁3  
+      pushMatrix();     
+      
+      for(int iX=0; iX<500; iX+=5)   
+        {         
+          rotate(radians(20));
+          stroke(0,50);
+          fill(0,5);
+          ellipse(5,50,50,200);                  
+        }
+      
+    //中心のピンク    
+      fill(255,0,255);
+      ellipse(0,0,50,50);
+      
+      popMatrix();
+
+
+
+    //それぞれの針に対応するオブジェクトを追加で描画する
+    //時針に対応するてんとう虫     
+      pushMatrix();
+     
+      scale(0.5);//大きさを縮小
+      rotate(radians(h*(360/12)));
+      translate(-2, -80);//てんとう虫の中心を時針が通過するよう移動
+      rotate(radians(90));//時計回りの方向を向くように回転
+       
+      stroke(0);
+      strokeWeight(5.5);
+      fill(255,0,255);
+      ellipse(0,0,60,60);//羽部分
+      fill(0);//あたま
+      ellipse(0,-25,30,13);   
+      ellipse(0,3,9,9);//斑点
+      ellipse(10,15,9,9);
+      ellipse(-10,15,9,9);
+      ellipse(-15,-2,9,9);
+      ellipse(15,-2,9,9);    
+      fill(255);//目玉
+      ellipse(7,-25,10,10);
+      ellipse(-7,-25,10,10);
+      
+      popMatrix();
+      
+      
+      
+    //分対応ちょうちょ     
+      pushMatrix();
+        
+      rotate(radians(m*(360/60)));//分針が動く角度
+      translate(25, -120);//ちょうちょを移動
+      rotate(radians(90));//時計回り方向を向くように回転
+      
+      stroke(0);
+      strokeWeight(3);
+      fill(255);
+      ellipse(-25,20,60,60);//羽
+      ellipse(25,20,60,60);  
+      ellipse(-20,55,30,30);
+      ellipse(20,55,30,30);      
+      fill(0);//胴体   
+      ellipse(0,20,10,30);  
+      stroke(0);//触角
+      strokeWeight(2);
+      line(20,-20,0,0);
+      line(-20,-20,0,0);
+      
+      popMatrix();
+    
+    
+     
+    //秒対応ちょうちょ   
+      pushMatrix();
+    
+      scale(1.5);
+      rotate(radians(s*(360/60)));//秒針が動く角度
+      translate(20, -130);//ちょうちょを移動
+      rotate(radians(90));//時計回り方向にに向くように回転
+
+      stroke(0);
+      strokeWeight(2);
+      fill(255);
+      ellipse(-25,20,60,60);//羽
+      ellipse(25,20,60,60);  
+      ellipse(-20,55,30,30);
+      ellipse(20,55,30,30); 
+      ellipse(-33,70,15,15);
+      ellipse(33,70,15,15);      
+      fill(0);//胴体   
+      ellipse(0,20,10,30);  
+      stroke(0);//触角
+      strokeWeight(1.5);
+      line(20,-20,0,0);
+      line(-20,-20,0,0);
+      
+      popMatrix();
+}          
+         
+
+//参考にしたサイト「yoppa org – Processingで時計を作る」　https://yoppa.org/proga10/1419.html
+//radiansによる針の角度の算出、pushMatrix,popMatrixによる針の保存と復元
+```
+
+![kadai03_04](images/kadai3/kadai03_04.gif)
+
+### sample05
+
+```java
+void setup()
+{
+  size(500,500);
+  colorMode(RGB);
+  noStroke();
+  frameRate(30);
+}
+
+void  draw()
+{
+  
+  background(255,120,100);
+  int d = second();
+  int m = minute();
+  int y = hour();
+  
+  
+  //午後
+  fill(53,62,87);
+  rect(0,250,500,250);
+  
+  
+  //秒：鳥（画面を横にに60分割）
+  fill(53,62,87);
+  ellipse(d*8.3-50,50,80,80);
+  ellipse(d*8.3,50,25,5);
+  ellipse(d*8.3-12,50,30,20);
+  fill(255,120,100);
+  ellipse(d*8.3-80,50,80,80);
+  fill(53,62,87);
+  ellipse(d*8.3-40,50,50,20);
+  fill(255,120,100);
+  ellipse(d*8.3-60,50,25,5);
+  
+  
+  //時間：太陽（画面を縦に２４分割、午前午後で色が変わる）
+  if(y*20>250)
+  {
+   fill(255,120,100);
+  }
+  else
+  {
+   fill(53,62,87);
+  }
+  ellipse(250,y*20.8,80,80);
+  
+  
+  //分：ヨット（画面を横にに60分割）
+  fill(53,62,87);
+  triangle(m*8.3-40,235,m*8.3,235,m*8.3,150);
+  triangle(m*8.3+5,235,m*8.3+35,235,m*8.3+5,160);
+  triangle(m*8.3-45,240,m*8.3,270,m*8.3+40,240);
+ 
+}
+```
+
+![kadai03_05](images/kadai3/kadai03_05.gif)
+
+### sample06
+
+```java
+void setup()
+
+{
+  size(600,600);
+  frameRate(8);
+  smooth();
+  colorMode(RGB,256);
+  background(255,255,255);
+  noStroke();
+}
+
+
+void draw()
+
+{
+  float h =hour()% 12 ;
+  float m =minute() ;
+  float s =second();
+  float arcStart=PI*1.5;
+ 
+  //時針
+  fill  (250,0,0,13);
+  arc(300,300,420,420,arcStart,arcStart+radians(h*30));
+  
+  //分針
+  fill  (100,0,150,10);
+  arc(300,300,480,480,arcStart,arcStart+radians(m*6));
+  
+  //秒針
+  fill  (0,random(50,255),random(50,255),10);
+  arc(300,300,540,540,arcStart,arcStart+radians(s*6));
+ 
+  //白背景
+  fill(255,255,255,10);
+  rect(0,0,600,600);
+}
+```
+
+![kadai03_06](images/kadai3/kadai03_06.gif)
+
+### sample07
+
+```java
+//運河などの水位調節に用いられる閘門をモチーフに制作しました。
+
+void setup()
+{
+   size(650,500);
+   frameRate(3);
+   colorMode(RGB,256);
+  
+}
+   
+  
+
+void draw()
+{
+  
+ 
+  //背景色---------------------------------------------------------------------  
+   
+   
+   if(18<h||h<4)    //背景色(夜)
+   { 
+        background(81,88,107);
+       
+    }
+   
+    else if(4<h&&h<6||17<h&&h<19) //背景色（宵、暁）
+    {
+        background(229,163,122);
+        
+    }
+    
+   else                          //背景色（朝昼）
+    {
+      background(146,210,209);
+     }
+     
+//山----------------------------------------------------------------------------
+     
+   noStroke();
+    fill(156,153,132,60);
+   triangle(0,420,80,100,700,500);
+   
+    fill(156,153,132,20);
+   triangle(0,470,260,140,665,400);
+   
+   
+   //水門--------------------------------------------------------------------
+   
+   noStroke();          //第一水門
+   fill(130,130,130);
+  if(m<=20)
+  {
+     rect(50,415-iGatehight1,10,100+iGatehight1);
+  }
+ 
+  else
+  {
+       rect(50,415,10,500);
+  }
+   
+   noStroke();          //第二水門
+   fill(130,130,130);
+   
+  if(21<m&&m<=40)
+   {
+     rect(230,275-iGatehight2,10,500);
+    }
+   
+  else
+      {
+           rect(230,275,10,225);
+      }
+   
+       
+   noStroke();          //第三水門
+   fill(130,130,130);
+   rect(410,50,10,450);
+   
+   noStroke();          //第四水門
+   fill(130,130,130);
+   rect(590,50,10,450);
+   
+  //for(int iwater=0;iwater<160;iwater++)  //左水
+  {
+      //float fRad= random(10); 
+      //fill(64,random(134,221),random(178,207),random(50,60));
+     // rect(random(0,45),random(425,500),8,8);
+  }
+
+
+//水域---------------------------------------------------------------------------------
+
+
+ water1(0,52,425,500);            //左淵　水域
+ 
+ if(m<=20)                                    //第一門〜第二門　水域
+ {
+     water1(70,233,411-iGatehight1,500);      
+ }
+ else
+ {
+     water1(70,233,411,500);  
+ }
+ 
+if(m<21||m>=41)                //第二水門〜第三水門 水域
+water2(250,410,275,500);   
+else
+water2(250,410,275-iGatehight2,500);  
+
+     
+
+ water3(428,593,50,500);      //第三門〜第四門　　水域
+ water2(610,650,50,500);      //右淵　水域
+ 
+ //船---------------------------------------------------------------------------------
+ 
+ noStroke();
+ fill(80,80,80);
+ 
+if(m<=20)
+ {
+     rect(50+iGatelength,410-iGatehight1,25,7);
+     fill(230,230,230);
+     triangle(74+iGatelength,408-iGatehight1,
+                    55+iGatelength,408-iGatehight1,
+                    55+iGatelength,390-iGatehight1
+                   );
+                    
+     ;
+ }
+else if(m<40)
+ {
+     fill(80,80,80);
+     rect(50+iGatelength,270-iGatehight2,25,7);
+     fill(230,230,230);
+     triangle(74+iGatelength,268-iGatehight2,
+                   55+iGatelength,268-iGatehight2,
+                   55+iGatelength,250-iGatehight2
+                  );
+ }
+ else
+ {
+     fill(80,80,80);
+     rect(50+iGatelength,50,25,7);
+     fill(180,180,180);
+     triangle(74+iGatelength,48,
+                   55+iGatelength,48,
+                   55+iGatelength,30
+                  );
+ }
+ 
+ 
+ //標示-------------------------------------------------------------------------------
+
+fill(200);
+textSize(12);
+text("0", 51, 430);
+textSize(10);
+text("m", 50, 440);
+
+ fill(180,0,0);
+textSize(12);
+text("2", 231, 288);
+fill(200);
+textSize(12);
+text("0", 231, 298);
+textSize(10);
+text("m", 230, 306);
+
+
+
+ fill(200);
+textSize(12);
+text("3", 412, 145);
+textSize(12);
+text("0", 412, 155);
+textSize(10);
+text("m", 411, 163);
+ 
+ fill(189,0,0);
+textSize(12);
+text("4", 412, 65);
+fill(200);
+textSize(12);
+text("0", 412, 75);
+textSize(10);
+text("m", 411, 83);
+
+fill(180,0,0);
+textSize(12);
+text("6", 592, 65);
+fill(200);
+textSize(12);
+text("0", 592, 75);
+textSize(10);
+text("m", 591, 83);
+
+ ellipse(140,60,25,25);
+ fill(170);
+ textSize(16);
+ text(h, 131, 65);
+
+ 
+
+
+ 
+ 
+
+
+ 
+ 
+       
+}
+
+
+
+
+//ここから関数----------------------------------------------------------------------
+
+
+
+void water1(int ix1,int ix2,int iy1,int iy2)//水の関数 密度低
+{
+  for(int iwater=0;iwater<500;iwater++) 
+    
+    {
+    
+      fill(64,random(134,221),random(178,207),random(50,60));
+       rect(random(ix1-10,ix2-10),random(iy1,iy2),10,10);
+  }
+}
+
+
+void water2(float ix1,float ix2,float iy1,float iy2)//水の関数　密度高
+{
+  for(float iwater=0;iwater<1000;iwater++) 
+   
+    {
+     
+      fill(64,random(134,221),random(178,207),random(50,60));
+      rect(random(ix1-10,ix2-10),random(iy1,iy2),10,10);
+    }
+}
+
+void water3(int ix1,int ix2,int iy1,int iy2)//水の関数　密度最高
+{
+  for(int iwater=0;iwater<2000;iwater++) 
+   
+    {
+     
+      fill(64,random(134,221),random(178,207),random(50,60));
+      rect(random(ix1-10,ix2-10),random(iy1,iy2),10,10);
+    }
+}
+
+   int s = second(); //秒
+    int m =minute();//分
+    int h = hour();//時
+    
+   
+   int iGatehight1=m*7;  //増減量
+   int iGatehight2=m*11/2;
+   int iGatehight3=m-50*7;
+   int iy=410-iGatehight1;
+   int iGatelength=m*9;
+```
+
+![kadai03_07](images/kadai3/kadai03_07.gif)
+
+
+
 # 課題2	繰り返し文によるパターン作成
+
+## 課題
+繰り返し（for）を効果的に使用した美しいパターン画像をデザインしなさい．
+## 目的
+繰り返し文の記述方法に慣れること．
+効率的に美しい画像を生成する方法を体験すること．
+
+## 条件
+- 画面サイズは500×500ピクセルとする．
+- 必ずforを使用すること．
+- 図形描画命令（point, line, rect, ellipse等）は全てforの { } の中に記述してあること．
+- 画像は複雑であるほど評価が高いが，プログラムは長ければ良いというものではない．
+効率的にプログラムを設計するよう心がけること．
+-  必須ではないが，適宜，プログラム中にコメントを入れること（サンプルのセクションを参照．日本語表示が上手くいかない場合は簡単な英単語やローマ字などでもよい）．
+- setup( )や，draw( )の使用は不可とする．
+## 提出までの流れ
+1. Teams課題ページより以下のリソースをダウンロード．
+	これらのリソース二つは提出物のひな型です．
+	- A00_fukushima.pptx
+	- A00_fukushima.zip
+1. A00_fukushima.zip を解凍ソフトで解凍する．
+1. 解凍後，**中のフォルダ名**と**pdeファイル**のファイル名の両方を以下のように変更する
+	**クラス+クラス番号_苗字**
+	例：A02_kitajima,  B16_okamoto
+1. <u>A00_fukushima.pptx のファイル名も上記のように変更</u>しておく．
+1. Processingを使用して，pde ファイルを書き換え，作品を作る．
+1. 作品が完成したら，Processing の実行ウィンドウ（画像が表示されているウィンドウ）のスクリーンショットを撮影．
+1. Windows標準のペイントソフトなどにペーストし，そのままpngファイルとして保存する．
+1. スケッチブック(pdeが入ったフォルダ)を**zip形式に圧縮**する.
+クラス+クラス番号_苗字.zip が出来上がるはず．
+1. pptxファイルをパワーポイントで開き
+	- 右に表示されているサンプル画像を自分の作品のスクリーンショット(png)に差し替える．
+	- 左のテキストボックス内のプログラムを自分の作品のプログラムに差し替える．
+	- 左下のフッターに前述のファイル名（クラス+クラス番号_苗字）を記入し，差し替える．
+	- 保存する．
+1. ファイルの提出
+	Teams課題２のページで「+作業の追加」をクリックして，出来上がった以下のファイルをアップロードしてください．
+	- **クラス+クラス番号_苗字.pptx**
+	- **クラス+クラス番号_苗字.zip**
+
+### 提出ファイルの参考資料
+***
+- クラス+クラス番号_苗字.pptx
+![ppt](images/kadai2/ppt.png)
+***
+- クラス+クラス番号_苗字.zip
+<img src="images/kadai2/zip.png" alt="zip" style="zoom:80%;" />
+***
+### 注意事項
+- 課題(HTML)ページのサンプルプログラムを加工した作品（色や形を変えた程度）については評価を行わない．また，ネット上のサンプルや参考書籍のプログラムを応用する場合は，出典を何らかの形式で明記し，どのように応用しているのか説明すること．盗作が疑われる場合は厳しく対処する．
+- 本科目で教えていない技術を使用しないこと．if文や独自の関数，配列，クラス，外部ライブラリ等の使用は不可とする．forのみでできることを追求するのがこの課題の目的であるので，そこをはき違えて身勝手な作品をつくらないようにすること．
+
+## サンプル
+
+## 課題2	繰り返し文によるパターン作成
+
 ## 課題
 繰り返し（for）を効果的に使用した美しいパターン画像をデザインしなさい．
 ## 目的

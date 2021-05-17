@@ -10,6 +10,7 @@
 ## フォント（エディタ・コンソール）の変更（任意）
 変更方法：ファイル>設定>エディタとコンソールのフォント
 デフォルトのフォント Source Code Pro は以下のことができない．
+
 - プログラム及びコメントへの日本語（全角）入力
 - コンソールへの日本語（全角）出力
 - これらを有効にするには，日本語対応のフォントに変更してください．
@@ -499,6 +500,7 @@ arc( 50+300, 100, 80, 80, radians(190), radians(350), CHORD );
 ## 曲線を描画する
 
 4点を結ぶ曲線の中間2点間が描画される（スプライン曲線）
+
 ```java
 curve( 点1のx値, 点1のy値,   // 制御点1
        点2のx値, 点2のy値,   // 描画点1
@@ -579,8 +581,7 @@ https://processing.org/reference/endShape_.html
 # 座標変換（平行移動，回転，拡大縮小）
 
 ## 前提知識
-- 座標≒原点
-- Processingでは初期座標がスクリーン左上(0,0)に設定されている．
+- Processingでは座標原点がスクリーン左上(0,0)に設定されている．
 - この座標を移動，回転，拡大縮小することを座標変換という．
 公式チュートリアル
 https://processing.org/tutorials/transform2d/
@@ -778,8 +779,113 @@ rect(0, 0, 50, 50);     // スクリーン左上に描画されるはず
 ```
 ![pushMatrix01](images/transform/pushMatrix01.png)
 
+
+
 https://processing.org/reference/pushMatrix_.html
 https://processing.org/reference/popMatrix_.html
+
+
+
+
+
+## 座標系まとめ
+
+### ２次元座標系
+
+![transform_origin](images/transform/transform_origin.png)
+
+***
+
+![transform_origin_draw](images/transform/transform_origin_draw.png)
+
+***
+
+![transform_rotate](images/transform/transform_rotate.png)
+
+***
+
+![transform_rotate_draw](images/transform/transform_rotate_draw.png)
+
+***
+
+![transform_rotate_translate01](images/transform/transform_rotate_translate01.png)
+
+***
+
+![transform_rotate_translate02](images/transform/transform_rotate_translate02.png)
+
+***
+
+### 初期の座標系
+
+![transform_origin01](images/transform/transform_origin01.png)
+
+***
+
+![transform_origin02_draw](images/transform/transform_origin02_draw.png)
+
+***
+
+### 平行移動
+
+![transform_translate](images/transform/transform_translate.png)
+
+***
+
+![transform_translate_draw](images/transform/transform_translate_draw.png)
+
+***
+
+### 回転
+
+![transform_rotation](images/transform/transform_rotation.png)
+
+***
+
+![transform_rotation_draw](images/transform/transform_rotation_draw.png)
+
+***
+
+### 平行移動+回転
+
+![transform_translate](images/transform/transform_translate.png)
+
+***
+
+![transform_translate_rotation](images/transform/transform_translate_rotation.png)
+
+***
+
+![transform_translate_rotation_draw](images/transform/transform_translate_rotation_draw.png)
+
+***
+
+### 回転+平行移動
+
+![transform_rotation](images/transform/transform_rotation.png)
+
+***
+
+![transform_rotation_translate01](images/transform/transform_rotation_translate01.png)
+
+***
+
+![transform_rotation_translate02](images/transform/transform_rotation_translate02.png)
+
+***
+
+### 座標系の保存と復帰について
+
+![transform_matrix_comment](images/transform/transform_matrix_comment.png)
+
+基本的には
+
+- **translate()やrotate()を使う前にpushMatrix()**で初期の座標系を保存しておく．
+- **座標系をリセットしたいときにpopMatrix()**で初期の座標系に戻す．
+
+以上のような使い方が多い．
+
+
 
 
 
@@ -1029,6 +1135,132 @@ fill( 1.0 );
 rect(iDoorX, iRoofHeight+iWallHeight-iDoorHeight, iDoorWidth, iDoorHeight);
 ```
 ![house01](images/calv_variable/house01.png)
+
+### ローカル変数とグローバル変数
+
+#### ローカル変数
+
+- 特定の範囲でのみ有効
+- `draw()`の度にメモリ領域が初期化されるため，フレームをまたいで値を保存することができない．
+- アニメーションでは局所的な使用に限られる．
+
+##### ブロック
+
+`{ }`で囲まれた部分を**ブロック**という．
+繰り返しfor文，条件分岐if文，関数で使用されている．
+
+```java
+for(/** 省略 */)
+{
+    // ブロック
+}
+```
+
+```java
+if(/** 省略 */)
+{
+    // ブロック
+}
+```
+
+```java
+void setup()
+{
+    // ブロック
+}
+void draw()
+{
+    // ブロック
+}
+```
+
+##### 使い方
+
+- **ブロック内で宣言された変数がローカル変数**となる．配列も同様．
+- ローカル変数・配列は，**宣言文のあるブロック内**でのみ有効（**スコープ**）．
+- 宣言文のあるブロック内にさらに**ネスティングされているブロック内**でも有効．
+
+```java
+for(/** 省略 */)
+{
+    int iX = 0;				// iX,iY宣言
+    int iY = 0;
+    point( iX, iY );		// OK
+    
+    for(/** 省略 */)
+    {
+        point( iX, iY );	// OK(ネスティング)
+    }
+}
+
+point( iX, iY );			// エラー：変数iXは存在しません
+```
+
+```java
+if(/** 省略 */)
+{
+    int iX = 0;				// iX,iY宣言
+    int iY = 0;
+    point( iX, iY );		// OK
+    
+    if(/** 省略 */)
+    {
+        int iZ = 0;			// iZ宣言
+        
+        point( iX, iY );	// OK(ネスティング)
+    }
+    
+    iZ = iZ +1;				// エラー：変数iZは存在しません
+}
+
+point( iX, iY );			// エラー：変数iXは存在しません
+```
+
+```java
+void setup()
+{
+    int iX = 0;				// iX,iY宣言
+    int iY = 0;
+    point( iX, iY );		// OK
+    
+    if(/** 省略 */)
+    {
+        point( iX, iY );	// OK(ネスティング)
+    }
+}
+void draw()
+{
+    point( iX, iY );		// エラー：変数iXは存在しません
+}
+```
+
+#### グローバル変数
+
+- 全ての範囲で有効
+
+
+- `draw()`の度にメモリ領域が初期化されることなく残るため，`draw()`の度に少しずつ数値を変更する等が可能．
+- **アニメーションにおいて，変化をもたらすために特に重要**．
+
+##### 使い方
+
+- **ブロック外で宣言すればグローバル変数**となる．
+- 通常，**プログラムの一番上に記述**する．
+
+```java
+int iX;			 // 宣言
+
+void setup()
+{
+	iX = 0;		 // OK
+}
+void draw()
+{
+	iX = iX + 5; // OK
+}
+```
+
+
 
 ## プログラミング独特の演算表現
 
@@ -1417,6 +1649,10 @@ point( random(100), random(100) );
 iPointIdx++		// 変数iPointIdxの値をインクリメント(1を足す)
 ```
 手順2へ戻る.
+
+##### 処理の流れまとめ
+
+![loop_steps](images/loop/loop_steps.png)
 
 #### 星空のような図の描画
 前述の点を打つプログラムを加工して星空を描いてみましょう．
@@ -3062,6 +3298,1273 @@ for(int iX = 0; iX < width; iX++ )
 
 
 
+# 関数の基本
+
+## 関数( function )とは
+
+- 関数とは，データを処理し何らかの値を返すモジュールのこと．
+  - **命令のまとまり**，と考えて差し支えない．
+
+![func_overview](images/function/func_overview.png)
+
+- 既に授業で使用している命令も関数の一種
+
+```java
+size(), colorMode(), point(), rect(), ellipse(), random(), sin(), cos(), tan()...
+```
+
+- 逆に，関数ではないもの
+
+```java
+for, if, else, else if, switch ...		// 主に制御文関連のもの
+```
+
+## 関数の使用
+
+### 関数の呼び出し( call )
+
+関数を使う際，
+
+1. 関数にデータ（値）を渡す．
+   この，渡すデータを**引数**という．
+2. 関数内で，渡したデータを元に処理が行われる．
+3. 処理の結果，値が返ってくる．
+   この，返ってくる値を**戻り値**・**返り値**という．
+   返ってこない関数もある（**void関数**）．
+
+### 関数の呼び出し方
+
+#### 値が返ってこない関数（void関数）
+
+- `ellipse, colorMode, size`など
+- 関数呼び出しだけで（命令）文となる．
+
+***
+
+##### 関数の挙動
+
+引数の値を元に，関数の中で必要な処理は全て実行される．
+
+![func_use_overview_void](images/function/func_use_overview_void.png)
+
+***
+
+#### 値が返ってくる関数
+
+- `random, sin, cos, tan` など
+- 関数を呼び出しを
+  - 変数に代入する
+  - 式に組み込む
+
+***
+
+##### 関数の挙動（変数に代入する）
+
+返り値を変数に代入する場合は，受け取る変数を用意する．
+
+<img src="images/function/func_use_overview_var.png" alt="func_use_overview" style="zoom:100%;"/>
+
+***
+
+##### 関数の挙動（式に組み込む）
+
+関数を式に組み込んだ場合は，関数を呼び出した場所に返り値が代入され，値が式に組み込まれる．
+
+![func_use_overview_expr](images/function/func_use_overview_expr.png)
+
+***
+
+#### 引数が無い関数
+
+```java
+noStroke();		// 引数が必要ない場合も () は必須．
+```
+
+
+
+### 関数の中身
+
+Processingで用意されている関数は，中身を直接見ることはできない．
+
+```java
+返り値の型 関数名( 引数 )
+{
+   //（命令）文
+   return 返り値;
+}
+
+// 関数の実体（返り値なし）
+void 関数名( 引数 )
+{
+   //（命令）文
+}
+```
+
+
+
+# アニメーション
+
+## アニメーションの基礎知識
+
+### 動画のフレームとは
+
+- 動画を構成する一枚一枚の静止画（コマ）のこと
+- 人間の目で動いているように見せるため，ごく短い時間間隔で切り替わっている．
+
+### フレームレートとは
+
+- 動画の滑らかさの指標．
+- **fps** ( frames per second )
+  - **1秒間に書き換えるフレームの数**，フレーム毎秒
+  - Processing でもこれを指定することでフレームレートを指定できる．
+
+
+
+## StaticモードとActiveモード
+
+### Staticモード
+
+- これまでの静止画を描画するモード
+
+- プログラムが上から書いた順番に実行され，終了する．
+
+### Activeモード
+
+- アニメーションを行う場合，**Activeモードでプログラムを記述する必要**がある．
+- プログラムのブロックが分かれる
+  - 開始時に１度だけ行う初期設定命令
+  - 毎フレーム行う描画命令
+- プログラムは終了命令が下されるまで終了しない．
+- 静止画の描画も行えるので，ほぼStaticモードの上位互換
+
+
+
+## アニメーションの始め方(Activeモード)
+
+### 1.　プログラム全体を`setup()`関数と`draw()`関数で構成する．
+
+```java
+void setup()
+{
+  // プログラムの開始時に１度だけ実行される（命令）文.
+}
+void draw()
+{
+  // 毎フレーム繰り返し実行される（命令）文.
+}
+```
+
+### 2.　`setup()`内で最初の設定を行う．
+
+プログラム実行時に，最初に１度だけ実行する（命令）文を記述する．
+
+#### よく使われる命令
+
+- 画面のサイズ`size()`
+- 背景色`background()`
+- カラーモード`colorMode()`
+- フレームレート`frameRate()`
+
+#### 例
+
+```java
+void setup()
+{
+  size( 128, 128 );
+  frameRate( 8 );
+  colorMode( HSB, 360, 1, 1 );
+  background( 0, 0, 0 );
+}
+```
+
+### 3. 　`draw()`内でフレーム毎の描画を行う．
+
+`frameRate()`で指定した頻度で`draw()`の命令が繰り返し実行される．
+例えば，`frameRate( 30 );// フレームレート30fps`なら，１秒間に30回実行される．
+
+#### よく使われる命令
+
+- 図形描画`point(), line(), rect(), ellipse()`など
+- 繰り返しfor文
+- 条件分岐if文
+- 変数への代入，算術式など
+
+#### 例
+
+```java
+void draw()
+{
+  for(int iIdx=0; iIdx<100; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    circle( random(width), random(height), 10 );
+  }
+  
+  for(int iIdx=0; iIdx<100; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    rect( random(width), random(height), 10, 10 );
+  }
+}
+```
+
+### プログラム全体
+
+```java
+void setup()
+{
+  size( 128, 128 );
+  frameRate( 8 );
+  colorMode( HSB, 360, 1, 1 );
+  background( 0, 0, 0 );
+}
+void draw()
+{
+  for(int iIdx=0; iIdx<10; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    circle( random(width), random(height), 10 );
+  }
+  
+  for(int iIdx=0; iIdx<10; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    rect( random(width), random(height), 10, 10 );
+  }
+}
+```
+
+![test](images/animation/test.gif)
+
+#### 静止画のみしか書かない場合
+
+setup()関数内のみに描画命令を書く
+この場合も，`draw()`の記述自体は必要
+
+```java
+void setup()
+{
+  size( 128, 128 );
+  frameRate( 8 );
+  colorMode( HSB, 360, 1, 1 );
+  background( 0, 0, 0 );
+  
+  for(int iIdx=0; iIdx<10; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    circle( random(width), random(height), 10 );
+  }
+  
+  for(int iIdx=0; iIdx<10; iIdx++)
+  {
+    fill( 170 + random(80), 100 + random(50), 200 );
+    rect( random(width), random(height), 10, 10 );
+  }
+}
+void draw()
+{
+}
+```
+
+![test](images/animation/test.png)
+
+### Activeモードまとめ
+
+- 1回だけしか実行されない命令類
+  → `setup()`関数内に書く
+- アニメーションのように，何度も実行される命令
+  →`draw()`関数内に書く
+- 静止画の描画
+  →`setup()`関数内のみに描画命令を書く
+
+
+
+### 演習
+
+#### ランダムな点描アニメーション
+
+![random_point_anim](images/animation/random_point_anim.gif)
+
+#### 1. 空の`setup()`と`draw()`を用意
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+    
+}
+void draw()
+{
+    
+}
+```
+
+#### 2. `setup()`に以下の処理を追加
+
+- スクリーンサイズ: 200×200
+- カラーモード: `RGB, 1, 1, 1`
+- 背景色: 黒 `0, 0, 0`
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  background( 0, 0, 0 );
+}
+void draw()
+{
+    
+}
+```
+
+#### 3. `draw()`に以下の処理を追加
+
+- 線の太さ: 最大4のランダム
+- 線の色: RGB全て最大1のランダム
+- 点の描画: XY座標値はスクリーン上でランダム
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  background( 0, 0, 0 );
+}
+void draw()
+{
+  strokeWeight( random(4) );
+  stroke( random(1), random(1), random(1) );
+  point( random(width), random(height) );
+}
+```
+
+
+
+## アニメーションの基本
+
+### フレームレートの設定
+
+`setup()`のなかで，１秒間に描画を行う(`draw()`が実行される)回数を指定できる．
+特に指定をしない場合，デフォルトは60fps．
+
+```java
+frameRate( fps );
+```
+
+##### 例
+
+```java
+frameRate( 30 );	// フレームレート30fps
+```
+
+### 画面のリフレッシュ
+
+`draw()`は，基本的に前フレームの描画結果の上に新しい描画を重ねて行う．
+フレームごとに，画面をリフレッシュしたい場合は，**backgroundと同じ色の四角を画面全体に貼付ける**事で行う．
+
+##### 例
+
+```java
+void setup()
+{
+  size( 128, 128 );
+  frameRate( 1 );
+  colorMode( HSB, 360, 1, 1 );
+  background( 0, 0, 0 );
+}
+void draw()
+{
+  // 画面のリフレッシュ.
+  fill( 0, 0, 0 );
+  rect( 0, 0, width, height );
+  
+  fill( 170 + random(80), 100 + random(50), 200 );
+  rect( random(width), random(height), 20, 20 );
+}
+```
+
+![refresh](images/animation/refresh.gif)
+
+### グローバル変数の使用
+
+#### ローカル変数
+
+※詳しくは，演算と変数/変数/ローカル変数とグローバル変数のセクションを参照
+
+#### グローバル変数
+
+- 全ての範囲で有効
+
+
+- `draw()`が実行される度にメモリ領域が初期化されることがなく，`draw()`の度に少しずつ数値を変更する等が可能．
+- **アニメーションにおいて，変化をもたらすために特に重要**．
+
+##### ブロック
+
+`{ }`で囲まれた部分を**ブロック**という．
+繰り返しfor文，条件分岐if文，関数で使用されている．
+
+```java
+for(/** 省略 */)
+{
+    // ブロック
+}
+```
+
+```java
+if(/** 省略 */)
+{
+    // ブロック
+}
+```
+
+```java
+void setup()
+{
+    // ブロック
+}
+void draw()
+{
+    // ブロック
+}
+```
+
+##### 使い方
+
+- **ブロック外で宣言すればグローバル変数**となる．
+- プログラムのどこからでも変数を使うことができる．
+- 通常，**プログラムの一番上に記述**する．
+
+```java
+int iX;			 // グローバル変数の宣言
+
+void setup()
+{
+	iX = 0;		 // OK
+}
+void draw()
+{
+	iX = iX + 5; // OK
+}
+```
+
+### 演習
+
+#### 矩形の移動アニメーション
+
+![rect_move](images/animation/rect_move.gif)
+
+#### 1. 空の`setup()`と`draw()`を用意
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+    
+}
+void draw()
+{
+    
+}
+```
+
+#### 2. `setup()`に以下の処理を追加
+
+- スクリーンサイズ: 200×200
+- カラーモード: `RGB, 1, 1, 1`
+- 線(stroke)の表示をオフ
+- フレームレート: 8 (fps)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+}
+void draw()
+{
+    
+}
+```
+#### 3. グローバル変数の追加
+
+- 横移動用グローバル変数を一つ宣言し，`setup()`で初期化しましょう．
+  - 変数名: iPosX
+  - 型: int
+  - 初期値: 0
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;             // グローバル変数iPosXの宣言
+　
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+    
+  iPosX = 0;      // iPosXの初期化
+}
+void draw()
+{
+    
+}
+```
+
+#### 4. `draw()`で矩形を描画
+
+- `draw()`で矩形を描画しましょう．
+  - X座標: iPosX
+  - Y座標: ( スクリーンの高さの半分 - 10 )
+  - 大きさ: 20, 20
+  - 塗り色: 白( 1, 1, 1 )
+
+![rect_move_01](images/animation/rect_move_01.png)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+  
+  iPosX = 0;
+}
+void draw()
+{
+  fill( 1, 1, 1 );						// White
+  rect( iPosX, height/2-10, 20, 20 );	// 矩形描画
+}
+```
+
+#### 5. 矩形を動かす
+
+- `draw()`の中に，`iPosX`に4を足す（加算）処理を追加しましょう．
+
+![rect_move_02](images/animation/rect_move_02.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+  
+  iPosX = 0;
+}
+void draw()
+{
+  iPosX += 4;	// フレーム毎に4を足す
+  
+  fill( 1, 1, 1 );
+  rect( iPosX, height/2-10, 20, 20 );
+}
+```
+
+#### 6. スクリーンのリフレッシュ処理の追加
+
+前フレームの矩形描画が残ってしまっている．
+`draw()`で，**新しい矩形を描画する前に**スクリーンをリフレッシュしましょう．
+
+- 矩形を描画する
+  - X座標: 0
+  - Y座標: 0
+  - 幅・高さ: スクリーンと同じ
+  - 塗り色: 黒(  0, 0, 0  )
+
+![rect_move_03](images/animation/rect_move_03.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+  
+  iPosX = 0;
+}
+void draw()
+{
+  fill( 0, 0, 0 );              // 白
+  rect( 0, 0, width, height );  // スクリーンのリフレッシュ.
+  
+  iPosX += 4;
+  
+  fill( 1, 1, 1 );
+  rect( iPosX, height/2-10, 20, 20 );
+}
+```
+
+#### 7. スクリーンの外に出たら左端に戻す
+
+矩形のX座標値は`iPosX`に保存されている．
+以下の処理を適切な場所に追加してみましょう．
+
+- もしX座標値がスクリーンの外ならX座標値を0に戻す
+
+![rect_move](images/animation/rect_move.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate( 8 );
+  
+  iPosX = 0;      // iPosXの初期化
+}
+void draw()
+{
+  fill( 0, 0, 0 );
+  rect( 0, 0, width, height );
+  
+  iPosX += 4;
+  
+  if( iPosX > width ) // もしX座標値がスクリーンの外なら
+  {
+    iPosX = 0;        // X座標値を0に戻す
+  }
+  
+  fill( 1, 1, 1 );
+  rect( iPosX, height/2-10, 20, 20 );
+}
+```
+
+
+
+
+
+## サンプル集
+
+### 円の移動・跳ね返りアニメーション
+
+![ellipse_move](images/animation/ellipse_move.gif)
+
+#### 1. 空の`setup()`と`draw()`を用意
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+    
+}
+void draw()
+{
+    
+}
+```
+
+#### 2. `setup()`に以下の処理を追加
+
+- スクリーンサイズ: 200×200
+- カラーモード: `RGB, 1, 1, 1, 100`
+- 線(stroke)を表示しない
+- フレームレート(fps): 8
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8); // fps
+}
+void draw()
+{
+    
+}
+```
+
+#### 3. グローバル変数の追加
+
+- 横移動用グローバル変数を一つ宣言し，`setup()`で初期化しましょう．
+  - 変数名: iPosX
+  - 型: int
+  - 初期値: 0
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX; // 楕円のX座標
+ 
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8);
+    
+  iPosX = 0; // 初期化
+}
+void draw()
+{
+    
+}
+```
+
+#### 4. `draw()`で楕円を描画
+
+- `draw()`で楕円を描画しましょう．
+  - X座標: iPosX
+  - Y座標: スクリーンの高さの半分
+  - 直径: 30, 30
+  - 塗り色: 白( 1, 1, 1 )
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8);
+    
+  iPosX = 0;
+}
+void draw()
+{
+  fill( 1, 1, 1 );						// White
+  ellipse( iPosX, height/2, 30, 30 );	// 楕円描画
+}
+```
+
+#### 5. 楕円を動かす
+
+- `draw()`の中に，`iPosX`に4を足す（加算）処理を追加しましょう．
+
+![ellipse_move_01](images/animation/ellipse_move_01.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8);
+  
+  iPosX = 0;
+}
+void draw()
+{
+  fill( 1, 1, 1 );
+  ellipse( iPosX, height/2, 30, 30 );
+  
+  iPosX += 4; // フレーム毎に4動かす
+}
+```
+
+#### 6. スクリーンのリフレッシュ処理の追加
+
+前フレームの楕円描画が残ってしまっている．
+`draw()`で，**新しい楕円を描画する前に**スクリーンをリフレッシュしましょう．
+
+- 矩形を描画する
+  - X座標: 0
+  - Y座標: 0
+  - 幅・高さ: スクリーンと同じ
+  - 塗り色: 黒(  0, 0, 0  )
+
+![ellipse_move_02](images/animation/ellipse_move_02.gif)
+
+```java
+int iPosX;
+ 
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8);
+    
+  iPosX = 0;
+}
+void draw()
+{
+  fill( 0, 0, 0 );				// Black
+  rect( 0, 0, width, height );	// スクリーンリフレッシュ
+  
+  fill( 1, 1, 1 );
+  ellipse( iPosX, height/2, 30, 30 );
+  
+  iPosX += 4;
+}
+```
+
+#### 7. 跳ね返り（難易度高め）
+
+今のままではスクリーン外に楕円が移動してしまう．
+**スクリーンの右端と左端で進む向きが反転**するよう，改良方法を考えてみましょう．
+
+![ellipse_move](images/animation/ellipse_move.gif)
+
+##### ヒント
+
+- 現在の<u>楕円進む向き</u>の情報を保存する**グローバル変数を追加**する．
+- 条件分岐`if`を使い，<u>楕円がスクリーン端を超えたときに進む向きを変える</u>．
+- 「向きが反転する」とはこの場合，(+)プラスが(-)マイナスになる，もしくは(-)マイナスが(+)プラスになる．
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+int  iPosX;
+int  iDirctionX; // 進む向き( 1:+X方向, -1:-X方向 )
+ 
+void setup()
+{
+  size(200, 200);
+  colorMode( RGB, 1, 1, 1 );
+  noStroke();
+  frameRate(8);
+  
+  iPosX = 0;
+  iDirctionX  = 1;
+}
+ 
+void draw()
+{
+  fill( 0, 0, 0 );
+  rect( 0, 0, width, height );
+  
+  fill( 1, 1, 1 );
+  ellipse( iPosX, height/2, 30, 30 );
+
+  iPosX += iDirctionX*4;             // iPosX = iPosX + iDirctionX*4; と同じ
+  if( iPosX >= width || iPosX < 0 )  // もしX座標値がスクリーン幅以上もしくは0未満だったら
+  {
+    iDirctionX *= -1;  // 向きを逆方向に変える(-1をかける)
+  }
+}
+```
+
+
+
+### 直線の回転アニメーション
+
+```java
+int iRatateDeg;             // アニメーション用回転角度
+ 
+void setup()
+{
+  size( 200, 200 );
+  frameRate( 8 );
+  
+  int iRatateDeg = 0;      // グローバル変数初期化
+}
+void draw()
+{
+  // 画面のリフレッシュ.
+  fill( 120, 120, 120 );
+  noStroke();
+  rect( 0, 0, width, height );
+  
+  iRatateDeg += 2;                 // 毎フレーム2°回転
+  
+  if( iRatateDeg > 360 )
+  {
+    iRatateDeg -= 360;             // 360°以上回転したら戻す.
+  }
+  
+  translate( width/2, height/2 );  // 座標原点をスクリーン中心へ.
+  rotate( radians(iRatateDeg) );   // 座標系回転.
+  
+  strokeWeight( 4 ); // 線の太さ.
+  stroke( 0, 0, 0 );
+  line( 0, 0, width/2, 0 );
+}
+```
+
+![line_rot](images/animation/line_rot.gif)
+
+
+
+### 波形の移動（位相変化）アニメーション
+
+```java
+int iAmplitudeL = 80;  // 振幅（大きな波の高さ）
+ 
+// グローバル変数.
+int iAnimPulseDeg = 0; // アニメーション用波の角度
+ 
+void setup()
+{
+  size( 400,200 );
+  colorMode( HSB, 90, 1.0, 1.0, 1.0 );
+}
+void draw()
+{
+  // スクリーンリセット.
+  noStroke();
+  fill( 0, 0, 0.4 );
+  rect( 0, 0, width, height );
+  
+  
+  iAnimPulseDeg += 2;                        // アニメーション用の角度を2°増やす.
+  if( iAnimPulseDeg > 360 )                  // 360°を超えたらリセット.
+  {
+    iAnimPulseDeg -= 360;
+  }
+  
+  // コサイン波形
+  strokeWeight( 8 );
+  for( int iX=0; iX < width; iX++ )
+  {
+    int iAngle0 = iX*4+iAnimPulseDeg;        // アニメーション用の角度を加算
+    int iAngle1 = (iX+1)*4+iAnimPulseDeg;    // アニメーション用の角度を加算
+     
+    // X座標値によって色は固定
+    stroke( iX%90, 1.0, 1.0 );
+    
+    line( iX, height/2 + iAmplitudeL*cos( radians(iAngle0) ),
+          iX, height/2 + iAmplitudeL*cos( radians(iAngle1+1) ) );
+  }
+}
+```
+
+![pulse_translate](images/animation/pulse_translate.gif)
+
+
+
+### 円弧の形状変化アニメーション
+
+```java
+int iArcAnimDeg;        // アニメーション用円弧の角度
+ 
+void setup()
+{
+  size( 200, 200 );
+  frameRate( 8 );
+  
+  iArcAnimDeg = 0;      // アニメーション用変数初期化
+}
+void draw()
+{
+  // 画面のリフレッシュ.
+  fill( 120, 120, 120 );
+  noStroke();
+  rect( 0, 0, width, height );
+  
+  // アニメーション用変数更新.
+  if( iArcAnimDeg < 180 )	// 180°以上変化したらリセット.
+  {
+    iArcAnimDeg += 4;		// 毎フレームの変化角度
+  }
+  else
+  {
+    iArcAnimDeg -= 180;		// リセット.
+  }
+  
+  // 円弧の始まりの角度を計算.
+  int iArcAnimDegBegin = iArcAnimDeg - 90;
+  
+  // 円弧の終わりの角度を計算.
+  int iArcAnimDegEnd   = 270 - iArcAnimDeg;
+  
+  fill( 255, 255, 255 );
+  stroke( 0,0,0 );
+  arc(width/2, height/2, width, height, radians(iArcAnimDegBegin), radians(iArcAnimDegEnd), CHORD);
+}
+```
+
+![arc_shape](images/animation/arc_shape.gif)
+
+
+
+# ユーティリティ関数
+
+
+
+## テキスト描画
+
+### text()
+
+スクリーンにテキストを描画する．
+フォントの色の変更は`fill()`を使う．
+
+#### 書式
+
+```java
+text( "描画する文字列", X座標値, Ｙ座標値 )	// 文字列を描画する場合（ダブルクォーテーションを使う）
+```
+
+
+```java
+text( 描画する値, X座標値, Ｙ座標値 )		 // 数値を描画する場合
+```
+
+
+```java
+text( 変数, X座標値, Ｙ座標値 )		 	   // 変数の値を描画する場合
+```
+
+#### 例
+
+```java
+text("word", 10, 30); 
+ 
+fill(0, 102, 153);
+text(3.14, 10, 60);
+ 
+int iText = 123;
+fill(0, 102, 153, 100);
+text(iText, 10, 90); 
+```
+
+![text](images/util/text.png)
+
+### textSize()
+
+テキスト描画のフォントサイズを設定する．
+
+#### 書式
+
+```java
+textSize( フォントサイズ )		// ピクセル単位
+```
+
+#### 例
+
+```java
+background(0);
+ 
+fill(255);
+textSize(26); // フォントサイズ:26
+text("WORD", 10, 50); 
+ 
+textSize(14); // フォントサイズ:14
+text("WORD", 10, 70);
+```
+
+![font_size](images/util/font_size.png)
+
+https://processing.org/reference/text_.html
+https://processing.org/reference/textSize_.html
+
+
+
+## 日付
+
+現在の日，月，西暦を取得する．
+
+### 書式
+
+```java
+day()		// 日(1 - 31)
+month()		// 月(1 - 12)
+Year()		// 年(2003, 2004, 2005, etc.)
+```
+
+### 例
+
+```java
+int iDay    = day();
+int iMonth  = month();
+int iYear   = year();
+ 
+text(iDay,   10, 28);
+text(iMonth, 10, 56); 
+text(iYear,  10, 84);
+```
+
+![date](images/util/date.png)
+
+https://processing.org/reference/year_.html
+
+
+
+## 時刻
+
+現在の時刻における秒，分，時を取得する．
+アニメーションに用いる場合，`draw()`を行うたびにこれらの関数を呼び，最新の時刻を取得する必要がある．
+
+### 書式
+
+```java
+second()  // 秒(0 - 59)
+minute()  // 分(0 - 59)
+hour()    // 時(0 - 23)
+```
+
+### 例
+
+```java
+int iSecond = second();
+int iMinute = minute();
+int iHour   = hour();
+
+text( iHour,   10, 56 );
+text( ":",     25, 56 );
+text( iMinute, 30, 56 );
+text( ":",     45, 56 );
+text( iSecond, 50, 56 );
+```
+
+![time](images/util/time.png)
+
+https://processing.org/reference/hour_.html
+
+
+
+## プログラムを開始してからの経過時間
+
+### millis()
+
+プログラムを開始してからの現在の経過時間を，ミリ(千分の一)秒単位で取得できる．
+少し難しいが，**差分を取ることで**細かいアニメーションに応用できる．
+
+#### 書式
+
+```java
+millis()	// 引数無し，1000分の1秒単位の値が返ってくる．
+```
+
+#### 例
+
+```java
+float fMillsPrevious = 0;  // 前回のdraw()における経過時間
+ 
+void setup()
+{
+  frameRate( 5 );  // fps:5
+}
+void draw()
+{
+  // スクリーンリフレッシュ
+  fill(0,0,0);
+  rect(0,0,width,height);
+  
+  // 現在のdraw()における経過時間
+  float fMillsCurrent = millis();
+  
+  // 前回のdraw()から経過した（差分）時間
+  float fMillsDelta = fMillsCurrent - fMillsPrevious;
+   
+  textSize( 20 );
+  fill(255,255,255);  
+  text( fMillsDelta, 5, 20);    // 前回のdraw()から経過した時間を描画
+
+  text( fMillsPrevious, 5, 50); // 前回のdraw()における経過時間を描画
+
+  text( fMillsCurrent, 5, 80);  // 現在のdraw()における経過時間を描画
+
+ // 現在の経過時間を保存.
+  fMillsPrevious = fMillsCurrent;
+}
+```
+
+![millis](images/util/millis.gif)
+
+https://processing.org/reference/millis_.html
+
+
+
+# 画像・PDF出力
+
+## 表示ウィンドウの画像を保存する．
+
+- ファイル形式は tif, tga, png, jpg などが使用可能.
+- **プログラムを実行すると**，プログラムが置かれているフォルダ（スケッチブック）内に画像が保存される.
+- 通常はプログラムの最後に書くとよい．
+### 書式
+```java
+save(“ファイル名.拡張子”); // ※ダブルクォーテーション（半角）を忘れずに.
+```
+### 例
+```java
+/**
+	スケッチ名：sketch01.pde
+	
+	ルート90・セルオートマトンの描画プログラム
+	~省略
+*/
+
+save( "sakuhin.png" );	// 表示ウィンドウを，"sakuhin.png"という名前で，pngファイルとして出力
+```
+![save_image](images/export/save_image.png)
+
+
+
+## PDFへ出力
+
+- **プログラムを実行すると**，プログラムが置かれているフォルダ（スケッチブック）内にpdfファイルが保存される.
+- 少々ステップを踏む必要あり．
+
+### 方法
+
+1. 　ライブラリのインポート
+   - （日本語）「スケッチ」メニュー ＞ 「ライブラリをインポート」 ＞ 「PDF Export」を選択
+   - （英語版）「Sketch」メニュー ＞ 「import Library」 ＞ 「PDF Export」を選択 
+
+![pdf_01](images/export/pdf_01.png)
+
+​		上記を選択すると，プログラムの一行目に`import processing.pdf.*;`が追加される．
+​		※**メニューを使わず，直に入力も可能．**
+
+![pdf_02](images/export/pdf_02.png)
+
+2. `size()`の記述変更
+
+   ```java
+   size( 横のサイズ, 縦のサイズ, PDF, “好きなファイル名.pdf” );
+   ```
+
+![pdf_03](images/export/pdf_03.png)
+
+3. 　プログラム末尾に`exit();`を追加．
+
+![pdf_04](images/export/pdf_04.png)
+
+4. プログラムを実行すると，pdfファイルが出力される．
+   この時，表示ウィンドウは表示されない．
+
+![pdf_05](images/export/pdf_05.png)
+
+
+
+
+
 # ジャンクプログラム置き場
 
 講師が作ってみたものの，難易度が高かったり，解説に不向きだったものを一応掲載しています．
@@ -3154,4 +4657,134 @@ for( int iRowIdx=0; iRowIdx < iRowTotal; iRowIdx++ )
 
 ![junk02](images/junk/junk02.png)
 
-<!--float にしなくてはいけない時，ブロック,ブロック内変数（スコープ）. 数式の組み合わせによる形状記述-->
+
+
+### ランダムな楕円のフェードアニメーション
+
+![ellipse_fade](images/animation/ellipse_fade.gif)
+
+#### 1. 空の`setup()`と`draw()`を用意
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+    
+}
+void draw()
+{
+    
+}
+```
+
+#### 2. `setup()`に以下の処理を追加
+
+- スクリーンサイズ: 200×200
+- カラーモード: `RGB, 1, 1, 1, 100`
+- 線(stroke)を表示しない
+- フレームレート(fps): 8
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1, 100 );
+  background( 1, 1, 1 );
+  noStroke();
+  frameRate(8); // fps
+}
+
+void draw()
+{
+ 
+}
+```
+
+#### 3. `draw()`に以下の処理を追加
+
+- 楕円を一つ描画
+  - X,Y座標：ランダム（最大X:スクリーン幅, 最大Y:スクリーン高さ）
+  - 直径：ランダム(最大100)
+  - 塗り色：RGB全てランダム(最大1)
+
+![ellipse_fade_01](images/animation/ellipse_fade_01.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1, 100 );
+  background( 1, 1, 1 );
+  noStroke();
+  frameRate(8); // fps
+}
+ 
+void draw()
+{
+  fill( random(1), random(1), random(1) );
+  ellipse( random(width), random(height), random(100), random(100) );
+}
+```
+
+#### 4. スクリーンのリフレッシュ処理を追加
+
+- スクリーン全体と同じサイズの矩形を背景色で描画する．
+
+![ellipse_fade_02](images/animation/ellipse_fade_02.gif)
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1, 100 );
+  background( 1, 1, 1 );
+  noStroke();
+  frameRate(8); // fps
+}
+ 
+void draw()
+{
+  // スクリーンをリフレッシュ
+  fill( 1, 1, 1 );
+  rect( 0,0,width,height );
+  
+  fill( random(1), random(1), random(1) );
+  ellipse( random(width), random(height), random(100), random(100) );
+}
+
+```
+
+#### 5. スクリーンリフレッシュのアルファ値を50%に変更
+
+- ステップ4で追加した矩形のアルファ値を50(%)に変更する．
+
+できれば下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 1, 1, 1, 100 );
+  background( 1, 1, 1 );
+  noStroke();
+  frameRate(8); // fps
+}
+ 
+void draw()
+{
+  // スクリーンをリフレッシュ
+  // アルファ値:50%で前フレームの描画結果に重ねる．
+  fill( 1, 1, 1, 50 );
+  rect( 0,0,width,height );
+  
+  fill( random(1), random(1), random(1) );
+  ellipse( random(width), random(height), random(100), random(100) );
+}
+```
