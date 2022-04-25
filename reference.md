@@ -4137,9 +4137,50 @@ rect( 0,0,RECT_WIDTH,RECT_HEIGHT );
 
 https://processing.org/reference/final.html
 
+## 演習3
+
+ストライプ模様の描画の改良
+以下のサンプルは，ウィンドウ左から右へ縦長の矩形を25個描画するプログラムである．
+※繰り返し文を使用
+
+```java
+size(500, 500);      // Window Size
+colorMode(RGB, 1.0); // RGB(0.0~1.0)
+float fR,fG,fB;      // Window RGB
+
+noStroke();
+
+for(int iX=0; iX<width; iX+=20)
+{
+  /* Example */
+  fR = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+  fG = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+  fB = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+
+  // draw rect
+  fill(fR, fG, fB);
+  rect(iX,0,20,height);
+}
+```
+
+![calv_var_practice3_original](images/calv_variable/calv_var_practice3_original.png)
+
+1. 矩形の色を決定している部分の右辺の代入文を改良してみましょう．
+
+```java
+  /* Example */
+	fR = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+  fG = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+  fB = ( sin( radians(iX*2.0) ) + 1 )/2.0;
+```
+
+- 矩形の座標値`iX`を活用する．
+- 様々な式や数値を組み合わせる．（すべてを使用する必要はない）
+  - 四則演算
+  - 三角関数 `sin()`, `cos()`, `tan()`
+  - ランダム値 `random()`
 
 
-***
 
 # 制御文
 
