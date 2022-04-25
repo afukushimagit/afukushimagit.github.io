@@ -4137,10 +4137,6 @@ rect( 0,0,RECT_WIDTH,RECT_HEIGHT );
 
 https://processing.org/reference/final.html
 
-## 演習3
-
-
-
 
 
 ***
