@@ -1,3 +1,5 @@
+
+
 # Processingの基本
 
 ## 開発環境
@@ -3512,6 +3514,8 @@ circle( 変数A, 変数B, 変数C );
 
 - べき乗の計算を行い，計算結果の値を返す命令．
 
+- 指数関数ともいう．
+
 - べき乗とは
 
   - 基数を指数の回数だけ掛け合わせる計算
@@ -3526,7 +3530,9 @@ $$
 pow( 基数, 指数 )
 ```
 
-| 関数名   | 算法     | 書式          | 算術表記                                    |
+#### 書式と数式の対応
+
+| 関数名   | 算法     | 書式          | 数式                                        |
 | -------- | -------- | ------------- | ------------------------------------------- |
 | 指数関数 | べき乗算 | `pow( n, e )` | ![](images/calv_variable/shisuu_kansuu.png) |
 
@@ -3555,15 +3561,17 @@ https://processing.org/reference/pow_.html
 
 ![sqrt_graph](images/calv_variable/sqrt_graph.png)
 
+#### 書式
+
 ```
 sqrt( 面積とする数値 )
 ```
 
-| 関数名             | 算法   | 書式        | 算術表記                                         |
-| ------------------ | ------ | ----------- | ------------------------------------------------ |
-| 平方根を求める関数 | 開平算 | `sqrt( n )` | ![root_func](images/calv_variable/root_func.png) |
+#### 書式と数式の対応
 
-##### 
+| 関数名             | 書式        | 数式                                             |
+| ------------------ | ----------- | ------------------------------------------------ |
+| 平方根を求める関数 | `sqrt( n )` | ![root_func](images/calv_variable/root_func.png) |
 
 ##### 例
 
@@ -3592,13 +3600,34 @@ https://processing.org/reference/sqrt_.html
   - 波，振動
   - 特に `sin()`, `cos()`は必ず -1~1の間の実数を返すので，振幅を利用することで波形のような表現ができる．
 
-| 算法                 | 書式                      | 算術表記                                                     |
-| -------------------- | ------------------------- | ------------------------------------------------------------ |
-| サイン（正弦）       | `sin( 角度のラジアン値 )` | <img src="images/calv_variable/sin_exp.png" alt="sin_exp" style="zoom: 67%;" /> |
-| コサイン（余弦）     | `cos( 角度のラジアン値 )` | <img src="images/calv_variable/cos_exp.png" alt="cos_exp" style="zoom: 67%;" /> |
-| タンジェント（正接） | `tan( 角度のラジアン値 )` | <img src="images/calv_variable/tan_exp.png" alt="tan_exp" style="zoom: 67%;" /> |
+#### 書式
+
+```java
+sin( 角度のラジアン値 )
+cos( 角度のラジアン値 )
+tan( 角度のラジアン値 )
+```
+
+角度をラジアンへ変換する命令を含めると以下のようになる
+
+```java
+sin( radians( 角度 ) )
+cos( radians( 角度 ) )
+tan( radians( 角度 ) )
+```
+#### 角度と計算結果の値の関係
+
+| 関数名   | 書式       | 返す値の範囲                                 |                      角度と返す値の関係                      |
+| -------- | ---------- | -------------------------------------------- | :----------------------------------------------------------: |
+| 正弦関数 | `sin( α )` | `-1～1`の間                                  | ![calv_var_sin_graph](images/calv_variable/calv_var_sin_graph.png) |
+| 余弦関数 | `cos( α )` | `-1～1`の間                                  | ![calv_var_cos_graph](images/calv_variable/calv_var_cos_graph.png) |
+| 正接関数 | `tan( α )` | `-∞～-∞` 90°等，値が定義できない場合がある． | ![calv_var_tan_graph](images/calv_variable/calv_var_tan_graph.png) |
 
 ####　三角関数と三角比
+
+- 三角関数は三角比として使うこともできる．
+  - 下図右のような直角三角形の各辺の長さと角度αは下図左のような式で表される．
+  - 三角比を利用し，回転角αと距離rからある地点のX座標値とY座標値を算出することができる．
 
 <img src="images/calv_variable/triangle_func_def.png" alt="triangle_func_def" style="zoom: 100%;" />
 
@@ -3627,7 +3656,7 @@ for (int iX = 0; iX < 400; iX +=16)       // 繰り返し文
 
 #### 例2
 
-座標変換を使わず，三角関数によって時計の針状の表現を行う．
+座標変換を使わず，三角比によって時計の針状の表現を行う．
 
 ![calc_variable_sincos_line](images/calv_variable/calc_variable_sincos_line.png)
 
