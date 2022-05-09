@@ -4080,26 +4080,29 @@ for (int iX = 0; iX < width; iX+=15)  // 以下の処理をiX:0~widthまで15ピ
 
 ![random02](images/calv_variable/random02.png)
 
-### 変数へ代入する際の注意点
+### int型変数へ代入する際の注意点
 
-`random()`からは実数（小数有り）が得られるため，変数への代入の際は以下のどちらかの処理を行う．
-
-- **実数**`float`型の変数にランダム値を代入する．
-- `floor()`などをつかって小数部を処理し，整数`int`型の変数に代入する．
-  - そのままではエラーで代入不可．
-
-
-##### 例
+- `int` 型の変数に`random()`の返り値を代入しようとするとエラーが発生する．
 
 ```java
-float fRandom = random( 100 );	// float型の変数fRandomにランダムな値を代入.
-
-int iRandom = random( 100 );		// これだとエラーが出る
-
-iRandom = floor( random(100) );	// int型の変数iRandomにランダムな値を小数点以下を切り捨てて代入する．
+int iRandom = random(100);	// Type mismatch, "float" does not match with "int"
 ```
 
+![calc_var_random_mismatch](images/calv_variable/calc_var_random_mismatch.png)
 
+- `random()`からは実数（小数有り）が得られるため，変数への代入の際は以下のいずれかの処理を行う．
+
+  - **実数**`float`型の変数にランダム値を代入する．
+
+  ```java
+  float fRandom = random( 100 );
+  ```
+
+  - `floor()`などをつかって小数部を処理し，整数`int`型の変数に代入する．
+
+  ```java
+  int iRandom = floor( random(100) );
+  ```
 
 https://processing.org/reference/random_.html
 
@@ -4243,10 +4246,17 @@ for(int iX=0; iX<width; iX+=20)
 
 - プログラムの流れ（フロー）を制御するための特殊な文
   - プログラムは通常上から下へ逐次実行される．
-  - 通常の文とは異なる特殊な書式をとる．
+    - 制御文を使い，変化を加えることができる．
+  - 通常の文とは異なる特殊な構文をとる．
+    - **条件式**
+      -  `( )`の中に記述する．
+      - 返り値が真(true)か偽(false)かで流れを切り替える．
+    - **ブロック文**
+      - `{ }`の中に記述する．
+      - 複文（複数の文）を一まとめにしたもの．
 - 主に以下の２種類がある．
-  - 繰り返し
-  - 条件分岐
+  - 条件分岐 `if` `if-else` `switch`
+  - 繰り返し `for` `while`
 - プログラムの流れは古くからフローチャート等を用いて図として表される．
 
 ## フローチャート(流れ図)
@@ -4255,10 +4265,11 @@ for(int iX=0; iX<width; iX+=20)
 
 - これは，以下のようなフローチャートによって図として表すことができる．
   - フローチャートにはプロセスの各ステップを表すパーツが複数種類存在する．
-    - 下図中の矩形やひし形等の図形
+    - 下図中の矩形やひし形等の図形など．
     - ある程度規格が統一されている．
+- 下のフローチャートは課題1のプログラムをフローチャートで示したもの．
 
-<img src="images/loop/flow_chart.png" alt="flow_chart" style="zoom:60%;" />
+<img src="images/loop/flow_chart.png" alt="flow_chart" style="zoom:80%;" />
 
 
 
@@ -4267,180 +4278,757 @@ for(int iX=0; iX<width; iX+=20)
 ### 条件式とは
 
 - プログラムの実行の流れを決める重要な要素，'判断'のパーツ．
-  <img src="images/loop/hishigata.png" alt="hishigata" style="zoom:60%;" />
+  - フローチャート部品のひし形図形の中に記述されているのが条件式．
 
-ここで用いられるのが条件式．
+<img src="images/loop/hishigata.png" alt="hishigata" style="zoom:80%;" />
+
+- 条件分岐，繰り返し**どちら**の記述にも用いられる．
+- 二つの値や変数を比較し，計算結果を真(**true**)か偽(**false**)として返す．
+  - 必ずどちらかの値が返る．
 
 - 式(Expression)の一種
-- 要素
-  - 値，変数
-  - 比較演算子，論理演算子
-- 計算結果（式が返す値）
-  - 真(true)
-  - 偽(false)
+  - 文に組み込んで使用する．
 
-### 条件式に用いる演算
+### 書式
 
-- 論理演算（ブーリアン演算）
+２つの値or変数の間にスペースをはさみ，比較演算子（後述）を中に記述する．
 
-  - 真か偽のどちらか（２進数）を2つ以上用いて結果を得る．
+```java
+値or変数 比較演算子 値or変数
+```
 
-    |  真  |  偽   |
-    | :--: | :---: |
-    | true | false |
-    |  1   |   0   |
+### 比較演算子
 
-    - 論理積 AND
-    - 論理和 OR
-    - 排他的論理和 XOR
-    - 否定 NOT
+下表の条件を満たしたとき，条件式は真(true)を返し，満たさなければ偽(false)を返す．
 
-- 比較演算
+| 条件式   | 比較演算子 | 条件                 |
+| -------- | ---------- | -------------------- |
+| `a < b`  | `<`        | aがbより小さい       |
+| `a <= b` | `<=`       | aがb以下             |
+| `a > b`  | `>`        | aがbより大きい       |
+| `a >= b` | `>=`       | aがbと等しいか大きい |
+| `a == b` | `==`       | aとbが等しい         |
+| `a != b` | `!=`       | aがbが等しくない     |
 
-  - 厳密には論理演算の一種．
+### 計算結果（式が返す値）
 
-### 条件式（比較演算子）
+条件を満たしたとき，式の結果は真(true)となり，そうでなければ偽(false)となる．
 
-以下の条件を満たしたとき，式の結果は真(true)となり，
-そうでなければ偽(false)となる．
+### 例1
 
-| 条件式   | 演算子 | 条件             |
-| -------- | ------ | ---------------- |
-| `a < b`  | `<`    | aがbより小さい   |
-| `a <= b` | `<=`   | aがb以下         |
-| `a > b`  | `>`    | aがbより大きい   |
-| `a == b` | `==`   | aとbが等しい     |
-| `a != b` | `!=`   | aがbが等しくない |
+条件式の計算結果を`print()`する例
 
-### 条件式（論理演算子）
+```java
+int iA = 100;		// 変数iAに100を代入
 
-基本的には比較演算式による条件式を組み合わせ，より複雑な条件を課す場合に用いる．
-以下の条件を満たしたとき，式の結果は真(true)となり，
-そうでなければ偽(false)となる．
+print( iA > 200 );	// 条件式の結果をそのままprint()
+```
 
-| 条件式               | 演算子 | 条件                             |
-| -------------------- | ------ | -------------------------------- |
-| `条件式A && 条件式B` | `&&`   | 条件式Aが真，なおかつ条件式Bが真 |
-| `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真 |
+![flow_condition_print](images/flow/flow_condition_print.png)
+
+### 例2
+
+算術式と組み合わせた例．
+変数iAが**偶数**ならtrue，**奇数**ならfalseの計算結果を`print()`する．
+
+```java
+int iA = 100;		// 変数iAに値を代入
+
+print( iA%2 == 0 );	// 条件式の結果をそのままprint()
+```
+
+![flow_condition_print_true](images/flow/flow_condition_print_true.png)
+
+#### 処理の順序
+
+![flow_condition_jouyozan](images/flow/flow_condition_jouyozan.png)
+
+### 例3
+
+変数の初期値に乱数を代入した例．
+変数`iRandom`が**3の倍数**ならtrue，そうでないならfalseの計算結果を`print()`する．
+
+```java
+int iRandom = floor( random(100) );	// 0~100の整数（小数点以下切り捨て）
+
+println( iRandom + " wa 3 no baisuu?" );
+print( iRandom%3 == 0 );  // 条件式の結果をそのままprint()
+```
+
+![flow_condition_random_3baisuu](images/flow/flow_condition_random_3baisuu.png)
+
+
+
+### 演習1
+
+`int`型の変数に乱数（0~100）を代入し，偶数ならtrue，奇数ならfalseの計算結果をコンソール出力する．
+
+- 変数名は自由．
+- 時間は3分程度
+
+![flow_condition_random_even](images/flow/flow_condition_random_even.png)
+
+
+
+## 条件分岐
+
+![if_flow](images/if_switch/if_flow.png)
+
+- フローチャートの判断のパーツと同等の処理を行う．
+- ある条件（**条件式**）に基づき，<u>実行する命令を選択</u>し，プログラムの流れを分岐させる．
+- ある状況下における変数の値に応じ，様々なふるまいが表現できる．
+- 条件分岐には以下の種類がある．
+  - if文
+  - if-else文
+
+### if文
+
+- 下図のようなフローチャートにおける最もシンプルな分岐をプログラムで表現できる．
+
+![if_flow_02](images/if_switch/if_flow_02.png)
+
+#### 構文
+
+```java
+if( 条件式 )	//  [条件]
+{
+  // ブロック文 　[処理]
+  // 条件式が真(true)の場合に実行する(命令)文をこの中に記述する．
+  // 2文字文インデント．（文の開始位置が右に2文字分ずれている）
+}
+```
+
+- 条件式の結果が真(true)である場合，ブロック文の命令を実行する．
+- 条件式の結果が偽(false)である場合，ブロック文の命令は実行されず，<u>ブロック文の次の文まで処理がスキップ</u>される．
+- `if(  )`の行には行末にセミコロン「`;`」が不要であることに注意．
+
+##### ブロック文
+
+- `{  }`で囲まれた，複数の文をまとめた部分のこと．
+- if文において，条件式の結果が真(true)である場合に実行される命令をこの中に記述する．
+  - `if( )`の直後に記述する必要がる．
+- ブロック文の中に記述する文は，**インデント**（字下げ）を行うこと．
+  - 可読性のため，他のプログラム言語においても基本的な守りごと．
+  - Processingの標準では半角2文字分．
+    - 実は明確には決まっていない．
+  - Processingがある程度自動的に行ってくれる．
+    - 手動で行う場合は，Tabキー．
+
+![flow_if_indent](images/flow/flow_if_indent.png)
+
+#### 処理の流れ
+
+##### 条件式の結果が真(true)の場合
+
+![flow_if_flow_true](images/flow/flow_if_flow_true.png)
+
+##### 条件式の結果が偽(false)の場合
+
+![flow_if_flow_false](images/flow/flow_if_flow_false.png)
+
+#### 例1
+
+乱数を使った例．
+変数`iRandom`が50以上なら`print()`する．
+
+```java
+int iRandom = floor( random(100) );  // 0~100の乱数
+
+print( iRandom );
+
+if( iRandom >= 50 )
+{
+  println( " wa 50 ijou" );
+}
+```
+
+![flow_if_50ijou](images/flow/flow_if_50ijou.png)
+
+#### 例2
+
+if文を二つ使った例．
+変数iRandomが偶数ならYesを，奇数ならNoを`print()`する．
+
+```java
+int iRandom = floor( random(100) );
+
+println( iRandom + " wa even?" );
+
+if( iRandom%2 == 0 )	// iRandomを2で割った余りが0だったら[条件式]
+{
+  println( "Yes" );
+}
+
+if( iRandom%2 == 1 )	// iRandomを2で割った余りが1だったら[条件式]
+{
+  println( "No" );
+}
+```
+
+![flow_if_random_even](images/flow/flow_if_random_even.png)
+
+##### 処理の順序
+
+![flow_if_random_even_flow](images/flow/flow_if_random_even_flow.png)
+
+#### 演習2
+
+`int`型の変数に乱数（0~100）を代入し，3の倍数ならYesをコンソール出力する．
+
+- 変数名は自由．
+- 時間は3分程度
+
+![flow_if_random_3baisuu](images/flow/flow_if_random_3baisuu.png)
+
+
+
+### if-else文
+
+- if文に対し，<u>条件を満たさなかった場合にも</u>特定の処理を行わせる．
+- 下図のようなフローチャートにおける，二つの処理への分岐をプログラムで表現できる．
+  - 処理Aか処理Bのどちらかが必ず実行される．
+
+![if_else_flow](images/if_switch/if_else_flow.png)
+
+#### 構文
+
+```java
+if( 条件式 )
+{
+  // ブロック文
+  // 条件式が真(true)の場合に実行する(命令)文をこの中に記述する．
+}
+else
+{
+  // ブロック文
+  // 条件式が偽(false)の場合に実行する(命令)文をこの中に記述する．
+}
+```
+
+- `else` の後ろに二つ目のブロック文が追加される．
+  - このブロックに条件式が偽(false)の場合に実行する(命令)文を記述する．
+- `else{}`の部分は必ず`if(){}`とセットで記述すること．
+
+#### 処理の流れ
+
+if文においては，<u>いずれか１つのブロック文のみを実行</u>し，その後ブロック文の次の文へ処理が移行する．
+（２つ以上のブロックを実行することはない．）
+
+##### 条件式の結果が真(true)の場合
+
+![flow_if_else_flow_true](images/flow/flow_if_else_flow_true.png)
+
+##### 条件式の結果が偽(false)の場合
+
+![flow_if_else_flow_false](images/flow/flow_if_else_flow_false.png)
+
+#### 例
+
+if文の例2を改良した例．
+変数`iRandom`が偶数ならYesを，奇数ならNoを`print()`する．
+こちらの記述がより正しい．
+
+```java
+int iRandom = floor( random(100) );
+
+println( iRandom + " wa even?" );
+
+if( iRandom%2 == 0 )	// iRandomを2で割った余りが0だったら[条件式]
+{
+  println( "Yes" );
+}
+else
+{
+  println( "No" );
+}
+```
+
+![flow_if_random_even](images/flow/flow_if_random_even.png)
+
+#### 演習3
+
+`int`型の変数に乱数（0~100）を代入し，3の倍数ならYesを，そうでないならNoをコンソール出力する．
+
+- 変数名は自由．
+- 時間は3分程度
+
+![flow_if_else_random_3baisuu](images/flow/flow_if_else_random_3baisuu.png)
+
+
+
+#### else if
+
+- 一つ目の条件を満たさなかった場合にも，二つ目以降の条件を課し，それを満たした場合特定の処理を行わせる．
+- `else if`は**複数加えることができ，細かく条件を加えて分岐させることができる**．
+  - むやみに増やしすぎるのは推奨しない．
+- 下図フローチャートのような分岐をプログラムで表現できる．
+
+![if_else_if_flow](images/if_switch/if_else_if_flow.png)
+
+##### 構文
+
+```java
+if( 条件式A )	// [条件A]
+{
+  // ブロック文A
+  // 条件Aを満たした場合実行する(命令)文; [処理A]
+}
+else if( 条件式B )	// [条件B]
+{
+  // ブロック文B
+  // 条件Bを満たした場合実行する(命令)文; [処理B]
+}
+```
+
+- 条件式Aの結果が真(true)である場合，ブロック文Aの命令を実行する．
+- 条件式Bの結果が真(true)である場合，ブロック文Bの命令を実行する．
+- どちらの条件式の結果も偽(false)である場合，<u>ブロック文の次の文まで処理がスキップ</u>される．
+
+##### 処理の流れ
+
+`else if` においても，<u>実行するブロック文は一つ以下</u>であることに注意．
+
+###### １つ目の条件式の結果が真(true)の場合
+
+![flow_if_if_else_flow_true](images/flow/flow_if_if_else_flow_true.png)
 
 ------
 
+###### １つ目の条件式の結果が偽(false)の場合
 
+![flow_if_if_else_flow_false](images/flow/flow_if_if_else_flow_false.png)
 
-## 繰り返し
+以下，２つ目の条件の評価へ続く．
 
-### できること
+###### 2つ目の条件式の結果が真(true)の場合
 
-- 大量の図形を描画する
+![flow_if_if_else_flow_false_true](images/flow/flow_if_if_else_flow_false_true.png)
+
+###### 2つ目の条件式の結果が偽(false)の場合
+
+![flow_if_if_else_flow_false_false](images/flow/flow_if_if_else_flow_false_false.png)
+
+##### 例1
+
+変数`iRandom`が3の倍数もしくは偶数の場合に`print()`する例．
 
 ```java
-size(400, 400);
-for(int iIdx=0; iIdx<400; iIdx++)
+int iRandom = floor( random(100) );
+
+print( iRandom );
+
+if( iRandom % 3 == 0)
 {
-  circle( random(width), random(height), 20 );
+  println( " wa 3 no baisuu" );
+}
+else if( iRandom % 2 == 0 )
+{
+  println( " wa even" );
 }
 ```
 
-<img src="images/loop/merit_01.png" alt="merit_01" style="zoom:80%;" />
+![flow_if_if_else_3baisuu_even](images/flow/flow_if_if_else_3baisuu_even.png)
 
-- 大量のプロパティ(座標，サイズ，色など)を変更する
+##### 例2
+
+`else if` を複数用いた例．
+変数`iRandom`が80以上もしくは60以上，40以上，20以上の場合に`print()`する．
 
 ```java
-size(400, 400);
-for(int iIdx=0; iIdx<400; iIdx++)
+int iRandom = floor( random(100) );
+
+print( iRandom );
+
+if( iRandom >= 80 )
 {
-  fill( 170 + random(80), 100 + random(50), 200 );
-  circle( random(width), random(height), 10 + random(15) );
+  println( " wa 80 ijou " );
+}
+else if( iRandom >= 60 )
+{
+  println( " wa 60 ijou" );
+}
+else if( iRandom >= 40 )
+{
+  println( " wa 40 ijou" );
+}
+else if( iRandom >= 20 )
+{
+  println( " wa 20 ijou" );
 }
 ```
 
-<img src="images/loop/merit_02.png" alt="merit_02" style="zoom:80%;" />
+![flow_if_if_else_80_20](images/flow/flow_if_if_else_80_20.png)
 
-### for文
+#### 演習4
 
-- 英語の前置詞for（〜の間）から由来．
-- **指定した/回数**分．処理を繰り返す．
-- あらかじめ繰り返す回数が決まっている場合に便利．
+`int`型の変数に乱数（0~100）を代入し，3の倍数もしくは4の倍数の場合にコンソール出力する．
 
-#### 書式
+- 変数名は自由．
+- 時間は3分程度
+
+![flow_if_if_else_3baisuu_4baisuu](images/flow/flow_if_if_else_3baisuu_4baisuu.png)
+
+
+
+#### else if else
+
+- 一見ややこしいが，`else if`の最後に`else`を加え，全ての条件を満たさなかった場合にも特定の処理を行わせる方式． 
+
+
+![if_else_if_else_flow](images/if_switch/if_else_if_else_flow.png)
+
+##### 構文
+
+`else if` と違い，`else`は一つのみ．
 
 ```java
-for( 繰り返し用変数の宣言・初期化; 繰り返し条件式; 繰り返し用変数の更新式 )	 //セミコロン(；)無し
+if( 条件式 )	// [条件A]
 {
-  (命令)文（複数書いてよい）;	// ←ここが繰り返される
-  // インデント(字下げ)はエディタが自動で行ってくれる． 手動で行う場合はTabキーを使う．
+  // 条件Aを満たした場合実行する(命令)文; [処理A]
+  // for文の時と同様，インデントする．
+}
+else if( 条件式 )	// [条件B]
+{
+  // 条件Bを満たした場合実行する(命令)文; [処理B]
+  // for文の時と同様，インデントする．
+}
+else
+{
+  // 条件を満たさなかった場合実行する(命令)文;   [処理C]
+}
+```
+
+##### 処理の流れ
+
+「条件式の評価→該当するブロック文の実行」という大きな流れを理解しておくとよい．
+
+![flow_if_if_else_else_flow](images/flow/flow_if_if_else_else_flow.png)
+
+##### 例1
+
+変数`iRandom`が3の倍数もしくは4の倍数の時に`baisuu`，
+それ以外の場合に`sonota`を`print()`する例．
+
+```java
+int iRandom = floor( random(100) );
+
+print( iRandom );
+
+if( iRandom % 3 == 0 )
+{
+  println( " wa 3 no baisuu" );
+}
+else if( iRandom % 4 == 0 )
+{
+  println( " wa 4 no baisuu" );
+}
+else
+{
+  println( " wa sonota" );
+}
+```
+
+![flow_if_if_else_else_3_4baisuu](images/flow/flow_if_if_else_else_3_4baisuu.png)
+
+##### 例2
+
+`else if` を複数用いた例．
+変数`iRandom`が80以上もしくは60以上，40以上，20以上の場合に`ijou`，
+それ以外の場合に`20 miman`を`print()`する．
+
+```java
+int iRandom = floor( random(100) );
+
+print( iRandom );
+
+if( iRandom >= 80 )
+{
+  println( " wa 80 ijou " );
+}
+else if( iRandom >= 60 )
+{
+  println( " wa 60 ijou" );
+}
+else if( iRandom >= 40 )
+{
+  println( " wa 40 ijou" );
+}
+else if( iRandom >= 20 )
+{
+  println( " wa 20 ijou" );
+}
+else
+{
+	println( " wa 20 miman" ); 
+}
+```
+
+![flow_if_if_else_else_80_20](images/flow/flow_if_if_else_else_80_20.png)
+
+#### 演習5
+
+`int`型の変数に乱数（0~100）を代入し，3の倍数もしくは4の倍数，5の倍数の時に`baisuu`，
+それ以外の場合に`sonota`をコンソール出力する．
+
+- 変数名は自由．
+- 時間は3分程度．
+
+![flow_if_if_else_else_3_4_5](images/flow/flow_if_if_else_else_3_4_5.png)
+
+
+
+### switch文
+
+- Switch文は分岐の判断に**変数や式**を用いる．
+  - 条件式を用いない．
+- 変数や式の返す値を読み取り，その値と等しい**ラベル**の箇所の処理が行われる．
+  - if文の`else if`とほぼ同様の役割を果たすが，こちらのほうがより適している場合もある．
+- <u>if-else文で代用可能</u>であるので，本授業では無理に使う必要はない．
+  - 活用できる者は活用してもよい．
+
+![switch_flow](images/if_switch/switch_flow.png)
+
+#### 構文
+
+- ラベル`case 値;`は`else if`とほぼ同様の役割を果たし，**複数記述可能**．
+  - ラベルの中は**二段階インデント**される．
+- `default:`は`else`とほぼ同様の役割を果たし，記述は任意．
+
+```java
+switch( 変数or式 )
+{
+  case 値A:
+    // 値が値Aと等しい場合，実行する(命令)文をここに記述する． [処理A]
+    break;
+  case 値B:
+    // 値が値Bと等しい場合，実行する(命令)文をここに記述する． [処理B]
+    break;
+  default:
+    // 値が全てのラベルの値と等しくなかった場合，実行する(命令)文をここに記述する． [処理C]
 }
 ```
 
 #### 処理の流れ
 
+1. 変数or式の返す値と等しいラベルを検索
+
+   ![flow_switch_flow_01](images/flow/flow_switch_flow_01.png)
+
+2. 該当するラベルの位置に記述されている処理を，`break;`の文の位置まで実行する．
+   下図の例では，青枠で囲まれた命令文の<u>いずれか一つ</u>が実行される．
+
+   ![flow_switch_flow_02](images/flow/flow_switch_flow_02.png)
+
+3. いずれかのラベル位置の処理が終了したら，ブロック文の次の文へ処理を移行する．
+
+   ![flow_switch_flow_03](images/flow/flow_switch_flow_03.png)
+
+#### 例
+
+4色が交互に出現するストライプの描画．
+
 ```java
-// 点をランダムに100個打つ
-for(int iPointIdx=0; iPointIdx<400; iPointIdx++)
+int iLineWeight = 8;  // 一本の縦線の太さ.
+size(400,200);
+strokeWeight( iLineWeight );
+for( int iLineIdx=0; iLineIdx < 50; iLineIdx++ )  // 50本の線を繰り返し描画.
 {
-  point( random(100), random(100) );
+  // 線番号を4で割った余り(剰余)(0~3)
+  // 余りが0~3のどれであるかによって処理を変更する．
+  switch( iLineIdx%4 )
+  {
+    case 0:
+      stroke( 235, 50, 50 );      // R
+      break;
+    case 1:
+      stroke( 50, 235, 50 );      // G
+      break;
+    case 2:
+      stroke( 50, 50, 235 );      // b
+      break;
+    case 3:
+      stroke( 235, 235, 235 );  // White
+      break;
+    default:
+  }
+  line( iLineIdx*iLineWeight, 0, iLineIdx*iLineWeight, height );
 }
 ```
 
-<img src="images/loop/point_random.png" alt="point_random" style="zoom:100%;" />
+![switch_sample](images/if_switch/switch_sample.png)
 
-1. 繰り返し用変数の宣言と初期化．
+
+
+## 繰り返し
+
+### for文
+
+- 英語の前置詞for（〜の間）から由来．
+- **特定の回数**分．処理を繰り返す．
+  - 厳密には，回数を指定するわけではない．
+
+- あらかじめ繰り返す回数が決まっている場合に便利．
+
+#### 構文
 
 ```java
-int iPointIdx=0;
+for( 繰り返し用変数の宣言; 条件式; 変数の更新式 )
+{
+  // 繰り返し実行する(命令)文．
+}
 ```
 
-2. 繰り返し条件式の評価（計算）.
+- for文は<u>繰り返し用の変数</u>を一つ使用する．「変数の宣言」で宣言と同時に初期値も代入する．
+- 「条件式」で繰り返しを継続する条件式を記述する．
+  - 条件式の結果が<u>真である場合</u>に繰り返しが継続される．
+  - 前述の変数を組み込む．
+  - 例：「変数の値が100以下」「変数の値が400以下」など．
+- 「変数の更新式」<u>で繰り返しが一回行われる毎に変数の値を変化させる</u>式を記述する．
+
+#### 例
+
+変数の値をコンソール出力する処理を10回繰り返すfor文
 
 ```java
-iPointIdx<400	// 変数iPointIdxの値が400未満か
+for( int iIdx = 0; iIdx < 10; iIdx++ )
+{
+  print( iIdx + ", " );
+}
 ```
 
-	結果が '真' なら，手順3へ.結果が '偽' なら，**繰り返し終了**し，{}の次の行に処理を移す.
+![flow_for_console_10count](images/flow/flow_for_console_10count.png)
 
-3. `{}`内の(命令)文を実行.
+- f繰り返し用変数は`int`型の変数名`iIdx`を宣言．初期値0を代入.
+  - 変数名の`iIdx`は`int`型の頭文字「i」 + 英語の「Index」の短縮「Idx」
+
+- 条件式は「`iIdx`の値が10未満」．
+  - 変数の値は0から始まるので，10回繰り返すために「未満」としている．
+- 変数の更新式は繰り返しが一回行われる毎に「変数`iIdx`に1を加える」．
+  - `++`はインクリメント演算子．変数の値に1を加える．
+
+##### 処理の流れ
+
+1. 変数の宣言
+
+  ![flow_for_console_10count_flow_01](images/flow/flow_for_console_10count_flow_01.png)
+
+2. ブロック文の処理
+
+  ![flow_for_console_10count_flow_02](images/flow/flow_for_console_10count_flow_02.png)
+
+3. 変数の更新式
+
+   この更新式で`iIdx`に1が加えられる．
+
+  ![flow_for_console_10count_flow_03](images/flow/flow_for_console_10count_flow_03.png)
+
+4. 条件式の評価
+
+  ![flow_for_console_10count_flow_04](images/flow/flow_for_console_10count_flow_04.png)
+
+5. 条件式の結果によって分岐
+
+  ![flow_for_console_10count_flow_05](images/flow/flow_for_console_10count_flow_05.png)
+
+   - trueの場合はステップ2.に戻る．
+   - falseの場合はブロック文の次の文へ処理を移行．
+
+
+
+#### 演習6
+
+（for文用の）変数の値をコンソール出力する処理を<u>100回</u>繰り返すfor文を書いてみましょう．
+
+- ゼロから書くのが難しい方は例1のコードをコピーし，変更を加えて仕上げましょう．
+- 演習時間4分程度．
+
+![flow_for_console_100count](images/flow/flow_for_console_100count.png)
+
+
+
+### for文を使った描画
+
+#### 乱数を使った繰り返し
+
+##### 例1
+
+点をランダムな位置に400個描画する．
+
+- ランダムな位置
+  - 乱数`random()`にウィンドウのサイズ：縦400横400を渡すことで，<u>ウィンドウ内に収まる座標値の乱数</u>を取得している．
 
 ```java
-point( random(100), random(100) );
-```
-
-4.  繰り返し用変数の更新
-
-```java
-iPointIdx++		// 変数iPointIdxの値をインクリメント(1を足す)
-```
-
-手順2へ戻る.
-
-##### 処理の流れまとめ
-
-![loop_steps](images/loop/loop_steps.png)
-
-#### 星空のような図の描画
-
-前述の点を打つプログラムを加工して星空を描いてみましょう．
-ゼロから書くのが難しい場合，以下のサンプルをアレンジしてみましょう．
-
-- 星の数を増やす.
-- 色や明るさを変える
-
-```java
-size( 400, 400);
-background( 0, 10, 20 );  // 背景.
+size( 400, 400 );
 for(int iPointIdx=0; iPointIdx<400; iPointIdx++)
 {
-  stroke( 255, 255, 255 );
   point( random(400), random(400) );
 }
 ```
 
-<img src="images/loop/hoshizora_simple.png" alt="hoshizora_simple" style="zoom:100%;" />
+![flow_for_400dots](images/flow/flow_for_400dots.png)
 
-### 星空のような図の描画（point()の代わりにcircle()を使用）
+##### 例2
+
+位置，大きさ，色がランダムな円400個描画する例．
+
+- ランダムな大きさ，色
+  - 塗り色指定`fill()`において，<u>170~250，100~150の乱数</u>を指定している．
+  - 円描画`circle()`において，円の大きさとして<u>10~25の乱数</u>を指定している．
+- ランダムな位置
+  - 乱数`random()`にシステム変数`width`, `height`を渡すことで，<u>ウィンドウ内に収まる座標値の乱数</u>を取得している．
 
 ```java
-// 星空のような図の描画（point()の代わりにcircle()を使用）
-size(400, 400);colorMode( HSB, 360, 1.0, 1.0, 1.0 ); // HSBA
+size(400, 400);
+for(int iCircleIdx=0; iCircleIdx<400; iCircleIdx++)
+{
+  fill( random(170,250), random(100,150), 200 );
+  circle( random(width), random(height), random(10,25) );
+}
+```
+
+<img src="images/loop/merit_02.png" alt="merit_02" style="zoom:80%;" />
+
+##### 演習7
+
+星空のような図の描画
+
+<img src="images/loop/hoshizora_simple.png" alt="hoshizora_simple" style="zoom:100%;" />
+
+- 前述の例1~2のいずれかのプログラムを加工して自分なりの星空を描いてみましょう．
+
+  - 例3のプログラムのほうが多少難易度が高い．
+  - 星の大きさを変えたい場合は例3を
+
+- 条件
+
+  - 背景色を暗くする．
+    - `background()`で背景色を指定する．
+  - 点の色を明るくする．
+    - `point()`の場合は`stroke()`で色を指定する．
+
+- 余裕があれば
+
+  - 点の数を増やす.
+
+  - 点の色や明るさをランダムに変える．
+
+- 演習時間6分程．
+
+  
+
+##### 例3
+
+演習7の星空のような図の描画の作例．
+
+- 表現としてより手を加えたもの．
+  - 不要な線を非表示，色やアルファ，大きさの細やかな調整．
+
+- カラーモードHSBを使用．
+- 変数名をより具体的な名前に変更．
+
+```java
+size(400, 400);
+colorMode( HSB, 360, 1.0, 1.0, 1.0 ); // HSBA
 background( 220, 0.1, 0.1 );          // 背景色
 noStroke();                           // 線無し
 for(int iStarIdx=0; iStarIdx<400; iStarIdx++)     // 400回繰り返す.
@@ -4455,40 +5043,98 @@ for(int iStarIdx=0; iStarIdx<400; iStarIdx++)     // 400回繰り返す.
 
 <img src="images/loop/hoshizora.png" alt="hoshizora" style="zoom:100%;" />
 
-### for中における変数の使用
 
-繰り返し用変数は{}の中でも使うことができる．
+
+#### X座標値0~ウィンドウ幅まで繰り返す
+
+##### 例1
+
+繰り返し用変数`iX`を座標値として使用し，100個の点描画行った例．
+
+- グラデーション
+  - 前準備として，`colorMode()`によってRGB値の最大値を100へ設定．
+  - `stroke()`における点描画のRGB値として変数`iX`の値を使用する．
+    - 繰り返し回数が増える（`iX`の値が大きくなる）ほど白色に近づく．
+- 点の座標値
+  - 変数`iX`にX座標の0~スクリーン端の座標値を(昇順で)代入しながら繰り返す．
+  - 描画を行う点のX，Y座標値として変数`iX`の値を使用する．
+    - 繰り返し回数が増える（`iX`の値が大きくなる）ほどウィンドウ右下へ移動する．
 
 ```java
-// グラデーションの対角線を描画.
-colorMode(RGB, 100);
-for(int iX=0; iX<100; iX++)
+colorMode(RGB, 100);		// RGB値の最大値を100に設定．
+for(int iX=0; iX<100; iX++) // 繰り返し用変数:iX
 {
-  stroke(iX, iX, iX);
-  point(iX, iX);
+  stroke(iX);						// iXの値をグレースケール値として使用．
+  point(iX, iX);				// iXの値をそのままY座標値としても使用．
 }
 ```
 
 <img src="images/loop/var_in_loop.png" alt="var_in_loop" style="zoom:100%;" />
 
-### for()の様々な書き方
+##### 例2
+
+例4をシステム変数`width`,`height`を用い，ウィンドウを可変にした例．
+
+- 例4の100の値の代わりにシステム変数`width`を用いる．
+  - `colorMode()`のRGB値の最大値を`width`へ設定．
+  - 条件式が`iX<width`という記述になる．
+- ウィンドウサイズを変更しても描画が崩れない．
 
 ```java
-// iXにX座標の0~スクリーン端の座標値を(昇順で)代入しながら繰り返す
-
-for( int iX=0; iX<width; iX++ )
+size( 200, 200 );				// ウィンドウサイズ指定．
+colorMode(RGB, width);  // RGB値の最大値をウィンドウ幅の値に設定．
+for(int iX=0; iX<width; iX++) // 繰り返し用変数:iX
 {
-  //（命令）文;
+  stroke(iX);   				// iXの値をグレースケール値として使用．
+  point(iX, iX);        // iXの値をそのままY座標値としても使用．
 }
 ```
+
+![flow_for_naname_line_width](images/flow/flow_for_naname_line_width.png)
+
+#### Y座標値0~ウィンドウ高まで繰り返す
+
+##### 例1
+
+繰り返し用変数`iY`を座標値として使用し，ウィンドウ上部から下部まで水平線を繰り返し描画した例．
+
 ```java
-// iYにY座標の0~スクリーン端の座標値を(昇順で)代入しながら繰り返す
+size( 100, 200 );
+colorMode(RGB, height);  // RGB値の最大値をウィンドウ高の値に設定．
 
-for( int iY=0; iY<height; iY++ )
+for( int iY=0; iY<height; iY++ ) // 繰り返し用変数:iY(0~height)
 {
-  //（命令）文;
+  stroke( iY );   							 // iYの値をグレースケール値として使用．
+  line( 0, iY, width, iY );			 // 水平線の描画．Y座標値は変数iYの値．
 }
 ```
+
+![flow_for_Yloop_lines](images/flow/flow_for_Yloop_lines.png)
+
+##### 例2
+
+例6を，線の間隔が<u>5ピクセル</u>になるよう変更した例．
+
+- 「変数の更新式」に変更を加えるだけでよい．
+  - `iY += 5`：代入演算子を使った算術式
+    - 変数`iY`に5を加える
+
+```java
+size( 100, 200 );
+colorMode(RGB, height);  // RGB値の最大値をウィンドウ高の値に設定．
+
+for( int iY=0; iY<height; iY+=5 )
+{
+  stroke( iY );
+  line( 0, iY, width, iY );
+}
+```
+
+![flow_for_Yloop_lines_interval](images/flow/flow_for_Yloop_lines_interval.png)
+
+#### 降順で繰り返す
+
+下のコードのように書くことで，これまでの昇順と逆順である降順で繰り返すことも可能．
 
 ```java
 // iXにX座標のスクリーン端~0座標値を(降順で)代入しながら繰り返す
@@ -4498,6 +5144,7 @@ for( int iX=width-1; iX>=0; iX-- )
   //（命令）文;
 }
 ```
+
 ```java
 // iYにY座標のスクリーン端~0の座標値を(降順で)代入しながら繰り返す
 
@@ -4507,57 +5154,34 @@ for( int iY=height-1; iY>=0; iY-- )
 }
 ```
 
-### forのネスティング
+#### 演習8
 
-- forの中で，さらにforを使うことができる．
-- これは何段階でも使用でき，増やすたびに次元が増えるイメージ．
-  →2つのforで二次元的な表現に向く
+下図のような縦線の繰り返しを描画するプログラムを書いてみましょう．
 
-```java
-// グラデーションのカラーチャート(矩形)
-size(200, 200);
-colorMode(HSB, 100);
-background(99);
-for(int iSatIdx=0; iSatIdx<10; iSatIdx++)        // 彩度(Y軸方向)
-{
-  for(int iHueIdx=0; iHueIdx<10; iHueIdx++)      // 色相(X軸方向)
-  {
-    fill( iHueIdx*10, 10+iSatIdx*10, 99 );
-    rect( iHueIdx*20, iSatIdx*20, 10, 10 );
-  }
-}
-```
+- 3分程度
 
-<img src="images/loop/nesting.png" alt="nesting" style="zoom:100%;" />
-
-```java
-// グラデーションのカラーチャート(ドット)
-size(200,200);
-noStroke();
-colorMode(HSB, 200); // カラーモード:HSB, 各値の最大値200
-for ( int iY = 0; iY < height; iY++ )    // 彩度(Y軸方向)
-{
-  for ( int iX = 0; iX < width; iX++ ) // 色相(X軸方向)
-  {
-    stroke( iX, iY, 200);
-    point( iX, iY);
-  }
-}
-```
-
-<img src="images/loop/nesting_xy.png" alt="nesting_xy" style="zoom:100%;" />
+![flow_for_border](images/flow/flow_for_border.png)
 
 ### while文
 
 - 英語の接続詞while（〜の間ずっと）から由来．
 
-- 指定した条件満たす限り，処理を繰り返す．
-- 何かの数を数え上げる場合などに便利．
+- <u>指定した条件を満たす限り</u>，処理を繰り返す．
+  - 特に繰り返す回数が決まっていない場合などに有効．
 
-#### 書式
+- 何かの数を数え上げる場合などにも便利．
+- **本授業では基本的にforを使うことを推奨**
+  - 適切に終了条件を設定しなければ無限ループに陥る可能性がある．
+  - `while()`でなければできない表現がほぼ無い．
+
+
+#### 構文
 
 ```java
-while (繰り返し条件式){	繰り返したい命令;}
+while( 繰り返し条件式 )
+{
+  // 繰り返したい命令;
+}
 ```
 
 #### 例
@@ -4575,11 +5199,379 @@ print( "描画した矩形の数は" + iCount + "個" );
 // コンソール表示：描画した矩形の数は10個
 ```
 
-**本授業では基本的にforを使うことを推奨**
 
-### 繰り返しによる表現
 
-***
+## ブロック文のネスト
+
+### ネストとは
+
+- ブロック文の中にさらに<u>ブロック文が入れ子状に記述されている</u>構造をネストという．
+- if文やfor文のブロック文を混ぜてネストを構成することもできる．
+- 入れ子の階層が１段階深くなるたびに，インデントが必要．
+
+###  if-else のネストの例
+
+- `else if` を単純に追加するだけでは難しい処理も，ネストにすることで容易に行える場合がある．
+
+![if_nest_flow](images/if_switch/if_nest_flow.png)
+
+上記のフローチャートをコード化したものが下のプログラム．
+
+```java
+if( 条件式 )	//   [条件A]
+{
+  // 条件Aを満たした場合,このブロックへ処理が移る．
+  if( 条件式 )	// [条件B]
+  {
+    // 条件Bを満たした場合，実行する(命令)文;       [処理A]
+    // 二段階インデントされる．
+  }
+  else
+  {
+    // 条件Bを満たさなかった場合，実行する(命令)文;  [処理B]
+  }
+}
+else
+{    // 条件Aを満たさなかった場合,このブロックへ処理が移る．
+  if( 条件式 )	// [条件C]
+  {
+    // 条件Cを満たした場合，実行する(命令)文;       [処理C]
+  }
+  else
+  {
+    // 条件Cを満たさなかった場合，実行する(命令)文;  [処理D] 
+  }
+}
+```
+
+
+
+### for文の中にif文を入れたネストの例
+
+#### 例1
+
+一定の領域にのみランダムで点を描画する例．
+
+- if文はもちろんfor文の中に記述することができる．
+- その場合，さらにインデントを追加する必要がある．
+
+```java
+// スクリーンの一定範囲にだけランダムドットを打つ．
+size(400,200);
+for( int iPointIdx=0; iPointIdx < 3000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+  if( fX + fY < 300 )  // もしX値とY値の合計が300以下なら.
+  {
+    point( fX,fY );
+  }
+}
+```
+
+![if_sample](images/if_switch/if_sample.png)
+
+#### 例2
+
+4つの領域へのランダム点描の例．
+for文とif-else文のネストを使っている．
+
+```java
+size(400,200);
+for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+  if( fX < 100 )
+  {
+    stroke( 255,0, 0 ); 	//R
+  }
+  else if( fX < 200 )
+  {
+    stroke( 0,255, 0 );  	//G
+  }
+  else if( fX < 300 )
+  {
+    stroke( 0,0, 255 );  	//B
+  }
+  else
+  {
+    stroke( 255,255, 255 );	//White
+  }
+  point( fX,fY );
+}
+```
+
+![if_sample02](images/if_switch/if_sample02.png)
+
+#### 例3
+
+4つの領域へのランダム点描の例．(縦2×横2)
+for文と２重のif-else文のネストを使っている．
+
+```java
+size(300,300);
+for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
+{
+  float fX = random( width );  // Xのランダム値.
+  float fY = random( height ); // Yのランダム値.
+  if( fX < width/2 )
+  {
+    if( fY < height/2 )
+    {
+      stroke( 255,0, 0 );      //R
+    }
+    else
+    {
+      stroke( 0,255, 0 );      //G
+    }
+  }
+  else
+  {
+    if( fY < height/2 )
+    {
+      stroke( 0,0, 255 );      //B
+    }
+    else
+    {
+      stroke( 255,255, 255 );  //White
+    }
+  }
+  point( fX,fY );
+}
+```
+
+![if_nest](images/if_switch/if_nest.png)
+
+#### 例4
+
+if-else文を使った日の丸模様のランダム点描．
+
+- if-else文の条件式として，円の公式を用いた算術式を記述している．
+
+```java
+size(400,200);
+background( 0, 0, 0 );
+translate( width/2, height/2 );  // 原点をスクリーン中心に移動．
+for( int iPointIdx=0; iPointIdx < 5000; iPointIdx++ )
+{
+  float fX = random( -width/2,  width/2 );  // Xのランダム値( -width/2～width/2)
+  float fY = random( -height/2, height/2 ); // Yのランダム値( -height/2～height/2)
+  
+  // (X,Y)座標値が円の内部に有れば.  
+  if( pow(fX,2) + pow(fY,2) < pow(height/2,2) )   // 円の公式 Xの二乗 + yの二乗 = 半径の二乗  
+  {
+    stroke( 255,0, 0 );		// R
+  }
+  else	// 条件を満たさなかった場合．
+  {
+    stroke( 255,255, 255 );	// White
+  }
+  point( fX,fY );
+}
+```
+
+![if_else_flow_sample01](images/if_switch/if_else_flow_sample01.png)
+
+### for文の中にfor文を入れたネストの例
+
+- for文の中で，さらにfor文を使うこともできる．
+- これは何段階でも使用でき，増やすたびに次元が増えるイメージ．
+  →2つのforで二次元的な表現に向く
+
+#### 例1
+
+繰り返し変数`iX`と`iY`の値をコンソール出力する例．
+
+- コンソール出力の最初の一行目で変数`iX`の値のみが0~9まで増えている．
+  - ネストの内側の繰り返しが最初に一巡行われている．
+- コンソール出力の二行目で変数`iY`の値が1に増えている．
+  - ネストの内側の繰り返しが一巡すると，変数`iY`の値が1増える．
+
+```java
+for( int iY=0; iY<10; iY++ )							// ネストの外側の繰り返し変数:iY
+{
+  for( int iX=0; iX<10; iX++ )						// ネストの内側の繰り返し変数:iX
+  {
+    print( "X" + iX + "Y" + iY + ", " );
+  }
+  println("");														// 改行
+}
+```
+
+![flow_for_nest_xy_console](images/flow/flow_for_nest_xy_console.png)
+
+##### 処理の流れ
+
+1. 外側，内側のfor文の繰り返し用変数に初期値が代入される．
+   内側のブロック文が最初に実行される．
+
+![flow_for_nest_xy_flow_00](images/flow/flow_for_nest_xy_flow_00.png)
+
+![flow_for_nest_xy_console_00](images/flow/flow_for_nest_xy_console_00.png)
+
+2. 内側のfor文が一巡する．（１巡目）
+   コンソール出力のを見ると，変数`iX`値が1ずつ増えていることが確認できる．
+
+![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
+
+![flow_for_nest_xy_console_01](images/flow/flow_for_nest_xy_console_01.png)
+
+3. 内側のfor文が終了し，次の文でコンソール出力を改行する．
+
+![flow_for_nest_xy_flow_02](images/flow/flow_for_nest_xy_flow_02.png)
+
+4. 外側のfor文の変数の更新と条件式の評価が実行される．
+   変数`iY`が1に増える．
+
+![flow_for_nest_xy_flow_03](images/flow/flow_for_nest_xy_flow_03.png)
+
+5. 内側のfor文の繰り返し用変数に初期値が代入される．
+   内側のブロック文が実行される．（２巡目開始）
+   コンソール出力のを見ると，変数`iY`値が1に増えていることが確認できる．
+
+![flow_for_nest_xy_flow_04](images/flow/flow_for_nest_xy_flow_04.png)
+
+![flow_for_nest_xy_console_02](images/flow/flow_for_nest_xy_console_02.png)
+
+6. 内側のfor文が一巡する．（２巡目）
+
+![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
+
+![flow_for_nest_xy_console_03](images/flow/flow_for_nest_xy_console_03.png)
+
+以上のような処理を繰り返している．
+
+#### 演習9
+
+例1のプログラムをコピーして，以下のようにコンソール出力がされるよう<u>条件式を変更</u>してみましょう．
+
+- 演習時間2分程度
+
+![flow_for_nest_xy_console_practice](images/flow/flow_for_nest_xy_console_practice.png)
+
+#### 例2
+
+グラデーションのカラーチャート(矩形)
+
+- 内側のfor文でX座標値を20増やしながら一行分の矩形を描画している．
+- 外側のfor文でY座標値を20増やし，一段（次の行へ）下げている．
+
+```java
+size( 200, 200 );                        // ウィンドウサイズを200×200．
+colorMode( HSB, 200 );                   // HSB最大値を200に設定．
+background( 200 );
+
+for( int iY=0; iY<200; iY+=20 )        // Y座標値を20ずらしながら繰り返し．
+{
+  for( int iX=0; iX<200; iX+=20 )      // X座標値を20ずらしながら繰り返し．
+  {
+    fill( iX, iY, 200 );    // 色相をiX, 彩度をiY, 輝度を200に設定．
+    rect( iX, iY, 10, 10 ); // iX,iYの座標に10×10の大きさの矩形を描画．
+  }
+}
+```
+
+![flow_for_nest_rects_graduation](images/flow/flow_for_nest_rects_graduation.png)
+
+#### 例3
+
+グラデーションのカラーチャート(点描画)
+
+- 内側のfor文でX座標値を1増やしながら一行分の矩形を描画している．
+- 外側のfor文でY座標値を1増やし，一段（次の行へ）下げている．
+
+```java
+size(200,200);
+colorMode(HSB, 200); // カラーモード:HSB, 各値の最大値200
+for ( int iY = 0; iY < height; iY++ )  // Y座標値を1ずらしながら繰り返し．
+{
+  for ( int iX = 0; iX < width; iX++ ) // X座標値を1ずらしながら繰り返し．
+  {
+    stroke( iX, iY, 200 );    				 // 色相をiX, 彩度をiY, 輝度を200に設定．
+    point( iX, iY);										 // iX,iYの座標に点を描画．
+  }
+}
+```
+
+<img src="images/loop/nesting_xy.png" alt="nesting_xy" style="zoom:100%;" />
+
+
+
+
+
+## 条件式（論理演算）
+
+### 論理演算（ブーリアン演算）
+
+- <u>条件式を複数繋げ</u>，条件を重ねることで行う演算のこと．
+
+- 1つの条件式は真(true)か偽(false)のどちらかの結果をかえすので，これらを2つ以上用いて結果を得ることになる．
+
+
+- 論理演算を行うには，**論理演算子**を用いる．
+
+### 論理演算子
+
+- <u>比較演算式による条件式</u>と論理演算子を組み合わせ，<u>より複雑な条件</u>を課すことができる．
+- 下表の条件を満たしたとき，式の結果は真(true)となり，そうでなければ偽(false)となる．
+
+| 条件式               | 演算子 | 条件                             | ベン図                                                       | 演算       |
+| -------------------- | ------ | -------------------------------- | ------------------------------------------------------------ | ---------- |
+| `条件式A && 条件式B` | `&&`   | 条件式Aが真，かつ条件式Bが真     | <img src="images/flow/flow_boolean_and.png" alt="flow_boolean_and" style="zoom:80%;" /> | 論理積 AND |
+| `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真 | <img src="images/flow/flow_boolean_or.png" alt="flow_boolean_or" style="zoom:80%;" /> | 論理和 OR  |
+| `! 条件式`           | `!`    | 条件式が偽                       | <img src="images/flow/flow_boolean_not.png" alt="flow_boolean_not" style="zoom:80%;" /> | 否定 NOT   |
+
+### 例
+
+for文のネストと論理演算を使った，市松模様の描画
+
+- for文の中でif文を使うことで，緑の矩形の描画を行う条件を設定している．
+
+```java
+size(800,320);
+background(0);    // 背景色：黒
+noStroke();
+
+int iCellSize = 40;                  // セル(四角)の大きさ．
+int iColumnTotal = width/iCellSize;  // 列(横軸)の総数.
+int iRowTotal = height/iCellSize;    // 行(横軸)の総数.
+
+for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )  // 列（縦方向）の繰り返し
+{
+  for( int iRowIdx=0; iRowIdx < iRowTotal; iRowIdx++ )            // 行（横方向）の繰り返し
+  {
+    if( iColumnIdx%2 == 0 && iRowIdx%2 == 0 || // 列番号が偶数かつ行番号が偶数の時，もしくは，
+        iColumnIdx%2 == 1 && iRowIdx%2 == 1 )  // 列番号が奇数かつ行番号が奇数の時
+    {
+      fill(0, 124, 96);    // 緑
+      
+      // 行番号と列番号からXY座標値を算出する．
+      rect( iColumnIdx*iCellSize, iRowIdx*iCellSize, iCellSize, iCellSize );
+    }
+  }
+}
+```
+
+![flow_condition_boolean_ichimatsu](images/flow/flow_condition_boolean_ichimatsu.png)
+
+#### セルと番号の割り振り
+
+- 各矩形に<u>列番号</u>及び<u>行番号</u>を割り振り，以下の条件を満たしたときにのみ緑の矩形を描画する．
+  - 二つの番号がどちらとも偶数，もしくは，
+  - 二つの番号がどちらとも奇数．
+- 下のように，模様を表として考えると理解しやすくなる．
+
+![flow_condition_boolean_ichimatsu_graph](images/flow/flow_condition_boolean_ichimatsu_graph.png)
+
+
+
+## 繰り返し表現のサンプル
+
+- 繰り返しの分類毎に，シンプルなプログラムを以下に記載する．
+- プログラムの出発点として使用するのもよい．
+
+
 
 #### 反復
 
@@ -4759,7 +5751,7 @@ for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 
 ![synmetry_trl](images/loop/synmetry_trl.png)
 
-***
+
 
 ### その他，身近にある「繰り返し」を観察してみましょう
 
@@ -4776,676 +5768,6 @@ for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 <img src="images/loop/rep_kaidan.jpg" alt="rep_kaidan" style="zoom:100%;" />
 
 <img src="images/loop/rep_mansion.jpg" alt="rep_mansion" style="zoom:100%;" />
-
-------
-
-
-
-## 条件分岐
-
-フローチャートの判断のパーツと同等の処理を行う．
-ある条件に基づき，実行する命令を選択し，プログラムの流れを分岐させる．
-これを用いることで，現在の状況に応じ，様々なふるまいが表現できる．
-
-![if_flow](images/if_switch/if_flow.png)
-
-### if文
-
-#### if
-
-特定の条件を満たした場合，結果は真(True)となり，特定の（命令）文を実行する．
-満たさなかった場合，結果は偽(False)となり，命令は実行されない．
-for文と違い，繰り返しは起きない．
-条件として，基本的には**条件式**を用いる．
-
-![if_flow_02](images/if_switch/if_flow_02.png)
-
-##### 書式
-
-```java
-if( 条件式 ) // [条件]
-{
-  // 条件を満たした場合実行する(命令)文;			[処理]
-  // for文の時と同様，インデントする．
-}
-```
-
-##### 例
-
-if文はもちろんfor文の中に記述することができる．
-その場合，さらにインデントを追加する必要がある．
-
-```java
-// スクリーンの一定範囲にだけランダムドットを打つ．
-size(400,200);
-for( int iPointIdx=0; iPointIdx < 3000; iPointIdx++ )
-{
-  float fX = random( width );  // Xのランダム値.
-  float fY = random( height ); // Yのランダム値.
-  if( fX + fY < 300 )  // もしX値とY値の合計が300以下なら.
-  {
-    point( fX,fY );
-  }
-}
-```
-
-![if_sample](images/if_switch/if_sample.png)
-
-### よく使われる技術
-
-#### 剰余算
-
-※演算と変数/算術式のセクションにも記載済み．
-「割り算の余り」を求める記述
-
-```java
-a % b	// aをbで割ったときの余り
-```
-
-```java
-// 偶数と奇数を判別する．
-int iA = 234;
-if( iA%2 == 0 )	// もし変数iAが偶数だったら．
-{
-  // 命令
-}
-```
-
-#### 論理演算子
-
-※制御文/条件式のセクションにも記載済み．
-基本的には比較演算式による条件式を組み合わせ，より複雑な条件を課す場合に用いる．
-以下の条件を満たしたとき，式の結果は真(true)となり，
-そうでなければ偽(false)となる．
-
-| 条件式               | 演算子 | 条件                                   |
-| -------------------- | ------ | -------------------------------------- |
-| `条件式A && 条件式B` | `&&`   | 条件式Aが真，なおかつ条件式Bが真( and) |
-| `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真(or)   |
-
-
-
-### if else
-
-if文に対し，条件を満たさなかった場合にも特定の処理を行わせる．
-
-![if_else_flow](images/if_switch/if_else_flow.png)
-
-##### 書式
-
-`else{}`の部分は必ず`if(){}`とセットで記述すること．
-
-```java
-if( 条件 ) // [条件]
-{
-  // 条件を満たした場合実行する(命令)文; [処理A]
-  // for文の時と同様，インデントする．
-}
-else
-{
-  // 条件を満たさなかった場合実行する(命令)文;  [処理B]
-}
-```
-
-##### 例1: ランダムドット日の丸模様
-
-```java
-size(400,200);
-background( 0, 0, 0 );
-translate( width/2, height/2 );  // 原点をスクリーン中心に移動．
-for( int iPointIdx=0; iPointIdx < 5000; iPointIdx++ )
-{
-  float fX = random( -width/2,  width/2 );  // Xのランダム値( -width/2～width/2)
-  float fY = random( -height/2, height/2 ); // Yのランダム値( -height/2～height/2)
-  
-  // (X,Y)座標値が円の内部に有れば.  
-  if( pow(fX,2) + pow(fY,2) < pow(height/2,2) )   // 円の公式 Xの二乗 + yの二乗 = 半径の二乗  
-  {
-    stroke( 255,0, 0 );		// R
-  }
-  else	// 条件を満たさなかった場合．
-  {
-    stroke( 255,255, 255 );	// White
-  }
-  point( fX,fY );
-}
-```
-
-![if_else_flow_sample01](images/if_switch/if_else_flow_sample01.png)
-
-##### 例2: 市松模様
-
-```java
-int iCellSize = 40; // セル(四角)のサイズ
-size(400,400);
-colorMode(RGB,16,16,16);
-int iColumnTotal = width/iCellSize;  // 列(横軸)の総数.
-int iRowTotal = height/iCellSize;    // 行(横軸)の総数.
-noStroke();
-for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )  // 列の繰り返し
-{
-  for( int iRowIdx=0; iRowIdx < iRowTotal; iRowIdx++ ) // 行の繰り返し
-  {
-    int iX = iColumnIdx*iCellSize; // 矩形の座標iX,iY
-    int iY = iRowIdx*iCellSize;
-    if( iColumnIdx%2 == 0 && iRowIdx%2 == 0 || // 列番号が偶数かつ行番号が偶数の時，もしくは，
-        iColumnIdx%2 == 1 && iRowIdx%2 == 1 )  // 列番号が奇数かつ行番号が奇数の時
-    {
-      fill(0, 8, 6);      // 緑模様
-    }
-    else
-    {
-      fill(0, 0, 0 );     // 黒
-    }
-    rect( iX, iY, iCellSize, iCellSize );
-  }
-}
-```
-
-![example02](images/if_switch/example02.png)
-
-##### 演習
-
-1. 100個の円をランダムな位置に描画
-
-```java
-size(200,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-![practice01_01](images/if_switch/practice01_01.png)
-
-2. 条件分岐を追加．
-
-   - もしXの値が100未満であれば色を赤に設定
-   - そうでなければ色を青に設定．
-
-   下の答えを見る前にまずやってみましょう．
-
-![practice01_02](images/if_switch/practice01_02.png)
-
-```java
-size(200,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  if( fX < 100 )	// もしfXの値が100未満なら
-  {
-    fill( 255, 0, 0);  // R
-  }
-  else				// そうでなければ
-  {
-    fill( 0, 0, 255);  // B
-  }
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-
-
-### else if
-
-最初の条件を満たさなかった場合にも，二つ目以降の条件を課し，それを満たした場合特定の処理を行わせる．
-`else␣if`は**複数加えることができ，細かく条件を加えて分岐させることができる**．
-
-![if_else_if_flow](images/if_switch/if_else_if_flow.png)
-
-##### 書式
-
-```java
-if( 条件式 )	// [条件A]
-{
-  // 条件Aを満たした場合実行する(命令)文; [処理A]
-  // for文の時と同様，インデントする．
-}
-else if( 条件式 )	// [条件B]
-{
-  // 条件Bを満たした場合実行する(命令)文; [処理B]
-  // for文の時と同様，インデントする．
-}
-```
-
-### else if else
-
-一見ややこしいが，`else if`の最後に`else{}`を加え，全ての条件を満たさなかった場合にも特定の処理を行わせる方式． 
-
-![if_else_if_else_flow](images/if_switch/if_else_if_else_flow.png)
-
-##### 書式
-
-```java
-if( 条件式 )	// [条件A]
-{
-  // 条件Aを満たした場合実行する(命令)文; [処理A]
-  // for文の時と同様，インデントする．
-}
-else if( 条件式 )	// [条件B]
-{
-  // 条件Bを満たした場合実行する(命令)文; [処理B]
-  // for文の時と同様，インデントする．
-}
-else
-{
-  // 条件を満たさなかった場合実行する(命令)文;   [処理C]
-}
-```
-
-##### 例: ランダムドット4つの領域分け
-
-```java
-size(400,200);
-for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
-{
-  float fX = random( width );  // Xのランダム値.
-  float fY = random( height ); // Yのランダム値.
-  if( fX < 100 )
-  {
-    stroke( 255,0, 0 ); 	//R
-  }
-  else if( fX < 200 )
-  {
-    stroke( 0,255, 0 );  	//G
-  }
-  else if( fX < 300 )
-  {
-    stroke( 0,0, 255 );  	//B
-  }
-  else
-  {
-    stroke( 255,255, 255 );	//White
-  }
-  point( fX,fY );
-}
-```
-
-![if_sample02](images/if_switch/if_sample02.png)
-
-##### 演習
-
-1. 100個の円をランダムな位置に描画 (※ウィンドウサイズ300*200)
-
-```java
-size(300,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-![practice02_01](images/if_switch/practice02_01.png)
-
-2. 条件分岐を追加．
-
-   - もしXの値が100未満であれば色を赤に設定
-
-   - もしXの値が200未満であれば色を緑に設定
-
-   - そうでなければ色を青に設定．
-
-     下の答えを見る前にまずやってみましょう．
-
-```java
-size(300,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  if( fX < 100 )  		// もしfXの値が100未満なら
-  {
-    fill( 255, 0, 0);   // R
-  }
-  else if( fX < 200 )	// もしfXの値が200未満なら
-  {
-    fill( 0, 255, 0);   // G
-  }
-  else        			// そうでなければ
-  {
-    fill( 0, 0, 255);   // B
-  }
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-![practice02_02](images/if_switch/practice02_02.png)
-
-
-
-#### ifのネスティング
-
-if文はfor文と同様に，入れ子に（ネスティング）することができる．
-`else if` を単純に追加するだけでは難しい処理も，こちらで容易に行える場合がある．
-
-##### 例: if else のネスティング
-
-![if_nest_flow](images/if_switch/if_nest_flow.png)
-
-```java
-if( 条件式 )	//   [条件A]
-{
-  // 条件Aを満たした場合,このブロックへ処理が移る．
-  if( 条件式 )	// [条件B]
-  {
-    // 条件Bを満たした場合，実行する(命令)文;       [処理A]
-    // 二段階インデントされる．
-  }
-  else
-  {
-    // 条件Bを満たさなかった場合，実行する(命令)文;  [処理B]
-  }
-}
-else
-{    // 条件Aを満たさなかった場合,このブロックへ処理が移る．
-  if( 条件式 )	// [条件C]
-  {
-    // 条件Cを満たした場合，実行する(命令)文;       [処理C]
-  }
-  else
-  {
-    // 条件Cを満たさなかった場合，実行する(命令)文;  [処理D] 
-  }
-}
-```
-
-##### 例
-
-```java
-// ランダムドットを4つの領域で塗り分ける．(縦2×横2)
-size(300,300);
-for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
-{
-  float fX = random( width );  // Xのランダム値.
-  float fY = random( height ); // Yのランダム値.
-  if( fX < width/2 )
-  {
-    if( fY < height/2 )
-    {
-      stroke( 255,0, 0 );      //R
-    }
-    else
-    {
-      stroke( 0,255, 0 );      //G
-    }
-  }
-  else
-  {
-    if( fY < height/2 )
-    {
-      stroke( 0,0, 255 );      //B
-    }
-    else
-    {
-      stroke( 255,255, 255 );  //White
-    }
-  }
-  point( fX,fY );
-}
-```
-
-![if_nest](images/if_switch/if_nest.png)
-
-##### 演習
-
-1. 100個の円をランダムな位置に描画 (※if else の演習ステップ1と同じ )
-
-```java
-size(200,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-![practice01_01](images/if_switch/practice01_01.png)
-
-2. 条件分岐を追加．
-
-   - もしXの値が100未満で，
-
-     - Yの値が100未満なら，色を赤に設定
-     - そうでなければ，黒に設定
-
-   - Xの値が100未満ではなく，
-
-     - Yの値が100未満なら色を青に設定
-     - そうでなければ白に設定
-
-     下の答えを見る前にまずやってみましょう．
-
-![practice03_02](images/if_switch/practice03_02.png)
-
-```java
-size(200,200);
-for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
-{
-  float fX = random(width);
-  float fY = random(height);
-  if( fX < 100 )  // もしfXの値が100未満なら
-  {
-    if( fY < 100 )
-    {
-      fill( 255, 0, 0);      // R
-    }
-    else
-    {
-      fill( 0, 0, 0 );       // Black
-    }
-  }
-  else        // そうでなければ
-  {
-    if( fY < 100 )
-    {
-      fill( 0, 0, 255);      // B
-    }
-    else
-    {
-      fill( 255, 255, 255);  // White
-    }
-  }
-  ellipse( fX, fY, 20, 20 );
-}
-```
-
-
-
-
-### switch文
-
-Switch文は分岐の判断に**条件式を用いない**．
-ある式（変数も可）の返す値を読み取り，その値と等しいラベルの箇所の処理が行われる．
-if文の`else if`とほぼ同様の役割を果たすが，こちらのほうがより適している場合もある．
-
-比較的難解であるので，本授業では無理に使う必要はない．
-活用できる者は活用してもよい．
-
-![switch_flow](images/if_switch/switch_flow.png)
-
-#### 書式
-
-ラベル(`case 値;`)は`else if`とほぼ同様の役割を果たし，複数記述可能．
-`default:`は`else`とほぼ同様の役割を果たし，記述は任意．
-
-```java
-switch( 式 )	//	[式]
-{
-  case 値A:	// [ラベルA]
-    // 式の値が値Aと等しい場合，実行する(命令)文; [処理A]
-    // 二段階インデントされる．
-    break;	// break; が有れば，即Switch文の処理を終了し，ブロックの外へ処理を移す．
-    // ※break; が無ければ，続けて下のラベルB内の処理へと進む．
-  case 値B:	// [ラベルB]
-    // 式の値が値Bと等しい場合，実行する(命令)文; [処理B]
-    break; // break;の記述は任意.
-  default: // 式の値が全てのラベルの値と等しくなかった場合，実行する(命令)文; [処理C]
-}
-```
-
-#### 例
-
-```java
-// 4色が交互に出現するストライプの描画．
-int iLineWeight = 8;  // 一本の縦線の太さ.
-size(400,200);
-strokeWeight( iLineWeight );
-for( int iLineIdx=0; iLineIdx < 50; iLineIdx++ )  // 50本の線を繰り返し描画.
-{
-  int iModLineIdx4 = iLineIdx%4;                  // iLineIdxを4で割った余り(剰余)(0~3)
-  switch( iModLineIdx4 )
-  {
-    case 0:
-      stroke( 255, 0, 0 );      // R
-      break;
-    case 1:
-      stroke( 0, 255, 0 );      // G
-      break;
-    case 2:
-      stroke( 0, 0, 255 );      // b
-      break;
-    case 3:
-      stroke( 255, 255, 255 );  // White
-      break;
-    default:
-  }
-  line( iLineIdx*iLineWeight, 0, iLineIdx*iLineWeight, height );
-}
-```
-
-![switch_sample](images/if_switch/switch_sample.png)
-
-
-
-## 変数のスコープ
-
-変数にはローカル変数とグローバル変数の二種類の変数がある．
-
-### ローカル変数
-
-- 特定の範囲でのみ有効
-- `draw()`の度にメモリ領域が初期化されるため，フレームをまたいで値を保存することができない．
-- アニメーションでは局所的な使用に限られる．
-
-#### ブロック
-
-`{ }`で囲まれた部分を**ブロック**という．
-繰り返しfor文，条件分岐if文，関数で使用されている．
-
-```java
-for(/** 省略 */)
-{    
-  // ブロック
-}
-```
-
-```java
-if(/** 省略 */)
-{
-  // ブロック
-}
-```
-
-```java
-void setup()
-{
-  // ブロック
-}
-void draw()
-{
-  // ブロック
-}
-```
-
-#### 使い方
-
-- **ブロック内で宣言された変数がローカル変数**となる．配列も同様．
-- ローカル変数・配列は，**宣言文のあるブロック内**でのみ有効（**スコープ**）．
-- 宣言文のあるブロック内にさらに**ネスティングされているブロック内**でも有効．
-
-##### `for{}`ブロック内に`for{}`をネスティングした例
-
-```java
-for(/** 省略 */)
-{
-  int iX = 0;				  // ローカル変数 iX,iY宣言
-  int iY = 0;
-  point( iX, iY );		// ローカル変数 iX,iY が使える
-  for(/** 省略 */)
-  {
-    point( iX, iY );	// ローカル変数 iX,iY が使える
-  }
-}
-point( iX, iY );			// エラー：変数iX,iYは存在しません
-```
-
-##### `for{}`ブロック内に`if{}`をネスティングした例
-
-```java
-if(/** 省略 */)
-{
-  int iX = 0;				  // ローカル変数 iX,iY宣言
-  int iY = 0;
-  point( iX, iY );		// ローカル変数 iX,iY が使える
-  if(/** 省略 */)
-  {
-    int iZ = 0;			  // ローカル変数 iZ宣言
-    point( iX, iY );  // ローカル変数 iX,iY が使える
-  }
-  iZ = iZ +1;				  // エラー：変数iZは存在しません
-}
-point( iX, iY );			// エラー：変数iX,iYは存在しません
-```
-
-##### `setup{}`ブロック内に`if{}`をネスティングした例
-
-```java
-void setup()
-{
-  int iX = 0;				  // ローカル変数 iX,iY宣言
-  int iY = 0;
-  point( iX, iY );		// ローカル変数 iX,iY が使える
-  if(/** 省略 */)
-  {
-    point( iX, iY );	// ローカル変数 iX,iY が使える
-  }
-}
-void draw()
-{
-  point( iX, iY );		// エラー：変数iX,iYは存在しません
-}
-```
-
-### グローバル変数
-
-- 全ての範囲で有効
-
-
-- `draw()`の度にメモリ領域が初期化されることなく残るため，`draw()`の度に少しずつ数値を変更する等が可能．
-- **アニメーションにおいて，変化をもたらすために特に重要**．
-
-#### 使い方
-
-- **ブロック外で宣言すればグローバル変数**となる．
-- 通常，**プログラムの一番上に記述**する．
-
-```java
-int iX;			 // 宣言
-void setup()
-{
-  iX = 0;		 // OK
-}
-void draw()
-{
-  iX = iX + 5; // OK
-}
-```
 
 
 
@@ -7079,6 +7401,133 @@ void draw()
   }
   fill( 1, 1, 1 );
   rect( iPosX, height/2-10, 20, 20 );
+}
+```
+
+
+
+## 変数のスコープ
+
+変数にはローカル変数とグローバル変数の二種類の変数がある．
+
+### ローカル変数
+
+- 特定の範囲でのみ有効
+- 基本的には，**ブロック文の中で宣言した変数はローカル変数**．
+- `draw()`の度にメモリ領域が初期化されるため，フレームをまたいで値を保存することができない．
+- アニメーションでは局所的な使用に限られる．
+
+#### ブロック
+
+`{ }`で囲まれた部分を**ブロック**という．
+繰り返しfor文，条件分岐if文，関数で使用されている．
+
+```java
+for(/** 省略 */)
+{    
+  // ブロック
+}
+```
+
+```java
+if(/** 省略 */)
+{
+  // ブロック
+}
+```
+
+```java
+void setup()
+{
+  // ブロック
+}
+void draw()
+{
+  // ブロック
+}
+```
+
+#### 使い方
+
+- **ブロック内で宣言された変数がローカル変数**となる．配列も同様．
+- ローカル変数・配列は，**宣言文のあるブロック内**でのみ有効（**スコープ**）．
+- 宣言文のあるブロック内にさらに**ネスティングされているブロック内**でも有効．
+
+##### `for{}`ブロック内に`for{}`をネスティングした例
+
+```java
+for(/** 省略 */)
+{
+  int iX = 0;				  // ローカル変数 iX,iY宣言
+  int iY = 0;
+  point( iX, iY );		// ローカル変数 iX,iY が使える
+  for(/** 省略 */)
+  {
+    point( iX, iY );	// ローカル変数 iX,iY が使える
+  }
+}
+point( iX, iY );			// エラー：変数iX,iYは存在しません
+```
+
+##### `for{}`ブロック内に`if{}`をネスティングした例
+
+```java
+if(/** 省略 */)
+{
+  int iX = 0;				  // ローカル変数 iX,iY宣言
+  int iY = 0;
+  point( iX, iY );		// ローカル変数 iX,iY が使える
+  if(/** 省略 */)
+  {
+    int iZ = 0;			  // ローカル変数 iZ宣言
+    point( iX, iY );  // ローカル変数 iX,iY が使える
+  }
+  iZ = iZ +1;				  // エラー：変数iZは存在しません
+}
+point( iX, iY );			// エラー：変数iX,iYは存在しません
+```
+
+##### `setup{}`ブロック内に`if{}`をネスティングした例
+
+```java
+void setup()
+{
+  int iX = 0;				  // ローカル変数 iX,iY宣言
+  int iY = 0;
+  point( iX, iY );		// ローカル変数 iX,iY が使える
+  if(/** 省略 */)
+  {
+    point( iX, iY );	// ローカル変数 iX,iY が使える
+  }
+}
+void draw()
+{
+  point( iX, iY );		// エラー：変数iX,iYは存在しません
+}
+```
+
+### グローバル変数
+
+- 全ての範囲で有効
+
+
+- `draw()`の度にメモリ領域が初期化されることなく残るため，`draw()`の度に少しずつ数値を変更する等が可能．
+- **アニメーションにおいて，変化をもたらすために特に重要**．
+
+#### 使い方
+
+- **ブロック外で宣言すればグローバル変数**となる．
+- 通常，**プログラムの一番上に記述**する．
+
+```java
+int iX;			 // 宣言
+void setup()
+{
+  iX = 0;		 // OK
+}
+void draw()
+{
+  iX = iX + 5; // OK
 }
 ```
 
@@ -10899,6 +11348,175 @@ class Dog
 
 講師が作ってみたものの，難易度が高かったり，解説に不向きだったものを保管しています．
 ネタに困ったときなど参照してもらって構いませんが，コメントが少な目です．
+
+
+
+##### 演習
+
+1. 100個の円をランダムな位置に描画 (※if else の演習ステップ1と同じ )
+
+```java
+size(200,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice01_01](images/if_switch/practice01_01.png)
+
+2. 条件分岐を追加．
+
+   - もしXの値が100未満で，
+
+     - Yの値が100未満なら，色を赤に設定
+     - そうでなければ，黒に設定
+
+   - Xの値が100未満ではなく，
+
+     - Yの値が100未満なら色を青に設定
+     - そうでなければ白に設定
+
+     下の答えを見る前にまずやってみましょう．
+
+![practice03_02](images/if_switch/practice03_02.png)
+
+```java
+size(200,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  if( fX < 100 )  // もしfXの値が100未満なら
+  {
+    if( fY < 100 )
+    {
+      fill( 255, 0, 0);      // R
+    }
+    else
+    {
+      fill( 0, 0, 0 );       // Black
+    }
+  }
+  else        // そうでなければ
+  {
+    if( fY < 100 )
+    {
+      fill( 0, 0, 255);      // B
+    }
+    else
+    {
+      fill( 255, 255, 255);  // White
+    }
+  }
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+
+
+
+
+## 演習
+
+1. 100個の円をランダムな位置に描画
+
+```java
+size(200,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice01_01](images/if_switch/practice01_01.png)
+
+2. 条件分岐を追加．
+
+   - もしXの値が100未満であれば色を赤に設定
+   - そうでなければ色を青に設定．
+
+   下の答えを見る前にまずやってみましょう．
+
+![practice01_02](images/if_switch/practice01_02.png)
+
+```java
+size(200,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  if( fX < 100 )	// もしfXの値が100未満なら
+  {
+    fill( 255, 0, 0);  // R
+  }
+  else				// そうでなければ
+  {
+    fill( 0, 0, 255);  // B
+  }
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+
+
+##### 演習
+
+1. 100個の円をランダムな位置に描画 (※ウィンドウサイズ300*200)
+
+```java
+size(300,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice02_01](images/if_switch/practice02_01.png)
+
+2. 条件分岐を追加．
+
+   - もしXの値が100未満であれば色を赤に設定
+
+   - もしXの値が200未満であれば色を緑に設定
+
+   - そうでなければ色を青に設定．
+
+     下の答えを見る前にまずやってみましょう．
+
+```java
+size(300,200);
+for( int iEllipseIdx=0; iEllipseIdx < 100; iEllipseIdx++ )
+{
+  float fX = random(width);
+  float fY = random(height);
+  if( fX < 100 )  		// もしfXの値が100未満なら
+  {
+    fill( 255, 0, 0);   // R
+  }
+  else if( fX < 200 )	// もしfXの値が200未満なら
+  {
+    fill( 0, 255, 0);   // G
+  }
+  else        			// そうでなければ
+  {
+    fill( 0, 0, 255);   // B
+  }
+  ellipse( fX, fY, 20, 20 );
+}
+```
+
+![practice02_02](images/if_switch/practice02_02.png)
+
+
+
+#### 
 
 ### 二次元配列を使った，竹藪のような表現
 
