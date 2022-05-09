@@ -5304,6 +5304,16 @@ for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
 
 ![if_sample02](images/if_switch/if_sample02.png)
 
+#### 演算9
+
+例2をベースに，下図のような５つの領域へのランダム点描を行うプログラムを作成してみましょう．
+
+- 演習時間3分程度
+
+![flow_for_nest_5area_dots](images/flow/flow_for_nest_5area_dots.png)
+
+
+
 #### 例3
 
 4つの領域へのランダム点描の例．(縦2×横2)
@@ -5442,7 +5452,7 @@ for( int iY=0; iY<10; iY++ )							// ネストの外側の繰り返し変数:iY
 
 以上のような処理を繰り返している．
 
-#### 演習9
+#### 演習10
 
 例1のプログラムをコピーして，以下のようにコンソール出力がされるよう<u>条件式を変更</u>してみましょう．
 
@@ -5522,7 +5532,41 @@ for ( int iY = 0; iY < height; iY++ )  // Y座標値を1ずらしながら繰り
 | `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真 | <img src="images/flow/flow_boolean_or.png" alt="flow_boolean_or" style="zoom:80%;" /> | 論理和 OR  |
 | `! 条件式`           | `!`    | 条件式が偽                       | <img src="images/flow/flow_boolean_not.png" alt="flow_boolean_not" style="zoom:80%;" /> | 否定 NOT   |
 
-### 例
+### 例1
+
+論理演算を使った縦縞模様の描画．
+
+- for文と組み合わせることで少し複雑な周期性を表現できる．
+
+```java
+size(400,200);
+noStroke();
+for( int iX = 0; iX < width; iX+=2 )  // 変数iXの値に2加えながら繰り返す．
+{
+  if( iX%3 == 0 || iX%5 == 0 )  // 変数iXの値が3か5の倍数なら
+  {
+    fill( 0 );  // 黒
+  }
+  else
+  {
+    fill( 250 );// 白
+  }
+  rect( iX, 10, 2, 180 );       // 縦に細い矩形を描画する．
+}
+```
+
+![flow_boolean_borders](images/flow/flow_boolean_borders.png)
+
+### 演習11
+
+例1のコードの`if( iX%3 == 0 && iX%5 == 0 )`の部分の3,5の数値を書き換え，
+異なるパターンが生成される数値の組み合わせを探してみましょう．
+
+- 演習時間3分ほど
+
+
+
+### 例2
 
 for文のネストと論理演算を使った，市松模様の描画
 
@@ -5563,6 +5607,8 @@ for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )  // 列（縦�
 - 下のように，模様を表として考えると理解しやすくなる．
 
 ![flow_condition_boolean_ichimatsu_graph](images/flow/flow_condition_boolean_ichimatsu_graph.png)
+
+
 
 
 
@@ -5752,22 +5798,6 @@ for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 ![synmetry_trl](images/loop/synmetry_trl.png)
 
 
-
-### その他，身近にある「繰り返し」を観察してみましょう
-
-<img src="images/loop/rep_cloud.png" alt="rep_cloud" style="zoom:100%;" />
-
-<img src="images/loop/rep_flower.jpg" alt="rep_flower" style="zoom:100%;" />
-
-<img src="images/loop/rep_lenga.png" alt="rep_lenga" style="zoom:100%;" />
-
-<img src="images/loop/rep_tile.png" alt="rep_tile" style="zoom:100%;" />
-
-<img src="images/loop/rep_tree.png" alt="rep_tree" style="zoom:100%;" />
-
-<img src="images/loop/rep_kaidan.jpg" alt="rep_kaidan" style="zoom:100%;" />
-
-<img src="images/loop/rep_mansion.jpg" alt="rep_mansion" style="zoom:100%;" />
 
 
 

@@ -110,6 +110,26 @@
 - 質問する際，「どんな作品をつくりたいのか」「何がわからないのか」「自分でどこまで調べたか」を明確化しておくこと．
 - プログラムに関する具体的な質問は，pdeファイルを添付するか，コードのテキストをコピー＆ペーストして文面に記載すること．
 
+## 解説
+
+身近にある「繰り返し」を観察してみましょう
+
+<img src="images/loop/rep_cloud.png" alt="rep_cloud" style="zoom:100%;" />
+
+<img src="images/loop/rep_flower.jpg" alt="rep_flower" style="zoom:100%;" />
+
+<img src="images/loop/rep_lenga.png" alt="rep_lenga" style="zoom:100%;" />
+
+<img src="images/loop/rep_tile.png" alt="rep_tile" style="zoom:100%;" />
+
+<img src="images/loop/rep_tree.png" alt="rep_tree" style="zoom:100%;" />
+
+<img src="images/loop/rep_kaidan.jpg" alt="rep_kaidan" style="zoom:100%;" />
+
+<img src="images/loop/rep_mansion.jpg" alt="rep_mansion" style="zoom:100%;" />
+
+
+
 ## 参考作品
 
 ### sample01
