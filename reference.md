@@ -237,7 +237,7 @@ print( "Answer is " + 12345 );
 
 #### 複数命令の内容のメモとして用いる
 
-```
+```java
 // ウィンドウを分割する
 line(0, 50, 100, 50); // yoko
 line(50, 0, 50, 100); // tate
@@ -250,7 +250,7 @@ circle(25, 25, 50);
 
 #### プログラムの一部を無効にする
 
-```
+```java
 /**
 
 // ウィンドウを分割する
@@ -273,6 +273,9 @@ circle(25, 25, 50);
 - <u>コメントが含まれた状態のスケッチを提出</u>してもらい，それも加味して評価を行います．
   - <u>コメントを十分に含んだ分かりやすいスケッチ</u>が高く評価されます．
   - コメントがまったく含まれていない場合，作品がどれほど良質であっても評価が下方修正されます．
+
+https://processing.org/reference/comment.html
+https://processing.org/reference/doccomment.html
 
 
 
@@ -4358,6 +4361,10 @@ print( iRandom%3 == 0 );  // 条件式の結果をそのままprint()
 
 
 
+https://processing.org/reference#control
+
+
+
 ### 演習1
 
 `int`型の変数に乱数（0~100）を代入し，偶数ならtrue，奇数ならfalseの計算結果をコンソール出力する．
@@ -4470,6 +4477,10 @@ if( iRandom%2 == 1 )	// iRandomを2で割った余りが1だったら[条件式]
 
 ![flow_if_random_even_flow](images/flow/flow_if_random_even_flow.png)
 
+https://processing.org/reference/if.html
+
+
+
 #### 演習2
 
 `int`型の変数に乱数（0~100）を代入し，3の倍数ならYesをコンソール出力する．
@@ -4543,6 +4554,10 @@ else
 ```
 
 ![flow_if_random_even](images/flow/flow_if_random_even.png)
+
+https://processing.org/reference/else.html
+
+
 
 #### 演習3
 
@@ -4669,7 +4684,7 @@ else if( iRandom >= 20 )
 
 
 
-#### else if else
+#### else if + else
 
 - 一見ややこしいが，`else if`の最後に`else`を加え，全ての条件を満たさなかった場合にも特定の処理を行わせる方式． 
 
@@ -4856,6 +4871,8 @@ for( int iLineIdx=0; iLineIdx < 50; iLineIdx++ )  // 50本の線を繰り返し�
 
 ![switch_sample](images/if_switch/switch_sample.png)
 
+https://processing.org/reference/switch.html
+
 
 
 ## 繰り返し
@@ -4931,6 +4948,8 @@ for( int iIdx = 0; iIdx < 10; iIdx++ )
 
    - trueの場合はステップ2.に戻る．
    - falseの場合はブロック文の次の文へ処理を移行．
+
+https://processing.org/reference/for.html
 
 
 
@@ -5161,6 +5180,8 @@ for( int iY=height-1; iY>=0; iY-- )
 
 ![flow_for_border](images/flow/flow_for_border.png)
 
+
+
 ### while文
 
 - 英語の接続詞while（〜の間ずっと）から由来．
@@ -5197,6 +5218,8 @@ print( "描画した矩形の数は" + iCount + "個" );
 
 // コンソール表示：描画した矩形の数は10個
 ```
+
+https://processing.org/reference/while.html
 
 
 
@@ -5461,6 +5484,25 @@ for( int iY=0; iY<10; iY++ )							// ネストの外側の繰り返し変数:iY
 
 #### 例2
 
+ウィンドウに正円を隙間なく並べて描画した例．
+
+```java
+size( 200, 200 );
+background( 0 );
+
+for( int iY = 10; iY < height; iY+=20 )
+{
+  for( int iX = 10; iX < width; iX+=20 )
+  {
+    circle( iX, iY, 20 );
+  }
+}
+```
+
+![flow_circles_in_window](images/flow/flow_circles_in_window.png)
+
+#### 例3
+
 グラデーションのカラーチャート(矩形)
 
 - 内側のfor文でX座標値を20増やしながら一行分の矩形を描画している．
@@ -5483,7 +5525,7 @@ for( int iY=0; iY<200; iY+=20 )        // Y座標値を20ずらしながら繰�
 
 ![flow_for_nest_rects_graduation](images/flow/flow_for_nest_rects_graduation.png)
 
-#### 例3
+#### 例4
 
 グラデーションのカラーチャート(点描画)
 
@@ -5506,6 +5548,82 @@ for ( int iY = 0; iY < height; iY++ )  // Y座標値を1ずらしながら繰り
 <img src="images/loop/nesting_xy.png" alt="nesting_xy" style="zoom:100%;" />
 
 
+
+### 演習11
+
+下図のようなウィンドウ中心から線を回転させながら描画するプログラムを作成する．
+
+![practive01_02](images/array/practive01_02.png)
+
+1. 　角度を5°ずつ足しながら，スクリーン中心からランダムな長さの線を12本描画
+
+```java
+size(300,300);
+translate( width/2, height/2 );
+// 原点をスクリーン中心に移動 
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+![practive01_01](images/array/practive01_01.png)
+
+2. 　12本の線の長さを`float`で保存する配列を用意する（宣言だけ）．
+
+```java
+size(300,300); 
+float[] fLineLength = new float[12];   // 12本の線の長さを保存する配列
+translate( width/2, height/2 );        // 原点をスクリーン中心に移動
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+3. 配列に線の長さの値を代入し，初期化しましょう．
+   	線の長さ: ` 20 + random( 100 ) `
+
+```java
+size(300,300);
+float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
+for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
+{
+  fLineLength[iLineIdx] = 20 + random( 100 );
+}
+translate( width/2, height/2 );        // 原点をスクリーン中心に移動 
+for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+{
+  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
+  rotate( radians(5) );                           // 5°回転
+}
+```
+
+4. 線の描画命令`line()`を，配列の要素を参照するよう変更し，
+   12本繰り返すfor文全体を，さらに6回繰り返すよう変更しましょう（for文のネスティング）．
+
+5. 完成プログラム
+
+```java
+size(300,300);
+float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
+for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
+{
+  fLineLength[iLineIdx] = 20 + random( 100 );
+}
+translate( width/2, height/2 ); // 原点をスクリーン中心に移動
+
+for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
+{
+  for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )  // 線12本分繰り返す
+  {
+    line( 0, 0, fLineLength[iLineIdx], 0 );		   // 配列を参照.
+    rotate( radians(5) );                          // 5°回転
+  }
+}
+```
 
 
 
@@ -5556,7 +5674,7 @@ for( int iX = 0; iX < width; iX+=2 )  // 変数iXの値に2加えながら繰り
 
 ![flow_boolean_borders](images/flow/flow_boolean_borders.png)
 
-### 演習11
+### 演習12
 
 例1のコードの`if( iX%3 == 0 && iX%5 == 0 )`の部分の3,5の数値を書き換え，
 異なるパターンが生成される数値の組み合わせを探してみましょう．
@@ -5607,7 +5725,9 @@ for( int iColumnIdx=0; iColumnIdx < iColumnTotal; iColumnIdx++ )  // 列（縦�
 
 ![flow_condition_boolean_ichimatsu_graph](images/flow/flow_condition_boolean_ichimatsu_graph.png)
 
-
+https://processing.org/reference/logicalAND.html
+https://processing.org/reference/logicalNOT.html
+https://processing.org/reference/logicalOR.html
 
 
 
@@ -5716,6 +5836,8 @@ size(400,200);
 background(0, 0, 0);
 noStroke();
 colorMode( HSB, width, height, 1.0 );
+
+// 正円を格子状に描画．
 for( int iY=3; iY<height; iY+=12 )
 {
   for( int iX=3; iX<width; iX+=12 )
@@ -5725,10 +5847,10 @@ for( int iY=3; iY<height; iY+=12 )
   }
 }
 
-pushMatrix();  // 念のため移動する前の座標系を記憶. 
 translate( width/3, -height/2 );  // 座標系を平行移動
 rotate( radians(45) );            // 座標系を45度回転 
 
+// 正円を格子状に描画．
 for( int iY=3; iY<height; iY+=12 )
 {
   for( int iX=3; iX<width; iX+=12 )
@@ -5737,8 +5859,6 @@ for( int iY=3; iY<height; iY+=12 )
     circle( iX, iY, 6 );  // 円
   }
 }
-
-popMatrix();   // 座標系を戻す.
 ```
 
 <img src="images/loop/moire.png" alt="moire" style="zoom:100%;" />
@@ -5746,6 +5866,8 @@ popMatrix();   // 座標系を戻す.
 ***
 
 #### 回転対称
+
+ひし型の回転対称
 
 ```java
 int iDiamondTotal = 9;  // ひし形の数.
@@ -5765,6 +5887,39 @@ for( int iDiamondIdx = 0; iDiamondIdx < iDiamondTotal; iDiamondIdx++ )
 ```
 
 ![synmetry_rot](images/loop/synmetry_rot.png)
+
+突起とくぼみが交互に現れる多角形
+
+```java
+float fRangeSpike = 40; // 突起部の頂点の距離
+float fRangePit = 180;  // くぼみ部の頂点の距離
+int   iSpikeTotal = 10;  // 突起の総数
+
+size( 400,400 );
+
+translate( width/2, height/2 );
+
+int iDegreePerSpike = 360 / iSpikeTotal; // 1スパイク毎に進む角度
+
+stroke(255,0,0);
+strokeWeight(4);
+
+// 多角形描画.
+beginShape();
+for( int iDegree = 0; iDegree < 360; iDegree+=iDegreePerSpike )
+{
+  float[] fDrawPointSpikeXY = { fRangeSpike*cos( radians( iDegree ) ),  fRangeSpike*sin( radians( iDegree  ) ) };
+  
+  int iDegreePit = iDegree+iDegreePerSpike/2;
+  float[] fDrawPointPitXY = { fRangePit*cos( radians( iDegreePit ) ), fRangePit*sin( radians( iDegreePit ) ) };
+  
+  vertex( fDrawPointSpikeXY[0], fDrawPointSpikeXY[1] );  // 突起部の頂点座標
+  vertex( fDrawPointPitXY[0], fDrawPointPitXY[1] );      // くぼみ部の頂点座標
+}
+endShape(CLOSE);
+```
+
+![flow_shape_spike_pit](images/flow/flow_shape_spike_pit.png)
 
 ***
 
@@ -5804,115 +5959,422 @@ for( int iRowIdx = 0; iRowIdx < 10; iRowIdx++ )
 
 ## 配列( array )とは
 
-- **同一の型**のデータ（変数）をメモリ上に並べたもの．
-- 違う型のデータは混在できない．
+- データ構造の一種．
+- 同種のデータを複数まとめて記述したい場合に有用．
+- <u>ハートウェア上で</u>どのように実現されているかイメージで把握すると理解しやすい．
+
+### 配列のハードウェア的イメージ
 
 <img src="images/array/concept01.png" alt="concept01" style="zoom:85%;" />
 
-- 並んでいる各データ（変数）を**要素（element）**という．
-- 各要素は，**要素番号（index）**という番号で参照できる．
-- 配列には，その配列全体を指すための名前（**配列名**）がついている。
-- 配列のもつ要素の総数を**要素数**という．
-  - 配列の最後の要素番号は`要素数-1`であることに注意．
+- **同一の型**のデータ（変数）をメモリ上に一列に並べた構造．
+- 変数の場合と同じく，配列の**宣言**をおこなうことで，この領域がメモリ上に予約（確保）される．
+
+### 配列のプログラムにおける利用
 
 <img src="images/array/concept02.png" alt="concept02" style="zoom:90%;" />
+
+- 配列には，その配列全体を指すための名前である**配列名**がついている。
+- 並んでいる各データ（変数）を**要素（element）**という．
+- 各要素は，**配列名**と**要素番号**を使って読み書きができる．
+- ある配列のもつ要素の総数を**要素数**という．
+  - 配列の最後の要素番号は`要素数-1`であることに注意．
 
 ### 宣言
 
 変数と同じく，配列も宣言文によって配列の宣言を行う必要がある．
-書式が変数の場合とかなり異なる点に注意．
+
+#### 書式
 
 ```java
-要素のデータ型[] 配列名 = new 要素のデータ型[要素数];              // 宣言のみ
+要素のデータ型[] 配列名 = new 要素のデータ型[要素数];
 ```
 
-##### 例
+- 書式が変数の場合とかなり異なる点に注意．
+
+#### 例1
+
+int型（整数型）の要素を10個持つ，名前がiXの配列の宣言文
 
 ```java
-int[] iA = new int[10];		  // int型（整数型）の要素を10個持つ，名前がiAの配列の宣言
+int[] iX = new int[10];
 ```
+##### 確保されるメモリのイメージ
+
+![array_X0_10](images/array/array_X0_10.png)
+
+#### 例2
+
+ float型（実数型）の要素を4個持つ，名前がfRGBAの配列の宣言文
+
 ```java
-float[] fB = new float[4];	// float型（実数型）の要素を4個持つ，名前がfBの配列の宣言
+float[] fRGBA = new float[4];
 ```
 
-### 宣言＋初期化
+##### 確保されるメモリのイメージ
 
-宣言と同時に初期化することもできる．
-調整用のパラメータなど，値を手入力する場合などに有効．
+<img src="images/array/array_fRGBA.png" alt="array_fRGBA" style="zoom:90%;" />
+
+### 要素の値を取得する
+
+ある配列の要素の値を取得するには，下のような書式を用いる．
 
 ```java
-int[] iParams = { 0, 106, 24, 16, 8, 112 };	// int型（整数型）の名前がiParamsの配列の宣言・初期化
+配列名[ 要素番号 ]
 ```
+
+- 配列名と要素番号を組み合わせることで，配列の一つの要素を**変数と同じように使用できる**．
+  - 格納されている値の読み書きが行える．
+- 変数と同様に式に組み込むこともできる．
+
+### 要素へ値を代入する
+
+ある配列の要素へ値を代入するには，下のような書式の文を記述する．
+
+```java
+配列名[ 要素番号 ] = 値;
+```
+
+- 要素番号のアドレスの要素に値を代入する．
+- 配列に初期化にもこの書式を用いる．
 
 ### 初期化
 
-基本的に**全ての要素にアクセスし，一つ一つ値を代入**する必要がある．
+- 配列に値を代入するため，宣言文とは別に<u>初期化を行う命令文</u>を複数記述する必要がある．
 
-#### 一つの要素への値の代入
-
-```java
-配列名[ 要素番号 ] = 値;	// 要素番号のアドレスの要素に値を代入する．
-```
-
-##### 例
+- **配列の全ての要素へ値を代入する必要**があり，下の例のように一つ一つ代入を行う命令文を記述する方法がある．
 
 ```java
-int[] iA = new int[4]; // 配列iAを宣言
-iA[0] = 0;	// 要素番号0に値0を代入．
-iA[1] = 0;	// 要素番号1に値0を代入．
-iA[2] = 0;	// 要素番号2に値0を代入．
-iA[3] = 0;	// 要素番号3に値0を代入．
+配列名[0] = 値;
+配列名[1] = 値;
+配列名[2] = 値;
+配列名[3] = 値;
+配列名[4] = 値;
+配列名[5] = 値;
+...
 ```
 
-#### for文を使った初期化
+#### 例1
 
-特に要素数が多い場合，for文を使って初期化すると楽．
-その際，繰り返し回数として，**要素数を取得**し設定するとより確実．
-（配列外の要素を間違って参照しようとしてしまうエラーの回避）
+int型（整数型）の要素を10個持つ，名前がiXの配列の宣言・初期化
 
-##### 要素数の取得
+```java
+int[] iX = new int[10]; // 配列を宣言
+
+// 初期化
+iRGBA[0] = 0;
+iRGBA[1] = 10;
+iRGBA[2] = 25;
+iRGBA[3] = 100;
+iRGBA[4] = 45;
+iRGBA[5] = 68;
+iRGBA[6] = 12;
+iRGBA[7] = 20;
+iRGBA[8] = 225;
+iRGBA[9] = 255;
+```
+
+- 初期化を行う最後の要素の要素番号が**9**であることに注意．
+  - `要素数 - 1`
+
+##### メモリ上のイメージ
+
+![array_shokika_iX0_10](images/array/array_shokika_iX0_10.png)
+
+- 実際に<u>メモリ上に書き込まれるのはデータ（値）</u>である点に注意．
+- 配列名と要素番号の組み合わせは，<u>プログラムから</u>各データの読み書きをおこなうために必要となる．
+
+#### 例2
+
+float型（実数型）の要素を4個持つ，名前がfRGBAの配列の宣言・初期化
+
+```java
+float[] fRGBA = new float[4]; // 配列を宣言
+
+// 初期化
+fRGBA[0] = 0;
+fRGBA[1] = 0.1;
+fRGBA[2] = 1.0;
+fRGBA[3] = 0.8;
+```
+
+- 初期化を行う最後の要素の要素番号が**3**であることに注意．
+  - `要素数 - 1`
+
+##### メモリ上のイメージ
+
+![array_shokika_fRGBA](images/array/array_shokika_fRGBA.png)
+
+### 演習1
+
+int型（整数型）の要素を4個持つ，名前が`iRGBA`の配列の宣言・初期化を行うプログラムを書いてみましょう．
+
+- 初期値として，`0, 50, 100, 80`の値を代入すること．
+- 実行しても何も表示されないが，エラーが表示されず実行が行えればよい．
+
+- 演習時間3分
+
+
+
+### 要素数の取得
+
+- 配列は`length`という変数を持っており，**配列の要素数**がを値として格納されている．
+- 下のような書式で変数として呼び出し，この値を取得することができる．
 
 ```java
 配列名.length
 ```
 
-##### for文を使った基本的な初期化
+- この変数に値を代入することはできない．
+  - 読み取り専用
+
+#### 例
+
+配列iXの要素数をコンソール出力
 
 ```java
-for( int iIdx=0; iIdx < 変数名.length; iIdx++ ){	配列名[ iIdx ] = 値;}
+int[] iX = new int[10]; // 配列を宣言
+
+print( iX.length );
 ```
 
-##### 例
+![array_iX_length](images/array/array_iX_length.png)
+
+#### 必要性
+
+例えば，以下の配列の宣言文の場合．
 
 ```java
-int[] iA = new int[10];						// 配列iAを宣言
-for( int iIdx=0; iIdx < iA.length; iIdx++ )	// 初期化(全ての要素に0を代入)
+float[] fRGBA = new float[4];
+```
+
+- 要素数は`4`であり，既に明らかであるのでわざわざ要素数の取得を行う記述は必要無いように感じられる．
+- しかし，要素数の変更に柔軟に対応するためにも，可能な限り`配列名.length`を用いた方がよい．
+
+
+
+### for文を使った初期化
+
+- for文を使って初期化すると効率的な場合がある．
+  - 全て同じ値．
+  - 規則性のある数列．
+    - ブロック文の中で算術式や条件式を使うことで，様々な数列を代入可能．
+  
+- for文の<u>条件式に要素数</u>を用いることで，繰り返し回数を要素数と同じ数にする．
+  - 配列外の要素を間違って参照しようとしてしまうエラーの回避ができる．
+
+#### for文を使った基本的な初期化
+
+```java
+for( int iElemIdx=0; iElemIdx < 変数名.length; iElemIdx++ )
 {
-  iA[ iIdx ] = 0;
+  配列名[ iElemIdx ] = 値;
 }
 ```
 
-### 要素の参照
+- 繰り返し用変数`iElemIdx`は，要素番号(  Element Index )を元に名付けている．
 
-配列名と要素番号を組み合わせることで，配列の一つの要素を**変数と同じように使用できる**．
-変数と同様に式に組み込むこともできる．
+#### 例1
+
+全ての要素に0の値を代入する．
 
 ```java
-配列名[ 要素番号 ]			 // 一つの要素の参照.
+int[] iX = new int[10];
+
+// 初期化
+for( int iElemIdx=0; iElemIdx < iX.length; iElemIdx++ )
+{
+  iX[ iElemIdx ] = 0;
+}
 ```
 
-初期化の項で述べたように，ある配列の要素へは以下の書式で値を代入でき，これは初期化後もいつでも行える．
+#### 例2
 
-##### 一つの要素への値の代入
+全ての要素に5の倍数の値を代入し，要素の値をコンソール出力．
 
 ```java
-配列名[ 要素番号 ] = 値;	// 要素番号のアドレスの要素に値を代入する．
+int[] iY = new int[10];
+
+// 初期化
+for( int iElemIdx=0; iElemIdx < iY.length; iElemIdx++ )
+{
+  iY[ iElemIdx ] = iElemIdx * 5;
+  print( iY[iElemIdx] + ", " );		// コンソール出力
+}
 ```
 
-### 例1
+- 繰り返し変数を使った算術式`iIdx * 5`の演算結果を初期値として代入している．
+
+![array_iY_5baisuu_console](images/array/array_iY_5baisuu_console.png)
+
+### 宣言と同時に初期化を行う場合
+
+- 宣言と同時に初期化を行う記述方法もある．
+- こちらを使うと**後に初期化を行う命令文の記述が必要ない**ため，プログラムがシンプルになる．
+  - 色や形の表現に関わる<u>要調整の値</u>を代入する場合などはこちらを推奨．
+
+#### 書式
 
 ```java
-// 矩形の高さリスト（配列）から，矩形を描画する．
+要素のデータ型[] 配列名 = { 値0, 値1, 値2, 値3, , , , 値n };
+```
+
+- 宣言だけの時と違い，`new` や`要素数`の記述が無く，`{ }`の形式で記述する点に注意．
+  - 文末に`;`も必要．
+- 値の数は自由に設定することができ，記述した値の数から要素数が自動的に割り出される．
+
+##### 例1
+
+int型（整数型）の名前がiRGBの配列の宣言・初期化
+
+```java
+int[] iX = { 0, 10, 25, 100, 45, 68, 12, 20, 225, 255 };
+```
+
+##### 例2
+
+float型（実数型）の名前がfRGBAの配列の宣言・初期化
+
+```java
+int[] fRGBA = { 0, 0.1, 1.0, 0.8 };
+```
+
+
+
+### 演習2
+
+- int型（整数型）の名前が`iX`の配列の宣言・初期化をし，全ての要素の値をコンソール出力する．
+
+- 初期化の値として，以下の6つの<u>2の倍数の数列</u>を代入する．
+
+  `0, 2, 4, 6, 8, 10,`
+
+- 演習時間3分
+
+![array_iX_2baisuu_console](images/array/array_iX_2baisuu_console.png)
+
+https://processing.org/reference/Array.html
+https://processing.org/reference/arrayaccess.html
+
+
+
+## 配列を使った描画
+
+- 配列を使い，プログラム効率化できる場合がある．
+
+### 複数パターンから一つの描画情報をランダムに取得する．
+
+- 乱数を用いつつ，ある程度のパターンに制限することで，画像に一定の秩序を持たせることができる．
+  - `random()`の返す値をそのまま描画に用いてしまうと，無秩序すぎる．
+
+1. 配列に，描画に関わる数値をリスト状に代入する．
+2. 描画の際，配列の要素番号によってパターンを選択する．
+
+#### 例1
+
+４種類の大きさをランダムに用いる正円の描画
+
+```java
+size( 200, 200 );
+
+int[] iCircleSizes = { 6, 12, 18, 30 };  // Circle Size
+
+for( int iCircleIdx = 0; iCircleIdx < 100; iCircleIdx++ )
+{
+  int iElemIdx = floor( random(4) ) % 4;	// 要素番号：0~3のランダム
+  
+  circle( random(width), random(height), iCircleSizes[iElemIdx] );
+}
+```
+
+![array_4patterns_circles](images/array/array_4patterns_circles.png)
+
+#### 例2
+
+6種類のX座標値をランダムに用いる矩形の描画
+
+```java
+size( 200, 200 );
+
+int[] iRectXs = { 0, 40, 80, 120, 160, 180 };  // Rect X
+
+for( int iRectIdx = 0; iRectIdx < 100; iRectIdx++ )
+{
+  int iElemIdx = floor( random(6) ) % 6;	// 要素番号：0~5のランダム
+  
+  rect( iRectXs[iElemIdx], random(height), 20, 10 );
+}
+```
+
+![array_6patterns_rects](images/array/array_6patterns_rects.png)
+
+#### 例3
+
+例2に，4種類の色情報(Gray値)の塗分けを加えた描画．
+
+```java
+size( 200, 200 );
+
+int[] iRectXs = { 0, 40, 80, 120, 160, 180 };  // Rect X
+int[] iColorGrays = { 40, 100, 180, 255 };     // Color Gray
+
+for( int iRectIdx = 0; iRectIdx < 200; iRectIdx++ )
+{
+  int iRectElemIdx  = floor( random(iRectXs.length) ) % iRectXs.length;	 				// 配列iRectXsの要素番号
+  int iColorElemIdx = floor( random(iColorGrays.length) ) % iColorGrays.length;	// 配列iColorGraysの要素番号
+  
+  fill( iColorGrays[iColorElemIdx] );
+  rect( iRectXs[iRectElemIdx], random(height), 20, 10 );
+}
+```
+
+- この例のように，配列の要素数を取得する`random(iRectXs.length)`，`iColorGrays.length`を数値の代わりに用いるとより効率的．
+
+![array_4patterns_grays](images/array/array_4patterns_grays.png)
+
+#### 例4
+
+４種類の大きさと色情報をランダムに用いる矩形の描画．
+
+```java
+size( 600, 100 );
+
+int[] iRectHeights = { 10, 30, 60, 90 };			// 矩形の高さ
+int[] iRectColorGs = { 100, 160, 220, 255 };	// color G
+
+background( 0 );
+rectMode(CENTER);
+
+for( int iX = 0; iX < 600; iX+=10 )
+{
+  int iElemIdx = floor( random(4) ) % 4;
+  
+  fill( 80, iRectColorGs[iElemIdx], 80 );
+  rect( iX, height/2, 10, iRectHeights[iElemIdx] );
+}
+```
+
+![array_4patterns_rects](images/array/array_4patterns_rects.png)
+
+
+
+### 演習3
+
+
+
+
+
+### 配列に数列を代入し，描画に用いる．
+
+1. 配列の初期化の際，for文において任意の数列を代入するよう記述する．
+2. 描画の際，配列の要素番号によってパターンを選択する．
+
+#### 例1
+
+10で始まり，10ずつ増える数列を配列に代入し，
+配列の要素を昇順矩形を描画する．
+
+```java
 int iRectWidth = 12;  // 矩形の幅.
 size( 200, 200 ); 
 int[] iRectHeight = new int[16]; // 配列iRectHeightを宣言(矩形の高さのリスト)
@@ -5933,7 +6395,10 @@ for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ ) // 要素番号順に繰り
 
 ![example01](images/array/example01.png)
 
-### 例2
+#### 例2
+
+例1で用いた配列を再利用し，降順とランダムのパターンの描画を行った例．
+
 ```java
 // 矩形の高さリスト（配列）から，矩形を描画する．(3パターン)
 int iRectWidth = 8;  // 矩形の幅.
@@ -5943,11 +6408,13 @@ for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ ) // 初期化
 {
   iRectHeight[ iIdx ] = 10 + iIdx*10; // 10,20,30....と代入.
 }
+
 colorMode( HSB, 3, iRectHeight.length, 1 ); // 彩度のMaxを配列の要素数に
+
 // 矩形リストを昇順に描画.
-for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ ) // 要素番号順に繰り返し(0~max)
+for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
 {
-  fill( 0, iIdx, 1 );  // R,彩度=要素番号
+  fill( 0, iIdx, 1 );
   rect( 0, height-iRectHeight[iIdx], iRectWidth, iRectHeight[iIdx] );
   translate( iRectWidth, 0 );
 }
@@ -5955,18 +6422,20 @@ for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ ) // 要素番号順に繰り
 translate( iRectWidth, 1 );
 
 // 矩形リストを降順に描画.
-for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
+for( int iIdx=iRectHeight.length - 1; iIdx >= 0; iIdx-- )
 {
-  int iReverseIdx = iRectHeight.length - iIdx - 1; // 要素番号を逆転(max~0)
-  fill( 1, iIdx, 1 );  // G,彩度=要素番号
-  rect( 0, height-iRectHeight[iReverseIdx], iRectWidth, iRectHeight[iReverseIdx] );
+  fill( 1, iRectHeight.length-iIdx, 1 );
+  rect( 0, height-iRectHeight[iIdx], iRectWidth, iRectHeight[iIdx] );
   translate( iRectWidth, 0 );
 }
-translate( iRectWidth, 1 ); // 矩形リストをランダム順に描画.
+
+translate( iRectWidth, 1 );
+
+// 矩形リストをランダム順に描画.
 for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
 {
-  int iRandIdx = floor( random( iRectHeight.length ) );   // 要素番号をランダムに, floor():小数点切り捨て
-  fill( 2, iIdx, 1 );  // B,彩度=要素番号
+  int iRandIdx = floor( random( iRectHeight.length ) );
+  fill( 2, iIdx, 1 );
   rect( 0, height-iRectHeight[iRandIdx], iRectWidth, iRectHeight[iRandIdx] );
   translate( iRectWidth, 0 );
 }
@@ -5974,170 +6443,135 @@ for( int iIdx=0; iIdx < iRectHeight.length; iIdx++ )
 
 ![example02](images/array/example02.png)
 
-### 演習
-
-1. 　角度を5°ずつ足しながら，スクリーン中心からランダムな長さの線を12本描画
-
-```java
-size(300,300);
-translate( width/2, height/2 );
-// 原点をスクリーン中心に移動 
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
-{
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-![practive01_01](images/array/practive01_01.png)
-
-2. 　12本の線の長さを`float`で保存する配列を用意する（宣言だけ）．
-    下の答えを見る前にやってみましょう．
-
-```java
-size(300,300); 
-float[] fLineLength = new float[12];   // 12本の線の長さを保存する配列
-translate( width/2, height/2 );        // 原点をスクリーン中心に移動
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
-{
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-3. 配列に線の長さの値を代入し，初期化しましょう．
-     	線の長さ: ` 20 + random( 100 ) `
-
-   下の答えを見る前にやってみましょう．
-
-```java
-size(300,300);
-float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
-for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
-{
-  fLineLength[iLineIdx] = 20 + random( 100 );
-}
-translate( width/2, height/2 );        // 原点をスクリーン中心に移動 
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
-{
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-4. 線の描画命令`line()`を，配列の要素を参照するよう変更し，
-   12本繰り返すfor文全体を，さらに6回繰り返すよう変更しましょう（for文のネスティング）．
-
-   正しく完成すると下の図のようになる．
-
-
-   下のプログラムの答えを見る前にやってみましょう．
-
-![practive01_02](images/array/practive01_02.png)
-
-```java
-size(300,300);
-float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
-for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
-{
-  fLineLength[iLineIdx] = 20 + random( 100 );
-}
-translate( width/2, height/2 ); // 原点をスクリーン中心に移動
-
-for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
-{
-  for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )  // 線12本分繰り返す
-  {
-    line( 0, 0, fLineLength[iLineIdx], 0 );		   // 配列を参照.
-    rotate( radians(5) );                          // 5°回転
-  }
-}
-```
-
 
 
 ## ２次元配列
 
-これまで説明したのは１次元の配列．
-２次元の配列は特に画像を扱うのに適している．
-実際のメモリ上での配置は以下の図の通り．
+- これまで説明したのは１次元の配列．
 
-![concept03](images/array/concept03.png)
+- ２次元配列の宣言は　以下のような記述となる．
 
-しかし，人にとっては表のイメージで考えた方が分かりやすい場合がある．
+```java
+int[][] iArray = new int[3][4];
+```
+
+​	この記述は概念上は下図のようになる．
 
 ![concept04](images/array/concept04.png)
 
 
 
+- メモリ上での配置は下図のようになる．
+
+![concept03](images/array/concept03.png)
+
+​	このようなメモリ上での配置は直観的に理解しづらいので，概念図で理解したほうが好ましい．
+
+- ２次元配列は，配列名，**2つの要素番号**を使って指定のデータにアクセスする．
+
+
 ### 宣言
 
+#### 書式
+
 ```java
-要素のデータ型[][] 配列名 = new 要素のデータ型[行数][列数];              // 宣言のみ
+要素のデータ型[][] 配列名 = new 要素のデータ型[行数][列数];
 ```
+
+#### 例1
+
+int型の行数4, 列数2の２次元配列iXYを宣言する．
+
+```java
+int[][] iXY = new int[4][2];
+```
+
+![array_xy_concept](images/array/array_xy_concept.png)
+
+#### 例2
+
+float型の行数6, 列数3の２次元配列fRGBを宣言する．
+
+```java
+float[][] fRGB = new float[6][4];
+```
+
+![array_rgb_concept](images/array/array_rgb_concept.png)
+
+### 要素数の取得
+
+#### 書式
+
+##### 行の要素数の取得
+
+```java
+配列名.length
+```
+
+##### 列の要素数の取得
+
+```java
+配列名[行番号].length
+```
+
+列の要素数を取得するには，形式上は行番号を指定する必要があるが，
+通常は以下のように，`0`でよい．
+
+```java
+配列名[0].length
+```
+
+#### 概念
+
+例えば以下の記述は，概念上は下図のようになる．
+
+```java
+int[][] iArray = new int[3][4];
+```
+
+![array_two_length](images/array/array_two_length.png)
 
 #### 例
 
-```java
-int[][] iA = new int[3][4];							// 行数3,列数4の２次元配列iAの宣言
-float[][] fColor = new float[300][200];	// 行数300,列数200の２次元配列iColorの宣言
-```
-
-### 初期化+宣言
-
-１次元配列と同様に，２次元配列も初期化と宣言を同時に行うことができる.
-少しややこしいが，`{}`内に列の値を列挙し，さらにそれを`{}`で入れ子にし，
-行ごとに改行しながら行数文増やしていけば理解しやすい．
+int型の行数が3，列数が4である2次元配列iArrayの行と列の要素数をコンソール出力する．
 
 ```java
-// 行数3,列数4の場合
-要素のデータ型[][] 配列名 = { { 列0値, 列1値，列2値，列3値 },	  // 行0
-													{ 列0値, 列1値，列2値，列3値 },		// 行1
-                   				{ 列0値, 列1値，列2値，列3値 } };	// 行2
+int[][] iArray = new int[3][4];
+
+print( "iArray.length: "    +iArray.length + ",  " );
+print( "iArray.length[0]: " +iArray[0].length );
 ```
 
-#### 例
+![array_two_length_console](images/array/array_two_length_console.png)
 
-```java
-int[][] iA = { { 0,   1， 2， 3 },
-              　{ 10, 11，12，13 },
-              　{ 20, 21，22，23 } };
+### for文を使った初期化
 
-float[][] fColor = { { 1.0, 0.5, 0.0 },
-                    　{ 1.0, 0.6, 0.1 },
-                    　{ 0.9, 0.6, 0.3 },
-                　    { 0.8, 0.5, 0.5} };
-```
+- １次元配列と同様に，２次元配列も初期化が必要．
+- ただし，for文を使う場合，for文のネストを記述する必要がある．
 
-### 初期化
+- 繰り返し回数として，**要素数を取得**し，使用するとより確実．
 
-１次元配列と同様に，２次元配列も初期化に際し，基本的にはfor文を使うのが楽．
-ただし，２次元配列を初期化するには，for文のネスティングを行う必要がある．
-
-繰り返し回数として，**要素数を取得**し設定するとより確実だが，
-行数と列数それぞれの要素数を取得する方法が多少紛らわしい点に注意．
-
-#### 要素数の取得
-
-```java
-配列名.length		  　// 行の要素数の取得.
-配列名[行番号].length	// 列の要素数の取得(取得する列の行番号を指定する必要がある).
-```
+  - 行数と列数それぞれの要素数を取得する方法が多少紛らわしい点に注意．
 
 #### for文を使った基本的な初期化
 
 ```java
 要素のデータ型[][] 配列名 = new 要素のデータ型[行数][列数];
-for( int iRowIdx=0; iRowIdx < 配列名.length; iRowIdx++ )	//行数分繰り返す.
+for( int iRowIdx=0; iRowIdx < 配列名.length; iRowIdx++ )
 {
-  for( int iColumnIdx=0; iColumnIdx < 配列名[iRowIdx].length; iColumnIdx++ )	//列数分繰り返す.
+  for( int iColumnIdx=0; iColumnIdx < 配列名[iRowIdx].length; iColumnIdx++ )
   {
     配列名[iRowIdx][iColumnIdx] = 0;
   }
 }
 ```
 
-##### 例
+行はロウ（ Row ），列はカラム（Column）という．
+繰り返し変数名はそれらに準じている．
+
+#### 例1
+
+int型の行数3,列数4である２次元配列iAを宣言し，全ての要素を0で初期化する例．
 
 ```java
 int[][] iA = new int[3][4]; 
@@ -6150,52 +6584,437 @@ for( int iRowIdx=0; iRowIdx < iA.length; iRowIdx++ )
 }
 ```
 
-### 例: 回転対称ランダム多角形
+#### 例2
+
+int型の行数4,列数5である２次元配列iValuesを宣言し，全ての要素を4で初期化する．
+さらに配列を表状にコンソール出力する．
 
 ```java
-/*　fVertexPos配列のイメージ.
+int[][] iValues = new int[4][5]; 
 
-多角形の頂点座標を格納する．
-
-|　 | 列0 | 列1 |
-|行0| x値 | y値 |
-|行1| x値 | y値 |
-|行2| x値 | y値 |
-|行3| x値 | y値 |
-
-*/
-
-// 実行する度にランダムな図形が描画される.
-int iRepeatTotal = 12;  // 多角形繰り返しの数.
-size( 300, 300 );
-float[][] fVertexPos = new float[4][2];　// 配列[頂点][座標値x,y]
-for( int iVertexIdx=0; iVertexIdx < fVertexPos.length; iVertexIdx++ )  // 配列初期化
+// 列の見出し表示.
+print( "    " );
+for( int iColumnIdx=0; iColumnIdx < iValues[0].length; iColumnIdx++ )
 {
-  fVertexPos[iVertexIdx][0] = random( width/3 );	// スクリーンサイズの三分の一までの値からランダム.
-  fVertexPos[iVertexIdx][1] = random( height/3 );
+  print( "列"+iColumnIdx );
 }
-colorMode( HSB, iRepeatTotal, 1, 1 );　// 色相の最大値を多角形繰り返しの数に設定
-translate( width/2, height/2 );　// 原点をスクリーン中心に移動
-for( int iRepIdx=0; iRepIdx < iRepeatTotal; iRepIdx++ )　// 回転しながら多角形の繰り返し
+println("");
+
+for( int iRowIdx=0; iRowIdx < iValues.length; iRowIdx++ )
 {
-  fill( iRepIdx, 1, 1 );  // 回転毎に色相を変える.
-  beginShape();　// 多角形スタート
-  vertex( 0, 0 );　// 頂点0
-  for( int iVertexIdx=0; iVertexIdx < fVertexPos.length; iVertexIdx++ )  // 頂点の数分繰り返し
+  print( "行"+iRowIdx+": " );  // 行の見出し表示.
+  
+  for( int iColumnIdx=0; iColumnIdx < iValues[iRowIdx].length; iColumnIdx++ )
   {
-    vertex( fVertexPos[iVertexIdx][0], fVertexPos[iVertexIdx][1] );      // 頂点
+    iValues[iRowIdx][iColumnIdx] = 4;
+    print( iValues[iRowIdx][iColumnIdx]+", " );  // 値をそのまま表示.
   }
-  endShape(CLOSE);　// 多角形閉じる.
-  rotate( radians(360/iRepeatTotal) );                                 // 座標系回転
+  println("");  // 改行するだけ．
+}
+```
+
+![array_values_console](images/array/array_values_console.png)
+
+
+
+### 演習4
+
+`int`型の行数5,列数2である２次元配列`iXY`を宣言し，全ての要素を10で初期化するプログラムを書いてみましょう．
+
+- 演習時間3分
+
+
+
+### 宣言+初期化
+
+- １次元配列と同様に，２次元配列も宣言と初期化を同時に行うことができる.
+  - 要素数の記入は省略される．
+- 少しややこしいが，`{}`内に列の値を列挙し，さらにそれを`{}`で入れ子にする．
+- 行ごとに改行しながら入力すれば，表の概念図と対応する並びになるので理解しやすい．
+- 行数3,列数4の２次元配列の場合，以下のように記述する．
+
+```java
+// 行数3,列数4の場合
+要素のデータ型[][] 配列名 = { { 列0値, 列1値，列2値，列3値 },	  // 行0
+													{ 列0値, 列1値，列2値，列3値 },		// 行1
+                   				{ 列0値, 列1値，列2値，列3値 } };	// 行2
+```
+
+#### 例1
+
+int型の行数4,列数2である２次元配列iXYの宣言と初期化．
+
+```java
+int[][] iA = { { 0,  0  },
+               { 0,  12 },
+               { 20, 40 },
+               { 80, 90 } };
+```
+
+#### 例2
+
+float型の行数3,列数4である２次元配列fRGBの宣言と初期化を行う．
+さらに配列を表状にコンソール出力する．
+
+```java
+float[][] fRGB = { { 1.0, 0.5, 0.0 },
+                   { 1.0, 0.6, 0.1 },
+                   { 0.9, 0.6, 0.3 },
+                   { 0.8, 0.5, 0.5 } };
+// 列の見出し表示.
+print( "     " );
+for( int iColumnIdx=0; iColumnIdx < fRGB[0].length; iColumnIdx++ )
+{
+  print( "列"+iColumnIdx+"  " );
+}
+println("");
+
+for( int iRowIdx=0; iRowIdx < fRGB.length; iRowIdx++ )
+{
+  print( "行"+iRowIdx+": " );  // 行の見出し表示.
+  
+  for( int iColumnIdx=0; iColumnIdx < fRGB[iRowIdx].length; iColumnIdx++ )
+  {
+    print( fRGB[iRowIdx][iColumnIdx]+", " );  // 値をそのまま表示.
+  }
+  println("");  // 改行するだけ．
+}
+```
+
+![array_float_rgb_console](images/array/array_float_rgb_console.png)
+
+### 演習5
+
+`int`型の行数3,列数2である２次元配列`iXY`を宣言し，宣言と初期化を同時に行うプログラムを書いてみましょう．
+
+- 初期化で代入する値は 0~99の間の値であれば何でもよい．
+
+- 演習時間3分
+
+
+
+## ２次元配列を使った描画
+
+### 多角形描画
+
+- 多角形は複数の頂点XY座標もつ．
+
+- この値を２次元配列に格納すると，プログラムが効率化できる．
+
+- 例えば以下の配列は，下図のように各頂点のXY座標値をもつ表として考えることができる．
+
+  ```java
+  int[][] iVertexes = { {  30,  40 },
+                        { 110,  20 },
+                        { 180,  80 },
+                        { 140, 180 },
+                        {  40, 150} };
+  ```
+  
+  
+
+![array_two_xy_concept](images/array/array_two_xy_concept.png)
+
+- 各行が多角形それぞれの頂点を表す．
+- 列0は各頂点のX座標値，列1は各頂点のY座標値を表す．
+  - 例えば，`iVertexes[2][1]`には頂点1のY座標値を格納することになる．
+
+#### 例1
+
+五つの頂点をもつ多角形の描画．
+
+```java
+size( 200, 200 );
+
+int[][] iVertexes = { {  30,  40 },
+                      { 110,  20 },
+                      { 180,  80 },
+                      { 140, 180 },
+                      {  40, 150} };
+
+strokeWeight( 4 );
+
+beginShape();
+for( int iVertexIdx=0; iVertexIdx < iVertexes.length; iVertexIdx++ )
+{
+  vertex( iVertexes[iVertexIdx][0], iVertexes[iVertexIdx][1] );
+}
+endShape(CLOSE);
+```
+
+![array_two_5vertexes](images/array/array_two_5vertexes.png)
+
+- 描画結果と頂点の対応は下図のようになる．
+
+  ![array_two_5vertexes_concept](images/array/array_two_5vertexes_concept.png)
+
+#### 例2
+
+多角形を回転させながら複数描画する．
+実行する度にランダムな図形が描画される.
+
+```java
+int iRepeatTotal = 12;  // 多角形繰り返しの数.
+
+size( 300, 300 );
+
+float[][] fVertexes = new float[4][2];
+
+// 配列初期化
+for( int iVertexIdx=0; iVertexIdx < fVertexes.length; iVertexIdx++ )
+{
+  fVertexes[iVertexIdx][0] = random( width/3 );  // スクリーンサイズの三分の一までの値からランダム.
+  fVertexes[iVertexIdx][1] = random( height/3 );
+}
+
+// 色相の最大値を多角形繰り返しの数に設定
+colorMode( HSB, iRepeatTotal, 1, 1 );
+
+// 原点をスクリーン中心に移動
+translate( width/2, height/2 );
+
+// 回転しながら多角形の繰り返し描画.
+for( int iRepIdx=0; iRepIdx < iRepeatTotal; iRepIdx++ )
+{
+  fill( iRepIdx, 1, 1 ); // 回転毎に色相を変える.
+  beginShape();
+  vertex( 0, 0 );        // スクリーン中心
+  
+  // 頂点の数分繰り返し
+  for( int iVertexIdx=0; iVertexIdx < fVertexes.length; iVertexIdx++ )
+  {
+    vertex( fVertexes[iVertexIdx][0], fVertexes[iVertexIdx][1] );
+  }
+  endShape(CLOSE);
+  
+  // 座標系を回転．
+  rotate( radians(360/iRepeatTotal) );
 }
 ```
 
 ![example03](images/array/example03.png)
 
-### 演習: ルール９０セル・オートマトン
+### 複数の色情報
 
-セル・オートマトンとは，格子状に配置されたセルがそれぞれ状態を持ち，隣接している周囲のセルの状態をもとに，時間とともに状態を遷移させていくモデルです．
-一定のルールを与えることで，規則が単純でも，豊かな結果を得ることができます．
+- カラー値は複数チャンネルの値をもつ．
+  - R値，G値，B値
+
+  - H値，S値，B値
+
+- これらの値を２次元配列に格納すると，プログラムが効率化できる．
+
+#### RGB情報の記述
+
+例えば以下の配列は，下図のようにR,G,B値をもつ表として考えることができる．
+
+```java
+int[][] iRGB = { { 255, 100, 100 },
+                 { 230, 230, 230 },
+                 {  80, 160,   0 },
+                 { 230, 215,   0 },
+                 { 180, 185,   0 } };
+```
+
+![array_colors_rgb_concept](images/array/array_colors_rgb_concept.png)
+
+#### HSB情報の記述
+
+例えば以下の配列は，下図のようにH,S,B値をもつ表として考えることができる．
+
+```java
+int[][] iHSB = { { 0,  80, 80 },
+                 { 60, 80, 80 },
+                 { 230,60, 80 },
+                 { 300,15, 80 } };
+```
+
+![array_colors_hsb_concept](images/array/array_colors_hsb_concept.png)
+
+#### 例1
+
+HSB配列を使った格子形状の描画．
+
+```java
+size( 400,400 );
+background(0);
+
+int[][] iHSB = { { 0,  80, 80 },
+                 { 60, 80, 80 },
+                 { 230,60, 80 },
+                 { 300, 1, 90 } };
+
+colorMode( HSB, 360, 100, 100 );
+
+for( int iY = 0; iY < height; iY+=20 )
+{
+  for( int iX = 0; iX < width; iX+=20 )
+  {
+    int iColorIdx = floor( random( iHSB.length ) );	// 行番号をランダムで選択:0~3
+    
+    fill( iHSB[iColorIdx][0], iHSB[iColorIdx][1], iHSB[iColorIdx][2] );
+    
+    square( iX, iY, 20 );
+  }
+}
+```
+
+![array_colors_hsb](images/array/array_colors_hsb.png)
+
+#### 例2
+
+RGB配列を使った様々な図形の描画．
+
+```java
+size( 400,400 );
+background(0);
+
+int[][] iRGB = { { 255, 100, 100 },
+                 { 230, 230, 230 },
+                 {  80, 160,   0 },
+                 { 230, 215,   0 },
+                 { 180, 185,   0 } };
+
+translate( 40, 40 );
+
+// 矩形描画
+rectMode(CENTER);
+for( int iRectIdx = 0; iRectIdx < 5; iRectIdx++ )
+{
+  fill( iRGB[iRectIdx][0], iRGB[iRectIdx][1], iRGB[iRectIdx][2] );
+  square( iRectIdx*80, 0, 80 );
+}
+
+translate( 0, 80 );
+
+// 正円描画
+for( int iCircleIdx = 0; iCircleIdx < 5; iCircleIdx++ )
+{
+  fill( iRGB[iCircleIdx][0], iRGB[iCircleIdx][1], iRGB[iCircleIdx][2] );
+  circle( iCircleIdx*80, 0, 80 );
+}
+
+translate( 0, 80 );
+
+// 三角形描画
+for( int iTriangleIdx = 0; iTriangleIdx < 5; iTriangleIdx++ )
+{
+  fill( iRGB[iTriangleIdx][0], iRGB[iTriangleIdx][1], iRGB[iTriangleIdx][2] );
+  triangle( iTriangleIdx*80,   -40,
+            iTriangleIdx*80-40, 40,
+            iTriangleIdx*80+40, 40 );
+}
+
+translate( 0, 80 );
+
+// 弧描画
+for( int iArcIdx = 0; iArcIdx < 5; iArcIdx++ )
+{
+  fill( iRGB[iArcIdx][0], iRGB[iArcIdx][1], iRGB[iArcIdx][2] );
+  arc( iArcIdx*80, 0, 80, 80, radians(45), radians(270), PIE );
+}
+
+translate( 0, 80 );
+
+// 多角形描画
+for( int iPolygonIdx = 0; iPolygonIdx < 5; iPolygonIdx++ )
+{
+  fill( iRGB[iPolygonIdx][0], iRGB[iPolygonIdx][1], iRGB[iPolygonIdx][2] );
+  beginShape();
+  vertex( iPolygonIdx*80-40, -40 );
+  vertex( iPolygonIdx*80+40, -40 );
+  vertex( iPolygonIdx*80+40,  40 );
+  endShape(CLOSE);
+}
+```
+
+![array_colors_primitives](images/array/array_colors_primitives.png)
+
+### 演習6
+
+以下のサンプルを改良し，より豊かな表現を行ってみましょう．
+
+- 色のパターンを増やす．
+- 背景や線に色を指定する．
+- if文を使って図形の大きさを変化させる．
+- 演習時間
+
+HSB配列を使った正円を格子状に並べた描画．
+
+```
+size( 400,400 );
+
+int[][] iHSB = { { 0,  0,   0 },
+                 { 0,  0, 100 } };
+
+colorMode( HSB, 360, 100, 100 );
+
+ellipseMode(CORNER);
+for( int iY = 0; iY < height; iY+=20 )
+{
+  for( int iX = 0; iX < width; iX+=20 )
+  {
+    int iColorIdx = floor( random( iHSB.length ) );  // 行番号をランダムで選択:0~3
+    
+    fill( iHSB[iColorIdx][0], iHSB[iColorIdx][1], iHSB[iColorIdx][2] );
+    
+    circle( iX, iY, 20 );
+  }
+}
+```
+
+![array_circles_hsb_simple](images/array/array_circles_hsb_simple.png)
+
+#### 作例
+
+- 16分の1の確率で円を大きくする．
+- 円の大きさに比例して枠線を太くする．
+
+```java
+size( 400,400 );
+background( 0, 0, 20 );
+
+int[][] iHSB = { { 10,   40,  80 },
+                 { 120,  80,  70 },
+                 { 280,  60,  60 },
+                 { 90,   90,  60 },
+                 { 340,  70, 100 } };
+
+colorMode( HSB, 360, 100, 100, 100 );
+
+for( int iY = 10; iY < height; iY+=20 )
+{
+  for( int iX = 10; iX < width; iX+=20 )
+  {
+    int iColorIdx = floor( random( iHSB.length ) );  // 行番号をランダムで選択
+    
+    fill( iHSB[iColorIdx][0], iHSB[iColorIdx][1], iHSB[iColorIdx][2], 60 );
+    
+    int iCircleSize =  floor( random(12,28));
+    
+    if( floor(random(16))%16 == 0 )    // 16分の1の確率で円を大きくする．
+    {
+      iCircleSize = floor( random(60,260));
+      stroke( 10, 2, 2 );
+      strokeWeight(iCircleSize/14);    // 円の大きさに比例して枠線も太くする．
+    }
+    else
+    {
+      noStroke();
+    }
+    
+    strokeWeight(iCircleSize/14);    // 円の大きさに比例して枠線も太くする．
+    circle( iX, iY, iCircleSize );
+  }
+}
+```
+
+![array_circles_hsb_koinobori](images/array/array_circles_hsb_koinobori.png)
+
+### 参考: ルール９０セル・オートマトン
+
+- セル・オートマトンとは，格子状に配置されたセルがそれぞれ状態を持ち，隣接している周囲のセルの状態をもとに，時間とともに状態を遷移させていくモデル．
+- ２次元配列を使って表現することができる．
+- 一定のルールを与えることで，単純な規則から複雑な結果を得ることができる．
 
 #### 初期状態
 
@@ -6218,99 +7037,109 @@ for( int iRepIdx=0; iRepIdx < iRepeatTotal; iRepIdx++ )　// 回転しながら�
 今回制作するプログラムでは，セル=ピクセルと考える．
 
 1. 二次元配列の宣言，初期化
-   格子状のセルを表す配列を用意しましょう．
+   格子状のセルを表す配列を用意する．
 
-```java
-size(500,500);
-int[][] cell=new int[width][height];     // スクリーンサイズ分の配列.
-for(int iY=0; iY<cell.length; iY++)  	   // 列の繰り返し
-{
-  for(int iX=0; iX<cell[iY].length; iX++)  // 行の繰り返し
-  {
-    cell[iX][iY]=0;  }
-}
-```
+   ```java
+   size(500,500);
+   
+   int[][] cell = new int[width][height]; // スクリーンサイズ分の配列.
+   
+   for(int iY=0; iY<height; iY++)  	   // 列の繰り返し
+   {
+     for(int iX=0; iX<width; iX++)      // 行の繰り返し
+     {
+       cell[iX][iY]=0;
+     }
+   }
+   ```
 
 2. 初期状態の入力
 
    - 最初の行の中心のセルを1，それ以外は0
    - 初期状態の唯一のセルを描画
 
-   ※ステップ1のプログラムの後に追加
+   ※以上の処理をステップ1のプログラムの後に追加する．
 
-```java
-cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
-point( width/2, 0 );  // 描画.
-```
+   ![cell_automaton01_01](images/array/cell_automaton01_01.png)
 
-3. 一行ずつセルの内容を更新して描画
-   ※ステップ2のプログラムの後に追加
+   ```java
+   size(500,500);
+   
+   int[][] cell=new int[width][height]; // スクリーンサイズ分の配列.
+   
+   for(int iY=0; iY<height; iY++)  	   // 列の繰り返し
+   {
+     for(int iX=0; iX<width; iX++)      // 行の繰り返し
+     {
+       cell[iX][iY]=0;
+     }
+   }
+   
+   cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
+   point( width/2, 0 );  // 描画.
+   ```
 
-```java
-for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
-{
-  for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
-  {
-    // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
-    cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
-    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
-    {
-      point( iX, iY );
-    }
-  }
-}
-```
+3. 隣接するセルの合計が次の(行の)値になる．
+
+   - for文のネストによる繰り返し
+
+   ※以上の処理をステップ2のプログラムの後に追加する．
+
+   ![cell_automaton01_02](images/array/cell_automaton01_02.png)
+
+   ```java
+   size(500,500);
+   
+   int[][] cell=new int[width][height]; // スクリーンサイズ分の配列.
+   for(int iY=0; iY<height; iY++)  	   // 列の繰り返し
+   {
+     for(int iX=0; iX<width; iX++)      // 行の繰り返し
+     {
+       cell[iX][iY]=0;
+     }
+   }
+   
+   cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
+   point( width/2, 0 );  // 描画.
+   
+   for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
+   {
+     for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
+     {
+       // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
+       cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
+       if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
+       {
+         point( iX, iY );
+       }
+     }
+   }
+   ```
+
+   
 
 4. スクリーン両端の処理
    ステップ3のままだと`iX-1`の値がマイナスになったり，`iX+1`の値が配列の要素番号の最大を超えてしまう．
-   ※ステップ3のプログラムを書き換える．
-
-```java
-for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
-{
-  for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
-  {
-    if( iX == 0 )             // スクリーン左端の処理.
-    {
-      cell[iX][iY] = ( 0 + cell[iX+1][iY-1] )%2;
-    }
-    else if( iX == width-1 )  // スクリーン右端の処理.
-    {
-      cell[iX][iY] = ( cell[iX-1][iY-1] + 0 )%2;
-    }
-    else
-    {
-      // 隣接するセルの合計が偶数なら0,奇数なら1をセルの値に代入.
-      cell[iX][iY] = ( cell[iX-1][iY-1] + cell[iX+1][iY-1] )%2;
-    }
-    if( cell[iX][iY] == 1 )    // もしもセルの値が1なら.
-    {
-      point( iX, iY );
-    }
-  }
-}
-```
+   ※ステップ3までのプログラムを書き換えると以下のようになる．
 
 #### 完成したプログラム
 
 
 ```java
-// シェルピンスキーのギャスケット.
-
-// 初期状態：最初の行の中心のセルを1，それ以外は0
-
 size(500, 500);
 
-int[][] cell=new int[width][height];       // スクリーンサイズ分の配列. 
-for(int iY=0; iY<cell.length; iY++)  // 列の繰り返し
+int[][] cell=new int[width][height]; // スクリーンサイズ分の配列.
+for(int iY=0; iY<height; iY++)  	   // 列の繰り返し
 {
-  for(int iX=0; iX<cell[iY].length; iX++) // 行の繰り返し
+  for(int iX=0; iX<width; iX++)      // 行の繰り返し
   {
     cell[iX][iY]=0;
   }
 }
+
 cell[width/2][0]= 1;  // 初期状態：最初の行の中心のセルを1，それ以外は0
 point( width/2, 0 );  // 初期状態の唯一のセルを描画. 
+
 for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
 {
   for(int iX=0; iX<width; iX++)	// 列0から繰り返し．
@@ -6342,20 +7171,23 @@ for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
 
 #### 初期状態（一行目のセルの状態）を変える
 
+巻貝の表面模様のような画像が生成される．
+この例では最初の行のセルの値が0か1かを全てランダムに決定している．
+
 ```java
-// シェルピンスキーのギャスケット.
+size(500,500);
 
-// 初期状態：最初の行のセルの値を全てランダム
+int[][] cell=new int[width][height]; // スクリーンサイズ分の配列.
 
-size(500, 500);
-int[][] cell=new int[width][height];       // スクリーンサイズ分の配列. 
-for(int iY=0; iY<cell.length; iY++)  // 列の繰り返し
+for(int iY=0; iY<height; iY++)  	   // 列の繰り返し
 {
-  for(int iX=0; iX<cell[iY].length; iX++)        // 行の繰り返し
+  for(int iX=0; iX<width; iX++)      // 行の繰り返し
   {
     cell[iX][iY]=0;
   }
-} // 初期状態：最初の行のセルの値を全てランダム
+}
+
+// 初期状態：最初の行のセルの値を全てランダム
 for(int iX=0; iX<width; iX++)
 {
   cell[iX][0]= floor( random( 100 ) )%2;
@@ -6364,6 +7196,7 @@ for(int iX=0; iX<width; iX++)
     point( iX, 0 );
   }
 }
+
 for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
 {
   for(int iX=0; iX<width; iX++)
@@ -6395,21 +7228,30 @@ for(int iY=1; iY<height; iY++)  // ２行目から繰り返し開始．
 
 ## 多次元配列
 
-配列の次元数は二次元以上にも増やすことができる．
-しかし，次元が増えるほど人にとっては直感的に理解しにくくなる．
-よって，せいぜい２次元配列までに留めることを推奨．
+- 配列の次元数は二次元以上にも増やすことができる．
+
+- しかし，次元が増えるほど人にとっては直感的に理解しにくくなる．
+  - 使用頻度も少ない．
+
+### int型の３次元配列の宣言文の例
 
 ```java
-int [][][] iRGBColor = new int[3][640][480];		// RGBそれぞれのバッファ.
+int [][][] iRGBColor = new int[3][640][480];
 ```
 
 ![rgb_buffer](images/array/rgb_buffer.png)
 
-#### 例
+#### 例1
+
+ピクセル毎のRGB値を持つ３次元配列を使った描画．
 
 ```java
-int iColorMax = 100;size(400,400);
+int iColorMax = 100;
+
+size(400,400);
+
 int[][][] iColor = new int[3][width][height]; // 初期化
+
 for(int iRGB = 0; iRGB < iColor.length; iRGB++ )
 {
   for(int iX = 0; iX < width; iX++ )
@@ -6420,6 +7262,7 @@ for(int iRGB = 0; iRGB < iColor.length; iRGB++ )
     }
   }
 }
+
 // 色決定
 for(int iX = 0; iX < width; iX++ )
 {
@@ -6439,6 +7282,7 @@ for(int iX = 0; iX < width; iX++ )
     }
   }
 }
+
 // 全チャンネルを参照し，画素RGB描画
 colorMode(RGB,iColorMax);
 for(int iX = 0; iX < width; iX++ )
