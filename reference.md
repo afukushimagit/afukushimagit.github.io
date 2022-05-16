@@ -5240,10 +5240,10 @@ https://processing.org/reference/while.html
 上記のフローチャートをコード化したものが下のプログラム．
 
 ```java
-if( 条件式 )	//   [条件A]
+if( 条件式A )	//   [条件A]
 {
   // 条件Aを満たした場合,このブロックへ処理が移る．
-  if( 条件式 )	// [条件B]
+  if( 条件式B )	// [条件B]
   {
     // 条件Bを満たした場合，実行する(命令)文;       [処理A]
     // 二段階インデントされる．
@@ -5255,7 +5255,7 @@ if( 条件式 )	//   [条件A]
 }
 else
 {    // 条件Aを満たさなかった場合,このブロックへ処理が移る．
-  if( 条件式 )	// [条件C]
+  if( 条件式C )	// [条件C]
   {
     // 条件Cを満たした場合，実行する(命令)文;       [処理C]
   }
@@ -5266,7 +5266,32 @@ else
 }
 ```
 
+コメント無しだと以下のような形式．
 
+```java
+if( 条件式A )
+{
+  if( 条件式B )
+  {
+    
+  }
+  else
+  {
+    
+  }
+}
+else
+{
+  if( 条件式C )
+  {
+    
+  }
+  else
+  {
+    
+  }
+}
+```
 
 ### for文の中にif文を入れたネストの例
 
@@ -5326,7 +5351,7 @@ for( int iPointIdx=0; iPointIdx < 8000; iPointIdx++ )
 
 ![if_sample02](images/if_switch/if_sample02.png)
 
-#### 演算9
+#### 演習9
 
 例2をベースに，下図のような５つの領域へのランダム点描を行うプログラムを作成してみましょう．
 
@@ -5413,78 +5438,115 @@ for( int iPointIdx=0; iPointIdx < 5000; iPointIdx++ )
 
 #### 例1
 
-繰り返し変数`iX`と`iY`の値をコンソール出力する例．
-
-- コンソール出力の最初の一行目で変数`iX`の値のみが0~9まで増えている．
-  - ネストの内側の繰り返しが最初に一巡行われている．
-- コンソール出力の二行目で変数`iY`の値が1に増えている．
-  - ネストの内側の繰り返しが一巡すると，変数`iY`の値が1増える．
+ウィンドウの全てのピクセルに対して描画を行うfor文のネスト．
 
 ```java
-for( int iY=0; iY<10; iY++ )							// ネストの外側の繰り返し変数:iY
+for( int iY=0; iY<height; iY++ )
 {
-  for( int iX=0; iX<10; iX++ )						// ネストの内側の繰り返し変数:iX
+  for( int iX=0; iX<width; iX++ )
   {
-    print( "X" + iX + "Y" + iY + ", " );
+    point( iX, iY );
   }
-  println("");														// 改行
+}
+```
+
+#### 例2
+
+ネストの中の繰り返し変数`iX`の値をコンソール出力する例．
+
+```java
+for( int iY=0; iY<10; iY++ )
+{
+  for( int iX=0; iX<10; iX++ )
+  {
+    print( iX + ", " );
+  }
+  println("");                            // 改行
 }
 ```
 
 ![flow_for_nest_xy_console](images/flow/flow_for_nest_xy_console.png)
 
+- `iX`の値が0~9まで順番にコンソール出力され改行，という処理が繰り返されている．
+
+  - ネストの中のfor文が１行分のコンソール出力を行っている．
+
+  ![flow_for_nest_xy_console_concept](images/flow/flow_for_nest_xy_console_concept.png)
+
+#### 例3
+
+ネストの中の繰り返し変数`iX`と`iY`の値をコンソール出力する例．
+
+```java
+for( int iY=0; iY<10; iY++ )
+{
+  for( int iX=0; iX<10; iX++ )
+  {
+    print( "X" + iX + "Y" + iY + ", " );
+  }
+  println("");                            // 改行
+}
+```
+
+![flow_for_nest_xy_double_console](images/flow/flow_for_nest_xy_double_console.png)
+
 ##### 処理の流れ
 
 1. 外側，内側のfor文の繰り返し用変数に初期値が代入される．
    内側のブロック文が最初に実行される．
-
-![flow_for_nest_xy_flow_00](images/flow/flow_for_nest_xy_flow_00.png)
+   ![flow_for_nest_xy_flow_00](images/flow/flow_for_nest_xy_flow_00.png)
 
 ![flow_for_nest_xy_console_00](images/flow/flow_for_nest_xy_console_00.png)
 
 2. 内側のfor文が一巡する．（１巡目）
    コンソール出力のを見ると，変数`iX`値が1ずつ増えていることが確認できる．
-
-![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
+   
+   ![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
 
 ![flow_for_nest_xy_console_01](images/flow/flow_for_nest_xy_console_01.png)
 
 3. 内側のfor文が終了し，次の文でコンソール出力を改行する．
 
-![flow_for_nest_xy_flow_02](images/flow/flow_for_nest_xy_flow_02.png)
+   ![flow_for_nest_xy_flow_02](images/flow/flow_for_nest_xy_flow_02.png)
+
+![flow_for_nest_xy_console_01_5](images/flow/flow_for_nest_xy_console_01_5.png)
 
 4. 外側のfor文の変数の更新と条件式の評価が実行される．
    変数`iY`が1に増える．
-
-![flow_for_nest_xy_flow_03](images/flow/flow_for_nest_xy_flow_03.png)
+   ![flow_for_nest_xy_flow_03](images/flow/flow_for_nest_xy_flow_03.png)
 
 5. 内側のfor文の繰り返し用変数に初期値が代入される．
    内側のブロック文が実行される．（２巡目開始）
    コンソール出力のを見ると，変数`iY`値が1に増えていることが確認できる．
-
-![flow_for_nest_xy_flow_04](images/flow/flow_for_nest_xy_flow_04.png)
+   
+   ![flow_for_nest_xy_flow_04](images/flow/flow_for_nest_xy_flow_04.png)
 
 ![flow_for_nest_xy_console_02](images/flow/flow_for_nest_xy_console_02.png)
 
 6. 内側のfor文が一巡する．（２巡目）
 
-![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
+   ![flow_for_nest_xy_flow_01](images/flow/flow_for_nest_xy_flow_01.png)
 
 ![flow_for_nest_xy_console_03](images/flow/flow_for_nest_xy_console_03.png)
 
 以上のような処理を繰り返している．
 
+
+
 #### 演習10
 
-例1のプログラムをコピーして，以下のようにコンソール出力がされるよう<u>条件式を変更</u>してみましょう．
+例3のプログラムをコピーして，以下のようにコンソール出力がされるよう<u>条件式を変更</u>してみましょう．
 
 - 演習時間2分程度
 
 ![flow_for_nest_xy_console_practice](images/flow/flow_for_nest_xy_console_practice.png)
 
-#### 例2
 
-ウィンドウに正円を隙間なく並べて描画した例．
+
+#### 例4
+
+ウィンドウに正円を並べて描画した例．
+繰り返し変数の更新式が`iY+=20`，`iX+=20`であることに注意．
 
 ```java
 size( 200, 200 );
@@ -5494,6 +5556,7 @@ for( int iY = 10; iY < height; iY+=20 )
 {
   for( int iX = 10; iX < width; iX+=20 )
   {
+    fill( iX, iY, 0 );
     circle( iX, iY, 20 );
   }
 }
@@ -5501,21 +5564,20 @@ for( int iY = 10; iY < height; iY+=20 )
 
 ![flow_circles_in_window](images/flow/flow_circles_in_window.png)
 
-#### 例3
+#### 例5
 
 グラデーションのカラーチャート(矩形)
 
-- 内側のfor文でX座標値を20増やしながら一行分の矩形を描画している．
-- 外側のfor文でY座標値を20増やし，一段（次の行へ）下げている．
+- 繰り返し変数の初期値`int iY=5`，`int iX=5`で描画位置を微調整している．
 
 ```java
 size( 200, 200 );                        // ウィンドウサイズを200×200．
 colorMode( HSB, 200 );                   // HSB最大値を200に設定．
 background( 200 );
 
-for( int iY=0; iY<200; iY+=20 )        // Y座標値を20ずらしながら繰り返し．
+for( int iY=5; iY<200; iY+=20 )
 {
-  for( int iX=0; iX<200; iX+=20 )      // X座標値を20ずらしながら繰り返し．
+  for( int iX=5; iX<200; iX+=20 )
   {
     fill( iX, iY, 200 );    // 色相をiX, 彩度をiY, 輝度を200に設定．
     rect( iX, iY, 10, 10 ); // iX,iYの座標に10×10の大きさの矩形を描画．
@@ -5525,103 +5587,72 @@ for( int iY=0; iY<200; iY+=20 )        // Y座標値を20ずらしながら繰�
 
 ![flow_for_nest_rects_graduation](images/flow/flow_for_nest_rects_graduation.png)
 
-#### 例4
+#### 例6
 
-グラデーションのカラーチャート(点描画)
+ネストの中のfor文で，複数の図形を回転させながら繰り返し描画を行う例．
 
-- 内側のfor文でX座標値を1増やしながら一行分の矩形を描画している．
-- 外側のfor文でY座標値を1増やし，一段（次の行へ）下げている．
+- 座標変換の必要性を要確認．
 
 ```java
-size(200,200);
-colorMode(HSB, 200); // カラーモード:HSB, 各値の最大値200
-for ( int iY = 0; iY < height; iY++ )  // Y座標値を1ずらしながら繰り返し．
+size( 200, 400 );
+
+rectMode(CENTER);
+for( int iY=10; iY<height; iY+=35 )	// 35ピクセルずつ下にずらす．
 {
-  for ( int iX = 0; iX < width; iX++ ) // X座標値を1ずらしながら繰り返し．
+  pushMatrix();
+  
+  translate( random(20,180), iY );	// 5つの矩形の塊の中心へ座標系の中心を移動．
+  
+  // 5つの矩形の塊を１つ描画．
+  for( int iRectIdx=0; iRectIdx<5; iRectIdx++ )
   {
-    stroke( iX, iY, 200 );    				 // 色相をiX, 彩度をiY, 輝度を200に設定．
-    point( iX, iY);										 // iX,iYの座標に点を描画．
+    fill( 51+iY/2, 110, 20 );
+    rect( 15, 0, 15, 10 );
+    rotate( radians(72) );	// 72°回転
   }
+  
+  popMatrix();  // translate()とrotate()で変化した座標系をリセット．
 }
 ```
 
-<img src="images/loop/nesting_xy.png" alt="nesting_xy" style="zoom:100%;" />
+![flow_for_nest_rects_falling](images/flow/flow_for_nest_rects_falling.png)
 
+#### 演習11
 
+例6のプログラムに変更を加え，自由に花のような模様を作ってみましょう．
 
-### 演習11
+- 演習時間8分程度
+- 下図は参考イメージとプログラム．
+  難しい場合は参考にしましょう．
 
-下図のようなウィンドウ中心から線を回転させながら描画するプログラムを作成する．
-
-![practive01_02](images/array/practive01_02.png)
-
-1. 　角度を5°ずつ足しながら，スクリーン中心からランダムな長さの線を12本描画
-
-```java
-size(300,300);
-translate( width/2, height/2 );
-// 原点をスクリーン中心に移動 
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
-{
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-![practive01_01](images/array/practive01_01.png)
-
-2. 　12本の線の長さを`float`で保存する配列を用意する（宣言だけ）．
+![flow_for_nest_falling_practice](images/flow/flow_for_nest_falling_practice.png)
 
 ```java
-size(300,300); 
-float[] fLineLength = new float[12];   // 12本の線の長さを保存する配列
-translate( width/2, height/2 );        // 原点をスクリーン中心に移動
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
+size( 200, 400 );
+background(20);
+
+rectMode(CENTER);
+for( int iY=10; iY<height; iY+=35 )
 {
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-3. 配列に線の長さの値を代入し，初期化しましょう．
-   	線の長さ: ` 20 + random( 100 ) `
-
-```java
-size(300,300);
-float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
-for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
-{
-  fLineLength[iLineIdx] = 20 + random( 100 );
-}
-translate( width/2, height/2 );        // 原点をスクリーン中心に移動 
-for( int iLineIdx = 0; iLineIdx<12; iLineIdx++ )  // 線12本分繰り返す
-{
-  line( 0, 0, 20 + random( 100 ), 0 );            // 長さランダム20~120
-  rotate( radians(5) );                           // 5°回転
-}
-```
-
-4. 線の描画命令`line()`を，配列の要素を参照するよう変更し，
-   12本繰り返すfor文全体を，さらに6回繰り返すよう変更しましょう（for文のネスティング）．
-
-5. 完成プログラム
-
-```java
-size(300,300);
-float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
-for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
-{
-  fLineLength[iLineIdx] = 20 + random( 100 );
-}
-translate( width/2, height/2 ); // 原点をスクリーン中心に移動
-
-for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
-{
-  for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )  // 線12本分繰り返す
+  pushMatrix();
+  
+  translate( random( 20,180 ), iY );		// 花の中心へ座標系の中心を移動．
+  
+  rotate( radians( random( 5,20 ) ) );  // 花弁の初期角度をランダムに．
+  
+  // 8枚の花弁を描画．
+  for( int iRectIdx=0; iRectIdx<8; iRectIdx++ )
   {
-    line( 0, 0, fLineLength[iLineIdx], 0 );		   // 配列を参照.
-    rotate( radians(5) );                          // 5°回転
+    fill( random( 220, 250 ), 50+iY/4, 20 );
+    ellipse( 15, 0, 15, 10 );
+    rotate( radians(45) );
   }
+  
+  // 花の中心部分．
+  fill( 220, 200+iY/8, 10 );
+  circle( 0, 0, 16 );
+  
+  popMatrix();  // translate()とrotate()で変化した座標系をリセット．
 }
 ```
 
@@ -5649,7 +5680,63 @@ for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
 | `条件式A || 条件式B` | `||`   | 条件式Aが真，もしくは条件式Bが真 | <img src="images/flow/flow_boolean_or.png" alt="flow_boolean_or" style="zoom:80%;" /> | 論理和 OR  |
 | `! 条件式`           | `!`    | 条件式が偽                       | <img src="images/flow/flow_boolean_not.png" alt="flow_boolean_not" style="zoom:80%;" /> | 否定 NOT   |
 
+※論理演算，特に!は本授業では使用頻度は高くないため，．
+
 ### 例1
+
+変数`iRandom`が偶数かつ3の倍数であるか調べるif文
+
+```java
+int iRandom = floor( random(100) );
+
+if( iRandom%2 == 0 && iRandom%3 == 0 )
+{
+  print( iRandom );
+}
+```
+
+### 例2
+
+変数`iRandom`が偶数もしくは3の倍数であるか調べるif文
+
+```java
+int iRandom = floor( random(100) );
+
+if( iRandom%2 == 0 || iRandom%3 == 0 )
+{
+  print( iRandom );
+}
+```
+
+### 例3
+
+変数`iRandom`が4の倍数ではない場合に真を返す条件式
+条件式を`()`で囲む必要がある．
+
+```java
+int iRandom = floor( random(100) );
+
+if( !(iRandom%4 == 0) )
+{
+  print( iRandom );
+}
+```
+
+しかし，実はこの記述は適切ではない．
+下のような記述が好ましい．
+
+```
+int iRandom = floor( random(100) );
+
+if( iRandom%4 != 0 )
+{
+  print( iRandom );
+}
+```
+
+この記述のように，論理演算子ではなく比較演算子`!=`を用いるほうが適切．
+
+### 例4
 
 論理演算を使った縦縞模様の描画．
 
@@ -5683,7 +5770,7 @@ for( int iX = 0; iX < width; iX+=2 )  // 変数iXの値に2加えながら繰り
 
 
 
-### 例2
+### 例5
 
 for文のネストと論理演算を使った，市松模様の描画
 
@@ -6105,6 +6192,8 @@ fRGBA[3] = 0.8;
 
 ![array_shokika_fRGBA](images/array/array_shokika_fRGBA.png)
 
+
+
 ### 演習1
 
 int型（整数型）の要素を4個持つ，名前が`iRGBA`の配列の宣言・初期化を行うプログラムを書いてみましょう．
@@ -6140,7 +6229,7 @@ print( iX.length );
 
 ![array_iX_length](images/array/array_iX_length.png)
 
-#### 必要性
+#### なぜ必要なのか
 
 例えば，以下の配列の宣言文の場合．
 
@@ -6166,13 +6255,13 @@ float[] fRGBA = new float[4];
 #### for文を使った基本的な初期化
 
 ```java
-for( int iElemIdx=0; iElemIdx < 変数名.length; iElemIdx++ )
+for( int iElemIdx=0; iElemIdx < 配列名.length; iElemIdx++ )
 {
   配列名[ iElemIdx ] = 値;
 }
 ```
 
-- 繰り返し用変数`iElemIdx`は，要素番号(  Element Index )を元に名付けている．
+繰り返し用変数`iElemIdx`の変数名は，要素番号(  Element Index )を元に名付けている．
 
 #### 例1
 
@@ -6223,7 +6312,7 @@ for( int iElemIdx=0; iElemIdx < iY.length; iElemIdx++ )
   - 文末に`;`も必要．
 - 値の数は自由に設定することができ，記述した値の数から要素数が自動的に割り出される．
 
-##### 例1
+#### 例1
 
 int型（整数型）の名前がiRGBの配列の宣言・初期化
 
@@ -6231,7 +6320,7 @@ int型（整数型）の名前がiRGBの配列の宣言・初期化
 int[] iX = { 0, 10, 25, 100, 45, 68, 12, 20, 225, 255 };
 ```
 
-##### 例2
+#### 例2
 
 float型（実数型）の名前がfRGBAの配列の宣言・初期化
 
@@ -6260,15 +6349,48 @@ https://processing.org/reference/arrayaccess.html
 
 ## 配列を使った描画
 
-- 配列を使い，プログラム効率化できる場合がある．
+配列を使い，プログラムを効率化できる場合がある．
+使い方毎に以下にまとめる．
 
-### 複数パターンから一つの描画情報をランダムに取得する．
+### ランダム値を配列に保存する．
 
-- 乱数を用いつつ，ある程度のパターンに制限することで，画像に一定の秩序を持たせることができる．
-  - `random()`の返す値をそのまま描画に用いてしまうと，無秩序すぎる．
+`random()`が返す値を配列に保存することで，同じ乱数の数列を繰り返し用いることができる．
 
-1. 配列に，描画に関わる数値をリスト状に代入する．
-2. 描画の際，配列の要素番号によってパターンを選択する．
+#### 例
+
+ランダムな線の長さをリストとして配列に保存し，回転対称の図を描画する．
+
+```java
+size(300,300);
+
+float[] fLineLength = new float[12]; // 12本の線の長さを保存する配列
+
+for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )   // 配列の初期化.
+{
+  fLineLength[iLineIdx] = random( 20, 120 );	// 長さランダム20~120
+}
+
+translate( width/2, height/2 ); // 原点をスクリーン中心に移動
+
+for( int iRepIdx = 0; iRepIdx<6; iRepIdx++ )   // ６回繰り返す．
+{
+  for( int iLineIdx = 0; iLineIdx<fLineLength.length; iLineIdx++ )  // 線12本分繰り返す
+  {
+    line( 0, 0, fLineLength[iLineIdx], 0 );		   // 線を描画．
+    rotate( radians(5) );                        // 5°回転
+  }
+}
+```
+
+![practive01_02](images/array/practive01_02.png)
+
+### 要素番号をランダムに決定する．
+
+- `random()`の返す値をそのまま描画に用いてしまうと，無秩序すぎる表現となる場合が多い．
+- 事前に用意した数パターンの中からランダムに用いる値を決定することで，一定の秩序を持たせることができる．
+
+1. 配列に，描画に関わる数パターンの数値を代入する．
+2. 描画の際，**要素番号をランダムに決定**し，該当する配列の値を用いて描画を行う．
 
 #### 例1
 
@@ -6328,39 +6450,47 @@ for( int iRectIdx = 0; iRectIdx < 200; iRectIdx++ )
 }
 ```
 
-- この例のように，配列の要素数を取得する`random(iRectXs.length)`，`iColorGrays.length`を数値の代わりに用いるとより効率的．
+この例のように，配列の要素数を取得する`random(iRectXs.length)`，`iColorGrays.length`を数値の代わりに用いるとより効率的．
 
 ![array_4patterns_grays](images/array/array_4patterns_grays.png)
-
-#### 例4
-
-４種類の大きさと色情報をランダムに用いる矩形の描画．
-
-```java
-size( 600, 100 );
-
-int[] iRectHeights = { 10, 30, 60, 90 };			// 矩形の高さ
-int[] iRectColorGs = { 100, 160, 220, 255 };	// color G
-
-background( 0 );
-rectMode(CENTER);
-
-for( int iX = 0; iX < 600; iX+=10 )
-{
-  int iElemIdx = floor( random(4) ) % 4;
-  
-  fill( 80, iRectColorGs[iElemIdx], 80 );
-  rect( iX, height/2, 10, iRectHeights[iElemIdx] );
-}
-```
-
-![array_4patterns_rects](images/array/array_4patterns_rects.png)
 
 
 
 ### 演習3
 
+下のプログラムはまだ未完成であり，完全にランダムな色の正方形を描画してしまっている．
+このプログラムに変更を加え，<u>数パターンの色の組み合わせから</u>ランダムに色が描画されるように完成させてみましょう．
 
+- 色のパターンは自由な値を入力してください．
+
+- 演習時間：5分程度
+
+```java
+size(400,400);
+
+int[] iColorR = { 0, 0, 0, 0 };	// 未完成：値が入力されていない．
+int[] iColorG = { 0, 0, 0, 0 };	// 未完成：値が入力されていない．
+int[] iColorB = { 0, 0, 0, 0 };	// 未完成：値が入力されていない．
+
+for( int iY = 0; iY < height; iY+=20 )
+{
+  for( int iX = 0; iX < width; iX+=20 )
+  {
+    int iElemIdx = floor( random(4) ) % 4;	// 要素番号0~3の乱数．
+    
+    fill( random(255), random(255), random(255) );	// 未完成：ランダムな色になってしまっている．
+    
+    square( iX, iY, 20 );
+
+  } 
+}
+```
+
+![array_mozaic_random](images/array/array_mozaic_random.png)
+
+#### 作例
+
+![array_mozaic_sakurei](images/array/array_mozaic_sakurei.png)
 
 
 
