@@ -329,6 +329,52 @@ https://processing.org/reference/doccomment.html
 
 
 
+## プログラミングの心構え
+
+より高度な表現を追求すると，プログラムも必然的に複雑になる．
+目的を達成するため，プランを練っても**何から手を付けていいか**分からなくなることも多い．
+そのような状況は，<u>プログラミングの開始時に，完成までの道筋を立ててしまおう</u>という思考に陥ってしまっている可能性が高い．
+
+実際，プログラミングを開始する時点では，完成までの道筋が見えていることは稀である．
+トライアンドエラーを繰り返し，**少しずつ**プログラムを作っていくことが基本である．
+
+### プログラミングの手順
+
+プログラミングは以下の手順を繰り返すことで進めていく．
+
+1. どんなコードをどこに追加するか考える．
+2. コードを追加し，実行してみる．
+3. 正しく動作した場合，ステップ1に戻る．
+   正しく動作しなかった場合，<u>原因は何なのか推考</u>する．
+4. 自分の推考を仮説ととらえ，それを元にプログラムに変更を加える．
+   ステップ3に戻る．
+
+特に上記手順の「原因が何なのか仮説を立て，変更を加え，それが正しいか確認する」プロセスによって**プログラミングへの理解**が深まることに留意すること．
+一度に追加するコードは，自分のプログラミングスキルを加味し，最小限にすることが肝要である．
+また，次に何のコードをどこに追加するかは，**追加するコードの優先度**を念頭に置くとよい．
+
+### プログラムの記述優先度
+
+1. 図形描画
+   必要ならfor文を用いる
+2. 座標変換
+3. 変数を図形描画へ組み込む
+4. 変数の値の更新式
+   必要ならfor文やif文を用いる
+5. 組み込んだ変数の宣言と初期化
+
+上記の優先度を見ると，描画→初期化という順番であることが分かる．
+つまり，<u>プログラムの処理の順番の逆順</u>にコードを優先的に記述することに留意．
+なぜなら，**できるだけ早い段階で描画結果を見て確認できる**からである．
+
+### まとめ
+
+- プログラミングは少しずつプログラムを作っていくことが基本．
+- 「少しプログラムを追加して実行し，確認する」の繰り返し．
+- 描画のコードを優先的に追加し，早い段階で描画結果を見て確認できるようにする．
+
+
+
 # 描画の基本
 
 ## 座標系について
@@ -8642,7 +8688,7 @@ size(), colorMode(), point(), rect(), ellipse(), random(), sin(), cos(), tan()..
 for, if, else, else if, switch ...		// 主に制御文関連のもの
 ```
 
-### 関数の呼び出し
+## 関数の呼び出し
 
 関数を使用することを，関数を呼び出す（ **コール**する）という．
 
@@ -8651,14 +8697,23 @@ for, if, else, else if, switch ...		// 主に制御文関連のもの
 
 ![func_overview](images/function/func_overview.png)
 
-例えば，`random()`や`ellipse()`を用いた命令文の記述は，下図のような要素から成り立っている．
+実は関数のコールは既にこれまでに行っている．
+例えば，`random()`や`ellipse()`等を用いた命令文の記述では，関数のコールを行っている．
+それらの命令文は下図のような要素から成り立っている．
 
 ![func_random_ellipse_elements](images/function/func_random_ellipse_elements.png)
 
 上図の`ellipse()`のように，値を返さない（返り値が無い）関数も存在する．
 そのような値を返さない関数を**void関数**という．
 
+このようなことから，関数のコールは以下のような書式で行えることが分かる．
 
+```java
+関数名( 引数 )
+```
+
+関数はコールされることで，初めてプログラム実行に影響を与える．
+これから学ぶ<u>自作の関数</u>についても，これまで使ってきた様々な関数と同じように，`setup()`や`draw()`ブロック内でコールすればよい．
 
 ## 関数の定義
 
@@ -8694,7 +8749,7 @@ void triangle( float x1, float y1, float x2, float y2, float x3, float y3 )
 ### setup(),draw()との関連性
 
 アニメーションのセクションでは`setup()`や`draw()`ブロックへの記述を行った．
-関数の定義の書式に近いことを確認しておく．
+これは，実はsetup()とdraw()の関数の定義を行っている．
 
 ```java
 void setup()
@@ -8710,21 +8765,57 @@ void draw()
 
 これらの先頭にある`void`の記述は，`setup()`や`draw()`関数が返り値を持たないvoid関数であることを示している．
 
-### 書式
+### 返り値のある関数の書式
 
 関数の定義は，返り値のある関数と返り値のないvoid関数で，多少異なる．
 
-#### 返り値のある関数
-
 ```java
-返り値の型 関数名( 引数の型 仮引数 ) // 引数は','区切りで複数可
+返り値の型 関数名( 引数の型 仮引数 )
 {
   // 命令(文);
   return 返り値；
 }
 ```
 
-#### 返り値のない関数(void関数)
+引数は「,」区切りで複数記述でき，記述しない(0個)こともできる．
+定義された関数のブロック内で，**仮引数**を用いて計算等を行う．
+また，return文という命令文で関数が返す値（**返り値**）を指定する．
+
+##### 例1
+
+3つの引数を受け取り，それらの平均値を返す関数．
+
+```java
+float calcAverage( int iVal0, int iVal1, int iVal2 )
+{
+  float fAverage = ( iVal0 + iVal1 + iVal2 ) / 3.0;
+  return fAverage;
+}
+```
+
+![func_calcAverage](images/function/func_calcAverage.png)
+
+##### 例2
+
+1つの引数を受け取り，その値を半径とした円の面積を返す関数．
+
+```java
+int calcArea( int iRadius )
+{
+  int iArea = floor( PI * iRadius * iRadius );  // PI:円周率3.14...をもつシステム定数
+  return iArea;
+}
+```
+
+
+
+### 演習1
+
+4つの引数を受け取り，それらの合計値を返す関数`calcSum()`を定義してみましょう．
+
+
+
+### 返り値のない関数(void関数)の書式
 
 ```java
 void 関数名( 引数の型 仮引数 ) // 引数は','区切りで複数可
@@ -8733,142 +8824,42 @@ void 関数名( 引数の型 仮引数 ) // 引数は','区切りで複数可
 }
 ```
 
-値を返すreturn文`return 返り値;`が無いことを確認．
+値を返すreturn文`return 返り値;`が無いことに注意．
+void関数は，**複数の描画命令をまとめる**ことに主に用いる．
 
-#### 引数について
+##### 例1
 
-関数の定義において，引数ではなく「仮引数」となっていることに注意．
-引数には以下の二種類がある．
-
-- 実引数
-  - 関数の呼び出しの際に記述する引数のこと．
-  - 具体的な値．
-
-- **仮引数**
-
-  - 関数定義時に記述する引数のこと．
-
-  - 関数に渡された**実引数の値を受け取る**．
-  - 関数内の命令を，仮引数を元に行う．
-  - スコープは関数内のみ．
-
-![my_func_argument](images/my_function/my_func_argument.png)
-
-### 例1
-
-円の面積を求める関数
+引数によってX,Y座標値を指定し，正方形と正円を描画する関数．
 
 ```java
-/**
- * 円の面積を求める
- *
- * @param fRadius 半径
- * @return float 面積
- */
-float calcArea( float fRadius )
+void drawSquareCircle( int iX, int iY )
 {
-  float fArea = PI * fRadius * fRadius;	// PI:円周率3.14...をもつシステム定数
-  return fArea;
+  square( iX, iY, 40 );
+  circle( iX, iY, 40 );
 }
 ```
 
-![my_func_define_float](images/my_function/my_func_define_float.png)
+##### 例2
 
-### 例2
-
-3つの値を受け取り，それらの平均値を返す関数．
+引数によって描画する点の数を指定し，複数の点をランダムに描画する関数．
 
 ```java
-/**
- * 3つの値を受け取り，それらの平均値を返す
- *
- * @param iVal1,iVal2,iVal3 値1,値2,値3
- * @return float 平均値
- */
-float getAverage( int iVal1, int iVal2, int iVal3 )
+void drawRandomDots( int iDotTotal )
 {
-  return ( iVal1 + iVal2 + iVal3 ) / 3.0;
-}
-```
-
-
-
-### 演習1
-
-4つの値を受け取り，それらの合計値を返す関数`getSum()`を定義してみましょう．
-
-
-
-### 例3
-
-現在の原点を中心に18個の楕円を描画する関数
-
-```java
-/**
- * 現在の原点を中心に18個の楕円を描画する
- *
- * @param fDistance 原点からの距離
- * @param fRadius 楕円の半径
- * @return 無し
- */
-void draw18Ellipses( float fDistance, float fRadius )
-{
-  for( int iEllipseIdx = 0; iEllipseIdx < 18; iEllipseIdx++ )
+  for( int iDotIdx = 0; iDotIdx < iDotTotal; iDotIdx++ )
   {
-    ellipse( fDistance, 0, fRadius, fRadius );
-    rotate( radians(20) );
+    point( random(width), random(height) );
   }
 }
 ```
 
-![my_func_define_void](images/my_function/my_func_define_void.png)
 
-### 例4
-
-2つの値（ X座標値, Y座標値 ）を受け取り，その座標に入れ子状に正方形を描画するvoid関数．
-
-```java
-void setup()
-{
-  size( 200, 200 );
-  
-  drawSquareNest( 100, 100 );  // 関数のコール
-}
-
-/**
- * 入れ子状に正方形を描画する
- *
- * @param iX,iY 正方形の中心座標
- * @return 無し
- */
-void drawSquareNest( int iX, int iY )
-{
-  rectMode( CENTER );
-  
-  // 正方形の大きさを100からスタートし，20ずつ小さくしながら繰り返す．
-  for( int iSquareSize = 100; iSquareSize > 0; iSquareSize -= 20 )
-  {
-    square( iX, iY, iSquareSize );
-  }
-}
-```
-
-![func_square_nest](images/function/func_square_nest.png)
 
 ### 演習2
 
-例4の`drawSquareNest()`のvoid関数定義に以下の変更を加えてみましょう．
+引数によってX,Y座標と大きさを指定し，正方形と正円を描画する関数を定義してみましょう．
 
-- 一番大きい（最初に描画する）正方形の大きさの値を渡す引数を１つ追加する．
-- 追加した引数を元に図形全体の大きさを正しく描画する．
 
-また，関数のコールを行っている文を以下のように書き換える．
-
-`drawSquareNest( 100, 100, 160 );  // 関数のコール`
-
-下図は大きさの値を示す引数として160を渡した場合の実行例
-
-![func_square_nest_max](images/function/func_square_nest_max.png)
 
 ### 関数定義の記述場所
 
@@ -8878,12 +8869,12 @@ void drawSquareNest( int iX, int iY )
 ```java
 void setup()
 {
-  
+  myFunc1();			// 関数のコール
 }
 
 void draw()
 {
-  
+  myVoidfunc1();	// 関数のコール
 }
 
 // 関数定義
@@ -8897,6 +8888,26 @@ void myVoidFunc1()
 
 }
 ```
+
+### 実引数と仮引数
+
+関数の定義においては，引数ではなく「仮引数」となっていることに注意．
+引数は**実引数**と**仮引数**の二種類がある．
+例えば下図のプログラムにおいて，それぞれの対応を確認できる．
+
+![my_func_argument](images/my_function/my_func_argument.png)
+
+- 実引数
+  - **関数の呼び出しの際に記述する引数**のこと．
+  - 具体的な値．
+
+- **仮引数**
+
+  - **関数定義時に記述する引数**のこと．
+
+  - 関数に渡された実引数の値を受け取る．
+  - 関数内の命令を，仮引数を元に行う．
+  - スコープは関数内のみ．
 
 ### return文
 
@@ -8915,12 +8926,113 @@ return 1;	  // 値を直接記述してもよい．
 return a+b;	// 数式を書いてもよい．計算結果の値が返される．
 ```
 
+
+
+## 返り値のある関数
+
+**複雑な計算**を行う処理を関数にまとめることができる．
+
+- 表現の本質に直結しない複雑な計算を切り分け，`draw()`ブロックを見やすくする．
+- 「円の面積を求める」「複数の値の平均値を求める」など
+
+void関数の定義の方が使用頻度は高い．
+
+### 例1
+
+円の面積を元に，異なるアルファ値を持つ正円をランダム描画するアニメーション
+円の面積が大きいほど，小さいアルファ値となる．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  colorMode( RGB, 255, 255, 255, 40000 );  
+  frameRate(4);
+  background( 0, 0, 0 );
+}
+void draw()
+{
+  fill( 0, 0, 0, 5000 );
+  rect( 0, 0, width, height );        // スクリーンリフレッシュ
+  
+  float fRadius = random( 20, 100 );  // 半径
+    
+  float fArea = calcArea( fRadius );  // 関数をコール
+    
+  fill( 255, 0, 0, 40000 - fArea );
+  circle( random(width), random(height), fRadius*2 );  // 正円描画
+}
+
+/**
+ * 円の面積を求める
+ *
+ * @param fRadius 半径
+ * @return float 戻り値の説明
+ */
+float calcArea( float fRadius )
+{
+  float fArea = PI * fRadius * fRadius;
+  return fArea;
+}
+```
+
+![func_circle_area_random_alpha](images/function/func_circle_area_random_alpha.gif)
+
+### 例2
+
+ランダムな大きさの矩形の並列描画．
+関数の定義の中で描画を行いつつ，値を返すこともできる．
+
+```java
+void setup()
+{
+  size( 200, 200 );
+  frameRate( 1 );
+}
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );  // スクリーンリフレッシュ
+  
+  int iX = 0;  // 矩形を描画するX座標値．
+  
+  for( int iRectIdx = 0; iRectIdx < 10; iRectIdx++ )
+  {
+    iX += drawRandomRect( iX );
+  }
+}
+
+/**
+ * 大きさがランダムな矩形を描画し，横幅の値を返す．
+ *
+ * @param iX X座標値
+ * @return int 横幅の大きさ
+ */
+int drawRandomRect( int iX )
+{
+  int iHeight = floor( random( 20, 200 ) );
+  int iWidth = floor( random( 8, 40 ) );
+
+  stroke( 0 );
+  fill( 100 );
+  rect( iX, height/2-iHeight/2, iWidth, iHeight );
+  return iWidth;
+}
+```
+
+![func_random_rects](images/function/func_random_rects.gif)
+
 ### if文で返り値を分岐させる
 
 if文などで条件分岐を行うと，**return文を複数記述**できる．
 
+#### 例
+
+2つの引数を受け取り，大きい方の値を返す関数．
+
 ```java
-int func( int iA, int iB )
+int getBigger( int iA, int iB )
 {
   if( iA > iB )	// iAがiBより大きければ
   {
@@ -8953,50 +9065,64 @@ int func( int iA, int iB )
 
 
 
-## 関数のCall
+## Void関数
 
-定義を行った関数をコールすることで，初めてプログラム実行に影響を与える．
-これまで使ってきた様々な関数と同じように，`setup()`や`draw()`ブロックでコールすればよい．
+**複雑な図形の描画**を関数にまとめることができる．
+
+- `draw()`ブロックを見やすくする．
+- 「まとまった複数の図形の組み合わせ」を用いたレイアウトを行いやすくなる．
+- 詳細な描画命令文が関数定義に集中するため，描画の調整がしやすくなる．
+- 独自の図形描画命令が作れる．
 
 ### 例1
 
-円の面積を元に，異なるアルファ値を持つ正円をランダム描画するアニメーション
+2つの値（ X座標値, Y座標値 ）を受け取り，その座標に入れ子状に正方形を描画する．
 
 ```java
+int iNestX;
+
 void setup()
 {
   size( 200, 200 );
-  colorMode( RGB, 255, 255, 255, 40000 );  
-  frameRate(4);
-  background( 0, 0, 0 );
+  iNestX = -30;
 }
+
 void draw()
-{
-  fill( 0, 0, 0, 5000 );
-  rect( 0, 0, width, height );        // スクリーンリフレッシュ
+{ 
+  rectMode( CORNER );
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );         // スクリーンリフレッシュ．
+
+  rectMode( CENTER );
+  stroke( 0 );
+  fill( 255 );
+  drawSquareNest( iNestX, height/2 );  // 関数コール
   
-  float fRadius = random( 20, 100 );  // 半径
-    
-  float fArea = calcArea( fRadius );  // 面積：関数をコール
-    
-  fill( 255, 0, 0, 40000-fArea );
-  circle( random(width), random(height), fRadius*2 );  // 正円描画
+  iNestX++;
+  if( iNestX > width+30 )
+  {
+    iNestX = -30;  // 入れ子のX座標値を左端に戻す
+  }
 }
 
 /**
- * 円の面積を求める
+ * 入れ子状に正方形を描画する
  *
- * @param fRadius 半径
- * @return float 戻り値の説明
+ * @param iX,iY 正方形の中心座標
+ * @return 無し
  */
-float calcArea( float fRadius )
+void drawSquareNest( int iX, int iY )
 {
-  float fArea = PI * fRadius * fRadius;
-  return fArea;
+  // 正方形の大きさを60からスタートし，10ずつ小さくしながら繰り返す．
+  for( int iSquareSize = 80; iSquareSize > 0; iSquareSize -= 10 )
+  {
+    square( iX, iY, iSquareSize );
+  }
 }
 ```
 
-![func_circle_area_random_alpha](images/function/func_circle_area_random_alpha.gif)
+![func_nest_rects](images/function/func_nest_rects.gif)
 
 ### 例2
 
@@ -9006,7 +9132,7 @@ float calcArea( float fRadius )
 void setup()
 {
   size( 200, 200 );
-  frameRate(2);
+  frameRate(1);
   background( 0, 0, 0 );
 }
 void draw()
@@ -9043,9 +9169,9 @@ void draw18Circles( float fDistance, float fCircleSize )
 
 ![func_18ellipses_hanabi](images/function/func_18ellipses_hanabi.gif)
 
-### 演習3
+### 演習1
 
-例2を参考に，`draw()`ブロック内に変更を加えて自由に花火のようなアニメーションを作ってみましょう．
+例2に変更を加えて自由に花火のようなアニメーションを作ってみましょう．
 
 - 演習時間8分程度
 - 以下，作例
@@ -9056,7 +9182,7 @@ void draw18Circles( float fDistance, float fCircleSize )
 void setup()
 {
   size( 400, 400 );
-  frameRate(2);
+  frameRate(4);
   background( 0, 0, 0 );
 }
 void draw()
@@ -9067,41 +9193,44 @@ void draw()
   translate( random( 120, 280 ), random( 40, 120 ) );  // ランダムな位置に座標原点を平行移動
   
   float fDistance = random( 10, 120 );
-  float fCircleSize = random( 2, 6 );
+  float fCircleSize = random( 2, 4 );
   
   noStroke();
   
-  int iAmari = floor(random(3))%3;  // 0~2のランダム
   
-  if( iAmari == 0 )
+  // 3種の色のパターンからランダム．
+  
+  int iColorPattern = floor(random(3));  // 0~2のランダム
+  
+  if( iColorPattern == 0 )
   {
     fill( random( 220, 255 ), random( 220, 255 ), random( 220, 255 ) );
   }
-  else if( iAmari == 1 )
+  else if( iColorPattern == 1 )
   {
     fill( random( 180, 255 ), random( 180, 255 ), random( 180, 255 ) );
   }
-  else if( iAmari == 2 )
+  else if( iColorPattern == 2 )
   {
     fill( random( 160, 255 ), random( 160, 255 ), random( 160, 255 ) );
   }
   
-  draw18Circles( fDistance, fCircleSize );            // 関数コール
+  draw60Circles( fDistance, fCircleSize );            // 関数コール
 }
 
 /**
- * 現在の原点を中心に18個の正円を描画する
+ * 現在の原点を中心に60個の正円を描画する
  *
  * @param fDistance 原点からの距離
  * @param fCircleSize 正円の大きさ
  * @return 無し
  */
-void draw18Circles( float fDistance, float fCircleSize )
+void draw60Circles( float fDistance, float fCircleSize )
 {
-  for( int iCircleIdx = 0; iCircleIdx < 18; iCircleIdx++ )
+  for( int iCircleIdx = 0; iCircleIdx < 60; iCircleIdx++ )
   {
-    circle( fDistance, 0, fCircleSize );
-    rotate( radians(20) );
+    circle( random( 0.98, 1.02 )*fDistance, 0, fCircleSize );  // 円の距離に振れ幅をもたせる．
+    rotate( radians(6) );
   }
 }
 ```
@@ -9110,16 +9239,18 @@ void draw18Circles( float fDistance, float fCircleSize )
 
 ### 例3
 
-円周上に花弁（楕円）を描画する．
+花のような模様を複数描画する．
 
 ```java
 void setup()
 {
   size(400,400);
-  colorMode(HSB, 8, 1, 1, 8);
-  for( int iFlowerIdx = 0; iFlowerIdx < 28; iFlowerIdx++ )
+  colorMode(HSB, 360, 100, 100, 100 );
+  
+  // 28個の花をランダムな位置に描画する．
+  for( int iFlowerIdx = 0; iFlowerIdx < 28; iFlowerIdx++ )	
   {
-    drawFlower( floor(random(6,14)), random(20,width-20), random(20,height-20) );	// 関数コール
+    drawFlower( floor(random(6,12)), random(20,width-20), random(20,height-20) );  // 関数コール
   }
 }
 void draw()
@@ -9138,16 +9269,21 @@ void drawFlower( int iPetalTotal, float fCenterX, float fCenterY )
 {
   pushMatrix();// 座標系の保存
   
-  int iRotDegPerPetal = 360 / iPetalTotal;	// 花弁毎の回転角度
+  int iRotDegPerPetal = 360 / iPetalTotal;  // 花弁毎の回転角度
   
   translate( fCenterX, fCenterY );
   
-  fill( random(8), 1, 1, 6 );
+  // 花弁描画
+  fill( random( 360 ), 100, 100, 60 );
   for( int iPetalIdx = 0; iPetalIdx < iPetalTotal; iPetalIdx++ )
   {
     ellipse( 20, 0, 20, 10 );
-    rotate( radians(iRotDegPerPetal) );	//回転
+    rotate( radians(iRotDegPerPetal) );  //回転
   }
+  
+  // 軸描画
+  fill( random( 50, 70 ), 100, 100, 60 );
+  circle( 0, 0, 20 );
   
   popMatrix();// 座標系の復帰
 }
@@ -9155,9 +9291,571 @@ void drawFlower( int iPetalTotal, float fCenterX, float fCenterY )
 
 ![func_flowers_random](images/function/func_flowers_random.png)
 
-### 関数から別の関数を呼び出す
+### 演習2
+
+下図のような多角形描画行う関数を定義してみましょう．
+
+![my_func_practice00_01](images/my_function/my_func_practice00_01.png)
+
+下の手順を参考にしてください．
+
+#### 1.ウィンドウを表示する．
+
+`draw()`に以下の記述を追加する．
+
+- スクリーンサイズ：400×400
+
+```java
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+}
+```
+
+#### 2. 矢印を描画する関数定義を準備する．
+
+void関数`drawArrow()`を定義しましょう．
+
+- ブロック内の記述はまだ不要．
+- 関数名：drawArrow
+
+- 仮引数
+  - int型のiX					: 矢印の始点のX座標
+  - int型のiY                    : 矢印の始点のY座標
+  - int型のiRotDeg         : 矢印の回転（°）
+
+```java
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+}
+```
+
+#### 3.drawArrow()を画面中心でコールする．
+
+`draw()`に以下の記述を追加しましょう．
+
+- 座標原点をスクリーン中心に移動する．
+- `drawArrow( 0, 0, 0 );`
+
+```java
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+	drawArrow( 0, 0, 0 );
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+}
+```
+
+#### 4.矢印のプロポーション用グローバル変数を定義する．
+
+矢印の各プロポーションを以下のようにグローバル変数で定義し，初期値を入力してください．
+（アニメーションではなく，定数として用いる）
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+```
+
+それぞれのグローバル変数の値は，下図のように矢印各部の大きさに対応する．
+
+![my_func_practice00_02](images/my_function/my_func_practice00_02.png)
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );		  // スクリーン中心に移動
+	drawArrow( 0, 0, 0 );								// 関数コール
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+}
+```
+
+#### 5. 多角形描画を用いて矢印の描画を行う．
+
+多角形描画を使って矢印を描画する命令を**drawArrow関数に追加**する．
+
+- 多角形描画の命令
+
+  ```java
+  beginShape();		   		  // 多角形描画を開始する．
+  vertex( X座標値, Y座標値 );	// 頂点0
+  vertex( X座標値, Y座標値 );	// 頂点1
+  vertex( X座標値, Y座標値 );	// 頂点2
+  vertex( X座標値, Y座標値 );	// 頂点3
+  vertex( X座標値, Y座標値 );	// 頂点4
+  vertex( X座標値, Y座標値 );	// 頂点5
+  vertex( X座標値, Y座標値 );	// 頂点6
+  endShape(CLOSE);		    // 多角形を閉じる．
+  ```
+
+  - 各頂点の座標は先ほど定義したグローバル変数を元に，下図を参考に算出する必要がある．
+
+    ![my_func_practice00_03](images/my_function/my_func_practice00_03.png)
+
+  - ここでは時間短縮のため，頂点のリストは以下のコードをコピーして用いるとよい．
+
+    ```java
+    vertex( 0, -iArrowBaseWidth/2 );
+    vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+    vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+    vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+    vertex( iArrowBaseHeight,  iArrowHeadWidth/2 );
+    vertex( iArrowBaseHeight,  iArrowBaseWidth/2 );
+    vertex( 0,  iArrowBaseWidth/2 );
+
+- 多角形の色
+
+    - 線（ストローク）：なし
+
+    - 塗色：黒(0,0,0)
+
+![my_func_practice00_04](images/my_function/my_func_practice00_04.png)
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  drawArrow( 0, 0, 0 );
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+  noStroke();
+  fill(0,0,0);
+  
+  // 多角形描画
+  beginShape();
+  vertex( 0, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+  vertex( iArrowBaseHeight,  iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight,  iArrowBaseWidth/2 );
+  vertex( 0,  iArrowBaseWidth/2 );
+  endShape(CLOSE);
+}
+```
+
+#### 6. 仮引数を元に座標変換を行う．
+
+今のままでは仮引数が使われていないので，これらを使って座標変換を行いましょう．
+以下の記述を`drawArrow()`に追加しましょう．
+
+- 平行移動: `iX, iY`
+- 回転: `iRotDeg` (ラジアン値に変換する)
+
+- 正しくできたかテストする方法
+  関数呼び出しの**実引数を色々変更**してみる．
+
+  ```java
+  drawArrow( 100, 0, 90 );	// 変更例( X値:100, Y値:0, 回転90° )
+
+
+![my_func_practice00_05](images/my_function/my_func_practice00_05.png)
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  drawArrow( 100, 0, 90 );
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+  translate( iX, iY );
+  rotate( radians( iRotDeg ) );
+  
+  noStroke();
+  fill( 0, 0, 0 );
+  
+  // 多角形描画
+  beginShape();
+  vertex( 0, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
+  vertex( 0, iArrowBaseWidth/2 );
+  endShape( CLOSE );
+}
+```
+
+#### 7. 座標変換のリセット
+
+実はステップ6のままでは，関数実行後も**変換された座標系が残ったまま**である．
+基本的には**関数内で行った座標変換は，関数内で戻しておいた方がよい．**
+`drawArrow()`に以下の記述を追加する．
+
+- `pushMatrix()`
+- `popMatrix()`
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  drawArrow( 100, 0, 90 );
+}
+
+void drawArrow( int iX, int iY, int iRotDeg )
+{
+  pushMatrix();  // 変換前の座標系を保存
+  
+  translate( iX, iY );
+  rotate( radians( iRotDeg ) );
+  
+  noStroke();
+  fill( 0,0,0 );
+  
+  // 多角形描画
+  beginShape();
+  vertex( 0, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
+  vertex( 0, iArrowBaseWidth/2 );
+  endShape( CLOSE );
+  
+  popMatrix();  // 変換前の座標系へ戻す．
+}
+```
+
+以上の手順で，`drawArrow()`という独自の矢印図形を描画する関数を作成することができた．
+
+
+
+### 演習3
+
+演習2のプログラムを元に，拡大縮小機能を追加し，`drawArrow()`を呼び出してレイアウトを行う．
+
+#### 1. drawArrow()に拡大縮小用の引数を追加する．
+
+矢印の大きさを変更（拡大縮小）できるよう，以下のように`drawArrow()`を書きかえる．
+
+- スケール値（拡大縮小率）を渡すための仮引数を１つ追加する．
+  - 仮引数名: fScale
+  - 引数の型: float
+
+また，関数コールの記述を以下のように書き換える．
+
+```java
+drawArrow( 0, 0, 0, 0.5 );	// スケール値:0.5(50%)
+```
+
+
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  drawArrow( 0, 0, 0, 0.5 );  // スケール値:0.5(50%)
+}
+
+void drawArrow( int iX, int iY, int iRotDeg, float fScale )
+{
+  pushMatrix();  // 変換前の座標系を保存
+  
+  translate( iX, iY );
+  rotate( radians( iRotDeg ) );
+  
+  noStroke();
+  fill( 0,0,0 );
+  
+  // 多角形描画
+  beginShape();
+  vertex( 0, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
+  vertex( 0, iArrowBaseWidth/2 );
+  endShape( CLOSE );
+  
+  popMatrix();  // 変換前の座標系へ戻す．
+}
+```
+
+#### 2. 仮引数fScaleを用いて座標系を拡大縮小する．
+
+`drawArrow()`に以下の記述を追加する．
+
+- `scale( fScale );`
+
+![my_func_practice01_06](images/my_function/my_func_practice01_06.png)
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+void setup()
+{
+  size(400,400);
+}
+
+void draw()
+{
+  translate(width/2,height/2);
+  drawArrow( 0, 0, 0, 0.5 );  // スケール値:0.5(50%)
+}
+
+void drawArrow( int iX, int iY, int iRotDeg, float fScale )
+{
+  pushMatrix();  // 変換前の座標系を保存
+  
+  translate( iX, iY );
+  rotate( radians( iRotDeg ) );
+  scale( fScale );
+  
+  noStroke();
+  fill( 0, 0, 0 );
+  
+  // 多角形描画
+  beginShape();
+  vertex( 0, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
+  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
+  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
+  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
+  vertex( 0, iArrowBaseWidth/2 );
+  endShape( CLOSE );
+  
+  popMatrix();  // 変換前の座標系へ戻す．
+}
+```
+
+これで`drawArrow()`は完成した．
+
+#### 3. drawArrow()を使った様々な表現
+
+`drawArrow()`を使って色々な描画を試してみましょう．
+静止画ならsetup()内，アニメーションさせたいならdraw()内で呼び出しましょう．
+
+- for文で矢印を繰り返し描画
+- 回転させながら複数の矢印を描画
+- draw()内で呼び出し，アニメーションを行う．
+
+また，以下の部分の数値を変更することで矢印のプロポーションを変更できる．
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+```
+
+##### 作例1
+
+40°ずつ回転させながら描画する．
+
+※`draw()`のみ記載
+
+```java
+void draw()
+{
+  for( int iRotDeg = 0; iRotDeg < 360; iRotDeg+=40 )
+  {
+    drawArrow( width/2,height/2,iRotDeg, 1.0 );
+  }
+}
+```
+
+![my_func_practice01_02](images/my_function/my_func_practice01_02.png)
+
+##### 作例2
+
+円周上に並べる
+
+※`draw()`のみ記載
+
+```java
+void draw()
+{
+  translate(width/2,height/2);
+  for( int iRotDeg = 0; iRotDeg < 360; iRotDeg+=18 )
+  {
+    drawArrow( 185, 0, 95, 1.0 );
+    rotate( radians( 18 ) );     //座標系を18°回転
+  }
+}
+```
+
+![my_func_practice01_03](images/my_function/my_func_practice01_03.png)
+
+##### 作例3
+
+並進
+
+※`draw()`のみ記載
+
+```java
+void draw()
+{
+  for( int iArrowIdx = 0; iArrowIdx < 48; iArrowIdx++ )  // 48回繰り返す
+  {
+    int iColumn = iArrowIdx%6;          // 列番号
+    int iRow = iArrowIdx/6;             // 行番号
+    int iX = 20 + 60 * iColumn + 50 * ( iRow%2 ); // 奇数の行番号は50右にずらす
+    int iY = 20 + 50 * iRow;
+    int iRotDeg = 180 * ( iRow%2 );               // 奇数の行番号は180°回転
+    drawArrow( iX, iY,iRotDeg, 1.0 );
+  }
+}
+```
+
+![my_func_practice01_04](images/my_function/my_func_practice01_04.png)
+
+##### 作例4
+
+並進（拡大縮小あり）
+
+※`draw()`のみ記載
+
+```java
+void draw()
+{
+  for( int iArrowIdx = 0; iArrowIdx < 48; iArrowIdx++ )  // 48回繰り返す
+  {
+    int iColumn = iArrowIdx%6;          // 列番号
+    int iRow = iArrowIdx/6;             // 行番号
+    int iX = 20 + 60 * iColumn + 50 * ( iRow%2 ); // 奇数の行番号は50右にずらす
+    int iY = 20 + 50 * iRow;
+    int iRotDeg = 180 * ( iRow%2 );               // 奇数の行番号は180°回転
+    float fScale = 0.2 + iRow/8.0;                // スケール値
+    drawArrow( iX, iY,iRotDeg, fScale );
+  }
+}
+```
+
+![my_func_practice01_05](images/my_function/my_func_practice01_05.png)
+
+##### 作例5
+
+移動と跳ね返りアニメーション
+
+※`drawArrow()`の関数定義以外を記載
+
+```java
+int iArrowBaseWidth = 10;    // 矢印の基部の幅
+int iArrowBaseHeight = 35;   // 矢印の基部の高さ
+int iArrowHeadWidth = 30;    // 矢印の頭部の幅
+int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
+
+int  iPosX;      // 矢印の座標
+int  iDirctionX; // 進む向き( 1:+X方向, -1:-X方向 )
+
+void setup()
+{
+  size(400,400);
+  frameRate(8);
+  iPosX = 0;
+  iDirctionX  = 1;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );// スクリーンリフレッシュ
+  
+  stroke( 0 );
+  drawArrow( iPosX, height/2, 90 *( 1 - iDirctionX ), 1.0 );  // 進む方向によって矢印を回転
+  
+  iPosX += iDirctionX * 8;
+  if( iDirctionX == 1  && iPosX > width-50 ||  // もし，右向きかつ矢印頭がスクリーン端をこえる
+      iDirctionX == -1 && iPosX < 50 )         // もしくは，左向きかつ矢印頭スクリーン端を超えたら
+  {
+    iDirctionX *= -1;  // 向きを逆方向に変える(-1をかける)
+  }
+}
+```
+
+![my_func_practice01_06](images/my_function/my_func_practice01_06.gif)
+
+## 関数から別の関数を呼び出す
 
 関数の中で別の関数を呼び出すことも可能．
+詳しくは，後の「再帰」のセクションで．
 
 ```java
 void setup()
@@ -9181,28 +9879,11 @@ void function2()
 }
 ```
 
-## なぜ関数化をするのか
-
-- **複雑な図形の描画**を関数にまとめる
-  - メインのプログラム(setup,draw)から切り離し，見やすくする．
-    - 描画部分のプログラムは長くなりがち．
-  - それを使って様々なレイアウトを行いやすくなる．
-  - 機能の追加がしやすくなる．
-  - 関数定義部分を移植することで，他のプログラムで使い回しがしやすくなる．
-- **複雑な計算**を行う処理を関数にまとめる．
-  - 表現の本質に直結しない複雑な計算を切り分け，目的達成に集中しやすくする．
-  - 「円の面積を求める」「複数の値の平均値を求める」など
-- **同じようなプログラム**があったら，関数にまとめる
-  - 同じようなプログラムを関数として一か所にまとめ，代わりに関数を呼び出すようにする．
-  - プログラムが見やすくなり，変更も行いやすくなる．．
-- 再帰的な処理を行いたいとき
-  ※再帰のセクションで解説
 
 
+## より高度な表現
 
-## 課外演習
-
-### 演習1
+### 演習
 
 顔のような描画
 
@@ -9414,446 +10095,6 @@ void drawFace( int iX, int iY )
 ```
 
 ![my_func_practice_simple_02](images/my_function/my_func_practice_simple_02.png)
-
-
-
-### 演習2
-
-複雑な図形を描画する関数
-
-![my_func_practice00_01](images/my_function/my_func_practice00_01.png)
-
-#### 1.setup,drawを記述
-
-- スクリーンサイズ：400×400
-- カラーモード：RGB, 100
-- 背景色：白(100,100,100)
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-}
-void draw()
-{
-}
-```
-
-#### 2.矢印を描画する関数を定義
-
-ブロック内の命令以外の枠だけ用意しましょう．
-
-- 関数名：drawArrow
-- 仮引数
-  - int型のiX					// 矢印の始点のX座標
-  - int型のiY                    // 矢印の始点のY座標
-  - int型のiRotateDeg   // 矢印の回転（°）
-- 返り値：なし
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-}
-void draw()
-{
-}
-/** 矢印を描画する      回転0だと：'→'のように右向き
-引数
-	iX:矢印の始点のX座標値
-  iY:矢印の始点のY座標値
-  iRotateDeg:矢印の回転（°）
-*/
-void drawArrow( int iX, int iY, int iRotateDeg )
-{
-}
-```
-
-#### 3.矢印のプロポーション
-
-矢印の各プロポーションを以下のようにグローバル変数で定義し，初期値を入力してください．
-グローバル変数は**プログラムの最初**に追加します．
-
-```java
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-```
-
-![my_func_practice00_02](images/my_function/my_func_practice00_02.png)
-
-```java
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-}
-void draw()
-{
-}
-void drawArrow( int iX, int iY, int iRotateDeg )
-{
-}
-```
-
-
-
-#### 4.多角形描画による矢印の描画
-
-多角形描画を使って矢印を描画する命令を**drawArrow関数に追加**しましょう．
-
-- 多角形描画の命令
-
-```java
-beginShape();		   		  // 多角形描画を開始する．
-vertex( X座標値, Y座標値 );	// 頂点0
-vertex( X座標値, Y座標値 );	// 頂点1
-vertex( X座標値, Y座標値 );	// 頂点2
-vertex( X座標値, Y座標値 );	// 頂点3
-vertex( X座標値, Y座標値 );	// 頂点4
-vertex( X座標値, Y座標値 );	// 頂点5
-vertex( X座標値, Y座標値 );	// 頂点6
-endShape(CLOSE);		    // 多角形を閉じる．
-```
-
-- 多角形の色
-  - 線（ストローク）：なし
-  - 塗色：黒(0,0,0)
-- 各頂点の座標は先ほど定義したグローバル変数を元に算出してください
-
-![my_func_practice00_03](images/my_function/my_func_practice00_03.png)
-
-- 正しくできたかテストする方法
-  setup()に以下の関数呼び出し文を追加する．
-
-```java
-translate(width/2,height/2);
-drawArrow(0,0,0);
-```
-
-![my_func_practice00_04](images/my_function/my_func_practice00_04.png)
-
-以下の答えを見る前にやってみましょう．
-
-```java
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-  translate(width/2,height/2);
-  drawArrow(0,0,0);
-}
-void draw()
-{
-}
-void drawArrow( int iX, int iY, int iRotateDeg )
-{
-  noStroke();
-  fill(0,0,0);    // 多角形描画
-  beginShape();
-  vertex( 0, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
-  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
-  vertex( 0, iArrowBaseWidth/2 );
-  endShape(CLOSE);
-}
-```
-
-#### 5.仮引数を元に座標変換
-
-今のままでは仮引数が使われていないので，これらを使って座標変換を行いましょう．
-drawArrow関数内に追加しましょう．
-
-- 平行移動: `iX, iY`
-- 回転: `iRotateDeg` (ラジアン値に変換する)
-
-- 正しくできたかテストする方法
-  setup()の関数呼び出しの**引数を色々変更**してみる．
-
-```java
-drawArrow(100,0,90);	// 変更例( X値:100, Y値:0, 回転90° )
-```
-
-
-
-以下の答えを見る前にやってみましょう．
-
-```java
-void drawArrow( int iX, int iY, int iRotateDeg )
-{
-  translate( iX, iY );　　　　　　// 座標系を移動
-  rotate( radians(iRotateDeg) );// 座標系を回転
-  noStroke();
-  fill(0,0,0);    // 多角形描画
-  beginShape();
-  vertex( 0, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
-  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
-  vertex( 0, iArrowBaseWidth/2 );
-  endShape(CLOSE);
-}
-```
-
-#### 6.座標変換のリセット
-
-実はステップ5のままでは，関数実行後も**座標変換が残ったまま**である．
-基本的には**関数内で行った変換は，関数内で戻した方がよい．**
-`drawArrow()`に，`pushMattix()`と`popMatrix()`を追加しましょう．
-※詳しくは座標変換セクションを参照
-
-```java
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-  translate(width/2,height/2);
-  drawArrow(100,0,90);
-}
-void draw()
-{
-}
-/** 矢印を描画する      回転0だと：'→'のように右向き
-	引数
-  	iX:矢印の始点のX座標値
-    iY:矢印の始点のY座標値
-    iRotateDeg;矢印の回転（°）
-*/
-void drawArrow( int iX, int iY, int iRotateDeg )
-{
-  pushMatrix();// 座標系を保存
-  translate( iX, iY );// 座標系を移動
-  rotate( radians(iRotateDeg) );// 座標系を回転
-  noStroke();
-  fill(0,0,0);    // 多角形描画
-  beginShape();
-  vertex( 0, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
-  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
-  vertex( 0, iArrowBaseWidth/2 );
-  endShape(CLOSE);
-  popMatrix();// 座標系を戻す
-}
-```
-
-
-
-### 演習3
-
-演習2の応用
-
-#### 1. 矢印を描画する（演習1の完成プログラム）
-
-演習2の最後のプログラムをコピー＆ペースト．
-
-#### 2.関数に拡大縮小機能を追加
-
-矢印の大きさを変更（拡大縮小）できるよう，
-drawArrow()を書きかえてみましょう．
-
-- スケール値（拡大縮小率）を渡すための仮引数を１つ追加する．
-  - 仮引数名: fScale
-  - 引数の型: float
-  - 100%の時，fScaleの値：1.0
-- 仮引数を使い，矢印の拡大縮小処理を追加する．
-- 関数呼び出し部(setup内)を変更
-  setup()の関数呼び出しに，**引数を追加**．
-
-```java
-drawArrow(0, 0, 0, 0.5);	// スケール値:0.5(50%)
-```
-
-![my_func_practice01_06](images/my_function/my_func_practice01_06.png)
-
-```java
-/** 矢印を描画する      回転0だと：'→'のように右向き
-	引数
-		iX:矢印の始点のX座標値
-    iY:矢印の始点のY座標値
-    iRotateDeg;矢印の回転（°）
-    fScale:矢印のスケール値 100%==1.0
-*/
-void drawArrow( int iX, int iY, int iRotateDeg, float fScale )
-{
-  pushMatrix();// 座標系を保存
-  translate( iX, iY );// 座標系を移動
-  rotate( radians(iRotateDeg) );// 座標系を回転
-  scale( fScale );// 座標を拡大縮小
-  noStroke();
-  fill(0,0,0);    // 多角形描画
-  beginShape();
-  vertex( 0, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowBaseWidth/2 );
-  vertex( iArrowBaseHeight, -iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight + iArrowHeadHeight, 0 );
-  vertex( iArrowBaseHeight, iArrowHeadWidth/2 );
-  vertex( iArrowBaseHeight, iArrowBaseWidth/2 );
-  vertex( 0, iArrowBaseWidth/2 );
-  endShape(CLOSE);
-  popMatrix();// 座標系を戻す
-}
-```
-
-#### 3.矢印を使った様々な表現
-
-関数`drawArrow()`を使って色々な描画を試してみましょう．
-静止画ならsetup()内，アニメーションさせたいならdraw()内で呼び出しましょう．
-
-- for文で矢印を繰り返し描画
-- 回転させながら複数の矢印を描画
-- draw()内で呼び出し，アニメーションを行う．
-
-また，以下の部分の数値を変更することで矢印のプロポーションを変更できる．
-
-```java
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-```
-
-
-
-##### 例:回転
-
-```java
-// seup()かdraw()に以下を記述
-for( int iRotateDeg = 0; iRotateDeg < 360; iRotateDeg+=40 ) // 40°ずつ回転させながら360°描画
-{
-  drawArrow(width/2,height/2,iRotateDeg);// 回転した角度だけ矢印の向きを回転させる.
-}
-```
-
-![my_func_practice01_02](images/my_function/my_func_practice01_02.png)
-
-##### 例:円周上に並べる
-
-```java
-// seup()かdraw()に以下を記述
-translate(width/2,height/2);
-for( int iRotateDeg = 0; iRotateDeg < 360; iRotateDeg+=18 )	// 20回繰り返す
-{
-  drawArrow(185,0,95); //中心からの距離:185, 矢印の向き95°
-  rotate(radians(18)); //座標系を18°回転
-}
-```
-
-![my_func_practice01_03](images/my_function/my_func_practice01_03.png)
-
-##### 例:並進
-
-```java
-// seup()かdraw()に以下を記述
-for( int iArrowIdx = 0; iArrowIdx < 48; iArrowIdx++ )	// 48回繰り返す
-{
-  int iColumn = iArrowIdx%6;	// 列番号0~	%:割り算の余り
-  int iRow = iArrowIdx/6;		  // 行番号0~
-  int iX = 20+60*iColumn+50*(iRow%2);	// 奇数の行番号は50右にずらす
-  int iY = 20+50*iRow;
-  int iRotateDegree = 180*(iRow%2);		// 奇数の行番号は180°回転
-  drawArrow(iX,iY,iRotateDegree);
-}
-```
-
-![my_func_practice01_04](images/my_function/my_func_practice01_04.png)
-
-##### 例:並進（拡大縮小あり）
-
-```java
-// seup()かdraw()に以下を記述
-for( int iArrowIdx = 0; iArrowIdx < 48; iArrowIdx++ )  // 48回繰り返す
-{
-  int iColumn = iArrowIdx%6; // 列番号0~  %:割り算の余り
-  int iRow = iArrowIdx/6;    // 行番号0~
-  float fScale = 0.2+iRow/8.0; // スケール値
-  int iX = 20+60*iColumn+floor(fScale*50*(iRow%2));  // 奇数の行番号はfScale*50右にずらす
-  int iY = 20+50*iRow;
-  int iRotateDegree = 180*(iRow%2);                  // 奇数の行番号は180°回転  	
-  drawArrow(iX,iY,iRotateDegree,fScale);
-}
-```
-
-![my_func_practice01_05](images/my_function/my_func_practice01_05.png)
-
-##### 例:移動と跳ね返りアニメーション
-
-```java
-// 関数定義以外を以下のように変更する．
-int iArrowBaseWidth = 10;    // 矢印の基部の幅
-int iArrowBaseHeight = 35;   // 矢印の基部の高さ
-int iArrowHeadWidth = 30;    // 矢印の頭部の幅
-int iArrowHeadHeight = 20;   // 矢印の頭部の高さ
-int  iPosX;      // 矢印の座標
-int  iDirctionX; // 進む向き( 1:+X方向, -1:-X方向 )
-void setup()
-{
-  size(400,400);
-  colorMode(RGB,100);
-  background(100,100,100);
-  frameRate(8);
-  iPosX = 0;
-  iDirctionX  = 1;
-}
-void draw()
-{
-  fill( 100, 100, 100 );
-  rect( 0, 0, width, height );// スクリーンリフレッシュ
-  drawArrow( iPosX, height/2, 90*( 1 - iDirctionX ) );  // 進む方向によって矢印を回転
-  iPosX += iDirctionX*8;             // iPosX = iPosX + iDirctionX*4; と同じ
-  if( iDirctionX == 1  && iPosX > width-50 ||  // もし，右向きかつ矢印頭がスクリーン端をこえる
-      iDirctionX == -1 && iPosX < 50 )         // もしくは，左向きかつ矢印頭スクリーン端を超えたら
-  {
-    iDirctionX *= -1;  // 向きを逆方向に変える(-1をかける)
-  }
-}
-```
-
-![my_func_practice01_06](images/my_function/my_func_practice01_06.gif)
-
-
-#### まとめ
-
-関数に複雑な図形描画をまとめると，
-
-- それを使って様々なレイアウトを行いやすくなる．
-- 機能の追加がしやすくなる．
-- 関数定義部分を移植（コピペ）することで，使い回しができる．
-
-
-
-## 関数応用
 
 ### アニメーション複製描画
 
@@ -10181,7 +10422,7 @@ void draw()
   rotate(radians(30*iHour-90));
   rect(0, 0, 240, 15);
   
-  popMatrix();			// 原点をスクリーン中心へ戻す
+  popMatrix();			// 回転をリセット
   
   pushMatrix();			// 現在の座標系を保存
   
@@ -10190,7 +10431,7 @@ void draw()
   rotate(radians(6*iMinute-90));
   rect(0, 0, 320, 10);
   
-  popMatrix();			// 原点をスクリーン中心へ戻す
+  popMatrix();			// 回転をリセット
   
   // 秒針描画
   int iSecond = second();
@@ -10202,6 +10443,394 @@ void draw()
 ![clock](images/util/clock.gif)
 
 
+
+## フレーム単位の変化（※非関数）
+
+秒より小さい単位の変化のアニメーションは，**フレーム単位の変化**のアニメーションとして実現できる．
+この場合，時間を取得する関数は用いない．
+例えば，「1秒周期で繰り返すアニメーション」は，**現在のフレーム番号をグローバル変数として保存**し，参照することで実現できる．
+
+### 演習1
+
+1秒で1回転する矩形のアニメーション
+
+![util_anim_per_1rot_05](images/util/util_anim_per_1rot_05.gif)
+
+以下の手順を参考にしてください．
+
+#### 1. ウィンドウを表示する．
+
+- `setup()`と`draw()`，及びそれらのブロックを記述する．
+- `setup()`ブロックに以下の処理を記述する．
+  - 「スクリーンサイズ: 300×300」
+
+```java
+void setup()
+{
+  size( 300, 300 );
+}
+
+void draw()
+{
+}
+```
+
+#### 2. 1秒で1回転する矩形の初期描画．
+
+`draw()`ブロックに以下の処理を記述する．
+
+- 「矩形描画：XY ( 0, 0 ), WH( 60, 4 )」
+
+```java
+void setup()
+{
+  size( 300, 300 );
+}
+
+void draw()
+{
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+}
+```
+
+![util_anim_per_1rot_01](images/util/util_anim_per_1rot_01.png)
+
+#### 3. 画面の中心に移動させる．
+
+`draw()`ブロックに以下の処理を記述する．
+
+- 「平行移動：`( width/2, height/2 )`」
+
+```java
+void setup()
+{
+  size( 300, 300 );
+}
+
+void draw()
+{
+  translate( width/2, height/2 );	// 座標原点を中心に移動
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+}
+```
+
+![util_anim_per_1rot_02](images/util/util_anim_per_1rot_02.png)
+
+これを回転させたい，`rotate()`を追加したいが，その前に回転アニメーション用のグローバル変数を追加する．
+
+#### 4. 現在のフレーム番号を保存するグローバル変数を追加する．
+
+- `int`型のグローバル変数`iFrameCur`の宣言文を記述する．
+
+- `setup()`ブロックに以下の処理を記述する．
+
+  「`iFrameCur`に0を代入して初期化する．」
+
+- `draw()`ブロックに以下の処理を記述する．
+
+  「`iFrameCur`に1を足す．」
+
+```java
+int iFrameCur;		// 現在のフレーム番号
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;	// 初期化
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+  
+  iFrameCur++;		// フレーム番号を進める．
+}
+```
+
+#### 5. iFrameCurを用いて回転させる．
+
+- `draw()`ブロックに以下の処理を記述する．
+  - 「回転：iFrameCur （度）」
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  translate( width/2, height/2 );
+  
+  rotate( radians( iFrameCur ) );	// 回転
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+  
+  iFrameCur++;
+}
+```
+
+![util_anim_per_1rot_03](images/util/util_anim_per_1rot_03.gif)
+
+#### 6. 画面をリフレッシュさせる．
+
+- `draw()`ブロックに以下の処理を記述する．
+
+  「画面をリフレッシュする」
+
+  - カラー： ( `201, 201, 201, 128 )`
+  - 線描画無し
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201, 128 );
+  rect( 0, 0, width, height );  // 画面をリフレッシュ
+  
+  translate( width/2, height/2 );
+  
+  rotate( radians( iFrameCur ) );
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+  
+  iFrameCur++;
+}
+```
+
+![util_anim_per_1rot_04](images/util/util_anim_per_1rot_04.gif)
+
+どう見ても1秒で1回転していない．
+現在のフレームレートは60なので，<u>1秒間で60°しか回転していない</u>．
+1秒間で360°回転させるには，毎フレーム**6°**回転させる必要がある．
+この割合はフレームレートによって変わる点に注意．
+
+#### 7. フレーム毎の回転量を6倍にする．
+
+- `draw()`ブロックの回転の処理を以下のように変更する．
+- 「 ( 現在のフレーム番号 × 6 ) °回転する」
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );
+  
+  translate( width/2, height/2 );
+   
+  rotate( radians( iFrameCur*6 ) );	// 毎フレーム6°回転
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+  
+  iFrameCur++;
+}
+```
+
+![util_anim_per_1rot_05](images/util/util_anim_per_1rot_05.gif)
+
+見た目はこれで完成だが，将来性を考え，フレーム番号を正しく0~59の間に収める処理を加える．
+
+#### 8. 1秒経ったらフレーム番号を0に戻す．
+
+- `draw()`ブロックに以下の処理を追加する．
+  - iFrameCur が60以上なら0に戻す．
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );
+  
+  translate( width/2, height/2 );
+  
+  rotate( radians( iFrameCur*6 ) );
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 0 );
+  rect( 0, 0, 60, 4 );
+  
+  iFrameCur++;
+  if( iFrameCur >= 60 )
+  {
+    iFrameCur = 0;	// フレーム番号リセット
+  }
+}
+```
+
+
+
+### 例1
+
+1秒間でがめんｗ横切る矩形の描画
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  frameRate( 20 );    // フレームレート:20
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );
+  
+  // 1秒間で横切る矩形の描画
+  fill( 0 );
+  rect( iFrameCur*15, 0, 5, 300 );
+  
+  iFrameCur++;
+  if( iFrameCur >= 20 )
+  {
+    iFrameCur = 0;  // フレーム番号リセット
+  }
+}
+```
+
+![util_anim_per_1translate](images/util/util_anim_per_1translate.gif)
+
+### 例2
+
+1秒間で色相環を一周する矩形の描画
+
+```java
+int iFrameCur;
+
+void setup()
+{
+  size( 300, 300 );
+  colorMode( HSB, 30, 100, 100 );   // Hue:0~30
+  frameRate( 30 );                  // フレームレート:30
+  iFrameCur = 0;
+}
+
+void draw()
+{
+  noStroke();
+  fill( 0, 0, 100 );
+  rect( 0, 0, width, height );
+  
+  // 1秒間で色相環を一周する矩形の描画
+  stroke( 0, 0, 0 );
+  fill( iFrameCur, 100, 100 );
+  rect( 50, 50, 200, 200 );
+  
+  iFrameCur++;
+  if( iFrameCur >= 30 )
+  {
+    iFrameCur = 0;  // フレーム番号リセット
+  }
+}
+```
+
+![util_anim_per_1_hue](images/util/util_anim_per_1_hue.gif)
+
+### 例3
+
+演習1を元に，秒とフレームをリンクさせた例
+
+※関数を使用
+
+```java
+int iFrameCur;   // 現在のフレーム番号
+int iSecondCur;  // 現在の秒
+
+void setup()
+{
+  size( 300, 300 );
+  iFrameCur = 0;
+  iSecondCur = second();
+}
+
+void draw()
+{
+  noStroke();
+  fill( 201, 201, 201 );
+  rect( 0, 0, width, height );
+  
+  // 現在の秒をテキスト表示
+  textSize( 20 );
+  fill( 255 );
+  text( iSecondCur, 40, 40 );
+  
+  translate( width/2, height/2 );
+
+  rotate( radians( iFrameCur*6 ) );
+  
+  // 1秒間で1回転する矩形の描画
+  fill( 40+iFrameCur*3 );
+  rect( 0, 0, 60, 4 );
+  
+  updateTime();
+}
+
+// 現在の秒とフレーム番号を更新する関数
+void updateTime()
+{
+  int iSecondNew = second();
+  
+  if( iSecondCur != iSecondNew )
+  {
+    iSecondCur = iSecondNew;  // 現在の秒更新
+    iFrameCur = 0;            // フレーム番号を0に戻す
+  }
+  else
+  {
+    iFrameCur++;
+  }
+}
+```
+
+![util_anim_per_1rot_second](images/util/util_anim_per_1rot_second.gif)
 
 ## プログラムを開始してからの経過時間
 
