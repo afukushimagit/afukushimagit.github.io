@@ -9902,6 +9902,7 @@ void setup()
   colorMode(RGB,100);
   background(100,100,100);
 }
+
 void draw()
 {
 }
@@ -9924,9 +9925,11 @@ void setup()
   colorMode(RGB,100);
   background(100,100,100);
 }
+
 void draw()
 {
 }
+
 void drawFace( int iX, int iY )
 {
 }
@@ -9953,9 +9956,11 @@ void setup()
   translate(width/2,height/2);	// スクリーン中心へ平行移動
   drawFace( 0, 0 );							// 関数のコール
 }
+
 void draw()
 { 
 }
+
 void drawFace( int iX, int iY )
 {
 }
@@ -9980,15 +9985,17 @@ void setup()
   translate(width/2,height/2);
   drawFace( 0, 0 );
 }
+
 void draw()
 { 
 }
+
 void drawFace( int iX, int iY )
 {
   ellipse( 0, 0, 100, 100 );// 輪郭
   ellipse( -20, -20, 8, 8 );// 目
   ellipse(  20, -20, 8, 8 );
-  line( -20, 20, 20, 20 );//口
+  line( -20, 20, 20, 20 );	//口
 }
 ```
 
@@ -10010,12 +10017,15 @@ void setup()
   translate(width/2,height/2);
   drawFace( 0, 0 );
 }
+
 void draw()
 {
 }
+
 void drawFace( int iX, int iY )
 {
   translate( iX, iY );			// 顔描画位置へ平行移動
+  
   ellipse( 0, 0, 100, 100 );// 輪郭
   ellipse( -20, -20, 8, 8 );// 目
   ellipse(  20, -20, 8, 8 );
@@ -10039,17 +10049,22 @@ void setup()
   translate(width/2,height/2);
   drawFace( 0, 0 );
 }
+
 void draw()
 {
 }
+
 void drawFace( int iX, int iY )
 {
   pushMatrix();// 座標系の保存
+  
   translate( iX, iY );
+  
   ellipse( 0, 0, 100, 100 );// 輪郭
   ellipse( -20, -20, 8, 8 );// 目
   ellipse(  20, -20, 8, 8 );
   line( -20, 20, 20, 20 );  // 口
+  
   popMatrix();// 座標系を戻す
 }
 ```
@@ -10079,26 +10094,33 @@ void setup()
   drawFace( 80,  320 );
   drawFace( 220, 240 );
 }
+
 void draw()
 {
 }
+
 void drawFace( int iX, int iY )
 {
   pushMatrix();
+  
   translate( iX, iY );
+  
   ellipse( 0, 0, 100, 100 );// 輪郭
   ellipse( -20, -20, 8, 8 );// 目
   ellipse(  20, -20, 8, 8 );
   line( -20, 20, 20, 20 );  // 口
+  
   popMatrix();
 }
 ```
 
 ![my_func_practice_simple_02](images/my_function/my_func_practice_simple_02.png)
 
+
+
 ### アニメーション複製描画
 
-関数による顔の描画を応用し，アニメーションを行う．
+前述の顔を描画する関数を応用し，アニメーションを行う．
 
 ```java
 int iFPS = 20;
@@ -10114,7 +10136,9 @@ void draw()
 {
   fill(60,60,60);
   noStroke();
-  rect(0,0,width,height); // 口の開き具合(cos,sin)
+  rect(0,0,width,height);
+  
+  // 口の開き具合(cos,sin)
   float fMouthOpenCos = (1 + cos(radians(iAnimMouthDeg)))/2.0; //cos単振動(0~1)
   float fMouthOpenSin = (1 + sin(radians(iAnimMouthDeg)))/2.0; //sin単振動(0~1)
   
@@ -10147,29 +10171,29 @@ void draw()
     iAnimMouthDeg +=4;// 4°進める
   }
 }
-/**    顔を描画する
-	引数
-  	fX:顔の中心の座標値
-    fY:
-    fMouthOpen:口の開き具合(0~1)
-    fScale;スケール値
-*/
+
 void drawFace( float fX, float fY, float fMouthOpen )
 {
   pushMatrix();//座標系保存
+  
   stroke(0,0,0);
   fill(255,255,255);
   ellipse( fX, fY, 80, 80 );  // 輪郭
+  
   fill(255,255,255);
   ellipse( fX-20, fY-20, 8, 8 );// 目
-  ellipse( fX+20, fY-20, 8, 8 );// 口
+  ellipse( fX+20, fY-20, 8, 8 );
+  
   //   位置調整のため，細かい数値が入っています．
   float fBeginDeg = 60 - 60*fMouthOpen;
   float fEndDeg = 120 + 60*fMouthOpen;
   float fMouthY = fY-10+16*fMouthOpen;
   float fEllipseWidth = 60-20*fMouthOpen;
+  
+  // 口の描画
   fill(255,0,0);
   arc( fX, fMouthY, fEllipseWidth, 40, radians(fBeginDeg), radians(fEndDeg), CHORD );
+  
   popMatrix();//座標系戻す
 }
 ```
@@ -10182,6 +10206,7 @@ void drawFace( float fX, float fY, float fMouthOpen )
 
 ```java
 int iAnimDegree;  // アニメーション用
+
 void setup()
 {
   size( 400, 200 );
@@ -10189,18 +10214,28 @@ void setup()
   frameRate(20);
   iAnimDegree = 0;
 }
+
 void draw()
 {
   noStroke();
   fill(0,0,0);
-  rect(0,0,width,height);    // 波長アニメーション
-  float fAnimPhaseShift = radians(iAnimDegree);  // 振幅アニメーション
+  rect(0,0,width,height);
+  
+  // 波長アニメーション
+  float fAnimPhaseShift = radians(iAnimDegree);
+  
+  // 振幅アニメーション
   float fAnimAmplitudeSin = 50+50*sin(radians(iAnimDegree));
-  float fAnimAmplitudeCos = 50+50*cos(radians(iAnimDegree));    // cos波
+  float fAnimAmplitudeCos = 50+50*cos(radians(iAnimDegree));
+  
+  // cos波
   stroke(255,0,0);
-  drawWaveCos( fAnimPhaseShift, fAnimAmplitudeCos, 400 );    // sin波
+  drawWaveCos( fAnimPhaseShift, fAnimAmplitudeCos, 400 );
+  
+  // sin波
   stroke(0,0,255);
   drawWaveSin( fAnimPhaseShift, fAnimAmplitudeSin, 400 );
+  
   if( iAnimDegree > 360 )// 360超えたらリセット
   {
     iAnimDegree-=360;
@@ -10238,11 +10273,11 @@ void drawWaveSin( float fPhaseShift, float fAmplitude, float fWaveLength )
 	params
   	iX:スクリーンのX座標値
     fWaveLength:波長
-    return:　位相(ラジアン値)
+    return:位相(ラジアン値)
 */
 float calcWavePhase( int iX, float fWaveLength )
 {
-  return TWO_PI * iX / fWaveLength;
+  return TWO_PI * iX / fWaveLength;	// TWO_PI: 360°のラジアン値
 }
 ```
 
