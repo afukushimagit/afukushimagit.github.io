@@ -8928,7 +8928,7 @@ return a+b;	// 数式を書いてもよい．計算結果の値が返される�
 
 
 
-## 返り値のある関数
+## 描画：返り値のある関数
 
 **複雑な計算**を行う処理を関数にまとめることができる．
 
@@ -9065,7 +9065,7 @@ int func( int iA, int iB )
 
 
 
-## Void関数
+## 描画：Void関数
 
 **複雑な図形の描画**を関数にまとめることができる．
 
@@ -9301,7 +9301,7 @@ void drawFlower( int iPetalTotal, float fCenterX, float fCenterY )
 
 #### 1.ウィンドウを表示する．
 
-`draw()`に以下の記述を追加する．
+Activeモードでウィンドウを表示させるところまで記述しましょう．
 
 - スクリーンサイズ：400×400
 
@@ -10706,7 +10706,7 @@ void draw()
 
 ### 例1
 
-1秒間でがめんｗ横切る矩形の描画
+1秒間で画面を横切る矩形の描画
 
 ```java
 int iFrameCur;
@@ -10938,6 +10938,1696 @@ void draw()
 
 
 
+
+# 再帰
+
+## 再帰とは
+
+再帰的であることを英語で「Recursive」と書く．
+自身が，自分自身を参照してしまうような状態．
+
+## 再帰呼び出しとは
+
+英語で「Recursive Call」と書く．
+
+**関数内で自分自身の関数を呼び出す**こと．
+
+```java
+void function( int iValue )
+{
+  function( iValue - 1 );
+}
+// ※この関数をコールすると無限ループに陥るので実行しないこと．
+```
+
+上記のような再帰呼び出しを行っている関数のことを**再帰関数**という．
+再帰関数は最初の呼び出しを１度行うだけで，何度も繰り返し関数の処理を繰り返す．
+ただし，再帰関数に渡す**引数の値を変化**させていく必要がある．
+
+無限ループを避けるため，if式と仮引数を用いて**再帰呼び出しを適切に終了させる**必要がある．
+
+```java
+void function( int iValue )
+{
+  if( iValue > 0 )
+  {
+  	function( iValue - 1 );
+  }
+}
+```
+
+仮引数`iValue`は再帰呼び出しの繰り返しにより，いつか必ず0の値をとる．
+それゆえ，上記のようにif文を加えることで，再帰呼び出しを終了させることができる．
+
+## 再帰void関数の定義
+
+再帰関数は関数の一種であるので，まず関数の定義を行う必要がある．
+再帰関数の定義を記述したら，`setup()`や`draw()`内で再帰関数をコールする．
+
+ここではvoid関数を用いた書式を学習する．
+条件式の種類によっておおまかに二通りの書式に分けられる．
+
+### 書式1
+
+再帰呼び出しを<u>続ける</u>条件式を記述する書式
+
+```java
+void 関数名( 仮引数の型 仮引数 )
+{
+  if( 条件式 )				// 真(true)なら再帰を続ける．
+  {
+    関数名( 実引数 ); // 再帰呼び出し
+  }
+}
+```
+
+### 書式2
+
+再帰呼び出しを<u>終了する</u>条件式を記述する書式
+
+```java
+void 関数名( 仮引数の型 仮引数 )
+{
+  if( 条件式 )				// 真(true)なら再帰を終了する．
+  {
+    return;					// 関数の処理をここで終了する．
+  }
+  関数名( 実引数 );		// 再帰呼び出し
+}
+```
+
+上記の二通りの書式は，実は本質的には違いがあまり無い．
+目的や好みに応じて書式を使い分ければよい．
+return文に抵抗があるなら書式1を推奨する．
+
+### 例1
+
+引数の値の回数だけ再帰呼び出しを行う再帰関数の定義．
+
+```java
+void recursiveCount( int iCount )
+{
+  if( iCount > 0 )		 // 真(true)なら再帰を続ける．
+  {
+    recursiveCount( iCount - 1 );	// 再帰呼び出し
+  }
+}
+```
+
+仮引数`iCount`から1を引いた値を，次の再帰呼び出しの際に実引数として渡している．
+再帰の続行条件は，仮引数`iCount`が0より大きいこと．
+
+### 例2
+
+引数の値を2で割り，割った後の値を引数として再帰呼び出しを行う再帰関数
+
+```java
+void recursiveDivide( float fValue )
+{
+  if( fValue > 5 )         // 仮引数fValueが5より大きければ再帰をつづける．
+  {
+    recursiveDivide( fValue / 2 );  // fValueを2で割った値を引数として再帰呼び出し．
+  }
+}
+```
+
+仮引数`fValue`を2で割った値を，次の再帰呼び出しの際に実引数として渡している．
+再帰の続行条件は，仮引数`fValue`が5より大きいこと．
+
+
+
+## 演習1
+
+下図の①，②に何を記述すればよいか考えてみましょう．
+
+再帰関数`recursiveScale()`の要件
+
+- 引数`fValue`の値に`1.2`をかけ，かけた後の値を実引数として再帰呼び出しを行う．
+- 再帰の続行条件は，仮引数`fValue`が1000より<u>小さい</u>こと．
+
+![recursive_scale_quiz](images/recursive/recursive_scale_quiz.png)
+
+演習時間：1分程度
+
+
+
+## 再帰関数の呼び出し
+
+前述の例1で定義した再帰関数を使用したプログラムを元に，再帰呼び出しの流れを見ていく．
+以下のプログラムでは，再帰関数`recursiveCount()`を`setup()`から呼び出している．
+
+```java
+void setup()
+{
+  recursiveCount( 4 );	// 4を引数として渡す
+}
+
+void recursiveCount( int iCount )
+{
+  print( iCount + ", " );
+  if( iCount > 0 )		 // 真(true)なら再帰を続ける．
+  {
+    recursiveCount( iCount - 1 );	// 再帰呼び出し
+  }
+}
+```
+
+![recursive_count_simple_console](images/recursive/recursive_count_simple_console.png)
+
+この再帰関数は結果として，最初に渡した実引数「4」の回数だけ再帰呼び出しを繰り返していることがわかる．
+
+### 最初の呼び出しの流れ
+
+#### 1. setup()から関数recursiveCount(4)を呼び出す．
+
+print()命令は削除しています．
+
+![recursive_step_01](images/recursive/recursive_step_01.png)
+
+※**コールスタック**とは，関数呼び出しの情報を保存したメモリ領域．
+　呼び出された関数は，それぞれの仮引数やローカル変数などのデータを保持している．
+
+#### 2. 仮引数に値が渡される．
+
+![recursive_step_01](images/recursive/recursive_step_02.png)
+
+#### 3. 条件式の評価．
+
+![recursive_step_02](images/recursive/recursive_step_03.png)
+
+#### 4. recursiveCount( 3 )の呼び出し．
+
+![recursive_step_03](images/recursive/recursive_step_04.png)
+
+#### 5. 仮引数に値が渡される．
+
+![recursive_step_04](images/recursive/recursive_step_05.png)
+
+#### 6. 条件式の評価．
+
+![recursive_step_05](images/recursive/recursive_step_06.png)
+
+#### 7. recursiveCount( 2 )の呼び出し．
+
+![recursive_step_06](images/recursive/recursive_step_07.png)
+
+#### 8. 仮引数に値が渡される．
+
+![recursive_step_07](images/recursive/recursive_step_08.png)
+
+#### 9. このような再帰呼び出しが，引数が0になるまで繰り返される．
+
+![recursive_step_08](images/recursive/recursive_step_09.png)
+
+#### 10. recursiveCount( 0 ) の呼び出し．
+
+![recursive_step_09](images/recursive/recursive_step_10.png)
+
+#### 11. 条件式の評価．
+
+条件式が偽となるため，if文のブロックは実行されない．
+
+![recursive_step_10](images/recursive/recursive_step_11.png)
+
+#### 12. recursiveCount( 0 ) の終了．
+
+その後にも，recursiveCount( 0 )ブロックには特に命令が記述されていない．
+
+![recursive_step_12](images/recursive/recursive_step_12.png)
+
+#### 13. 呼び出し元のrecursiveCount( 1 )へ戻る．
+
+recursiveCount( 0 ) の呼び出し元の位置はif文のブロック内．
+
+![recursive_step_13](images/recursive/recursive_step_13.png)
+
+#### 14. recursiveCount( 1 )の終了．
+
+その後，recursiveCount( 1 )ブロックには特に命令が記述されていない．
+
+![recursive_step_14](images/recursive/recursive_step_14.png)
+
+#### 15. 逆順にrecursiveCount()が終了していく．
+
+このように，呼び出された順番と逆順にrecursiveCount()が終了していく．
+
+![recursive_step_15](images/recursive/recursive_step_15.png)
+
+#### 16. 最初の呼び出し元に戻る．
+
+![recursive_step_16](images/recursive/recursive_step_16.png)
+
+#### 例3
+
+例2で定義した再帰関数`recursiveDivide()`を`setup()`から実行した例．
+
+```java
+void setup()
+{
+  recursiveDivide( 100 );  // 100を引数として渡す
+}
+
+void recursiveDivide( float fValue )
+{
+  print( fValue + ", " );
+  
+  if( fValue > 5 )         // 仮引数fValueが5より大きければ再帰をつづける．
+  {
+    recursiveDivide( fValue / 2 );  // fValueを2で割った値を引数として再帰呼び出し．
+  }
+}
+```
+
+![recursive_divide_console](images/recursive/recursive_divide_console.png)
+
+このような再帰関数は図形を分割して描画する等の表現に応用できる．
+
+
+
+## 演習2
+
+演習1と同じ再帰関数`recursiveScale()`を定義し，引数の値`1`を渡して`setup()`から呼び出してみましょう．
+また，例3を参考にprint()命令を記述し，下図のようにコンソール出力を行いましょう．
+
+再帰関数`recursiveScale()`の要件（演習1と同じ）
+
+- 仮引数はfloat型の`fValue`．
+
+- 仮引数`fValue`の値に`1.2`をかけ，かけた後の値を実引数として再帰呼び出しを行う．
+- 再帰の続行条件は，仮引数`fValue`が1000より<u>小さい</u>こと．
+
+演習時間：4分
+
+![recursive_scale_console](images/recursive/recursive_scale_console.png)
+
+
+
+## スタックオーバーフローエラー
+
+終了条件を正しく記述しないと，プログラムがフリーズし，ProcessingのGUIから終了することができなくなる．
+以下のようなエラーが表示される．
+
+![recursive_error_console](images/recursive/recursive_error_console.png)
+
+仮にその状況に陥って知った場合の解決先を以下に示す．
+
+### windowsの場合
+
+ウィンドウ右上の×ボタンをクリックし，プログラムを強制終了させる．
+
+![recursive_error_window_poput](images/recursive/recursive_error_window_poput.png)
+
+### Macの場合
+
+※未記載
+
+## 返り値のある再帰関数の定義と呼び出し
+
+返り値のある関数を用いて再帰関数を定義することもできる．
+本授業で用いるにはあまり適していないので，書式等は割愛する．
+
+### 例1
+
+1から始まり，ある数nまでの数の和を求める再帰関数．
+$$
+1 + 2 + 3 + 4 + 5 + \cdots + n
+$$
+
+```java
+int recursiveSum( int iN )
+{
+  if( iN > 0 )
+  {
+    int iSumM = recursiveSum( iN-1 );	// 再帰呼び出し
+    return iN + iSumM;
+  }
+  else
+  {
+    return 0;
+  }
+}
+```
+
+### 例2
+
+例1の再帰関数を用い，1から始まり10までの数の和を求める．
+
+```java
+void setup()
+{
+  int iSum = recursiveSum( 10 );			// 最初の呼び出し
+  print( iSum );
+}
+
+int recursiveSum( int iN )
+{
+  if( iN > 0 )
+  {
+    print( iN + " + " );
+    int iSumM = recursiveSum( iN-1 );	// 再帰呼び出し
+    return iN + iSumM;
+  }
+  else
+  {
+    print( "0" );
+    return 0;
+  }
+}
+```
+
+![recursive_nsum_console](images/recursive/recursive_nsum_console.png)
+
+
+
+## 再帰関数を使った描画基礎
+
+### 描画命令を記述する位置
+
+「再帰関数の呼び出し-例2」のプログラムに描画命令を加える場合を考える．
+以下，変更を加える前のプログラム．
+
+```java
+void setup()
+{
+  recursiveDivide( 100 );  // 100を引数として渡す
+}
+
+void recursiveDivide( float fValue )
+{
+  print( fValue + ", " );
+  
+  if( fValue > 5 )         					// 仮引数fValueが5より大きければ再帰をつづける．
+  {
+    recursiveDivide( fValue / 2 );  // fValueを2で割った値を引数として再帰呼び出し．
+  }
+}
+```
+
+![recursive_divide_console](images/recursive/recursive_divide_console.png)
+
+このプログラムに描画命令を加える位置は下図の通り．（`print()`命令を記述していた部分）
+
+![recursive_draw_add_place](images/recursive/recursive_draw_add_place.png)
+
+上図のように，再帰呼び出しを終了させるif文の前に記述するのが一般的．
+
+### 描画命令の記述の仕方
+
+仮引数`fValue`を用いて描画命令を記述することになる．
+再帰呼び出しの度に仮引数`fValue`の値は２分の１に変化している．
+
+この特性を使って，描画領域を再帰的に分割するプログラムを記述できる．
+
+```java
+void setup()
+{
+  recursiveDivide( 100 );
+}
+
+void recursiveDivide( float fValue )
+{
+  // 矩形描画
+  rect( 0, 0, fValue, height );
+  
+  if( fValue > 5 )
+  {
+    recursiveDivide( fValue / 2 );
+  }
+}
+```
+
+![recursive_draw_add_divide](images/recursive/recursive_draw_add_divide.png)
+
+このプログラムでは，矩形の横幅の大きさの指定に，仮引数`fValue`を用いている．
+
+### さらに命令を追加する．
+
+下のプログラムではスクリーンサイズを200×100，塗り色の指定を加えている．
+
+```java
+void setup()
+{
+  size( 200, 100 );
+  recursiveDivide( width );      // 実引数を200に
+}
+
+void recursiveDivide( float fValue )
+{
+  // 矩形描画
+  fill( fValue + 100 );          // 塗り色
+  rect( 0, 0, fValue, height );
+  
+  if( fValue > 5 )
+  {
+    recursiveDivide( fValue / 2 );
+  }
+}
+```
+
+![recursive_draw_add_divide_ad](images/recursive/recursive_draw_add_divide_ad.png)
+
+## 演習3
+
+正方形を再帰的に4分割する再帰関数を定義する．
+
+![recursive_4squares_divided](images/recursive/recursive_4squares_divided.png)
+
+### 1.ウィンドウを表示する．
+
+Activeモードでウィンドウを表示させるところまで記述しましょう．
+※静止画なのでdraw()は不要
+
+- スクリーンサイズ：400×400
+
+```java
+void setup()
+{
+  size( 400, 400 );
+}
+```
+
+### 2. 再帰関数定義を準備する．
+
+void関数`draw4Squares()`を定義しましょう．
+
+- ブロック内の記述はまだ不要．
+- 関数名：draw4Squares
+- 仮引数
+  - float型の fSize
+
+```java
+void setup()
+{
+  size( 400, 400 );
+}
+
+void draw4Squares( float fSize )
+{
+}
+```
+
+仮引数`fSize`は**これから分割する領域全体の大きさ**の情報を表す．
+
+### 3. 再帰関数を呼び出す．
+
+描画結果がいち早く確認できるよう，再帰関数の呼び出しを記述してしまいましょう．
+`setup()`に以下の処理を追加しましょう．
+
+- `draw4Squares()`に引数`400`を渡して呼び出す．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+  draw4Squares( 400 );
+}
+
+void draw4Squares( float fSize )
+{
+}
+```
+
+この引数`400`が再帰呼び出しにより，２分の１に分割されていくことを念頭に置いておく．
+
+### 4. 3つの正方形を描画する．
+
+void関数`draw4Squares()`に正方形の描画命令を追加する．
+下図を参考に，仮引数`fSize`を用い，右上，左下，右下に３つの正方形を描画する．（左上は空白）
+
+![recursive_4squares_divided_02](images/recursive/recursive_4squares_divided_02.png)
+
+```java
+void setup()
+{
+  size( 400, 400 );
+  draw4Squares( 400 );
+}
+
+void draw4Squares( float fSize )
+{
+  // 右上の正方形
+  fill( 255, 0, 0 );
+  square( fSize/2, 0, fSize/2 );
+  
+  // 左下の正方形
+  fill( 0, 255, 0 );
+  square( 0, fSize/2, fSize/2 );
+  
+  // 右下の正方形
+  fill( 255, 255, 255 );
+  square( fSize/2, fSize/2, fSize/2 );
+}
+```
+
+![recursive_4squares_divided_01](images/recursive/recursive_4squares_divided_01.png)
+
+この描画を再帰呼び出しにより繰り返すことになる．
+
+### 5. 再帰を続行するif文を記述する．
+
+void関数`draw4Squares()`の最後に以下のif文と空のブロックを追加する．
+
+- もし`fSize`が4以上だったら
+
+```java
+void setup()
+{
+  size( 400, 400 );
+
+  draw4Squares( 400 );
+}
+
+void draw4Squares( float fSize )
+{
+  // 右上の正方形
+  fill( 255, 0, 0 );
+  square( fSize/2, 0, fSize/2 );
+  
+  // 左下の正方形
+  fill( 0, 255, 0 );
+  square( 0, fSize/2, fSize/2 );
+  
+  // 右下の正方形
+  fill( 255, 255, 255 );
+  square( fSize/2, fSize/2, fSize/2 );
+  
+  // 左上の正方形（再帰）
+  if( fSize > 4 )
+  {
+  }
+}
+```
+
+再帰の続行条件を`fSize > 4`としたのは，分割する領域の大きさが4以下の場合，それ以上分割しても視覚的には無意味であるため．
+
+### 6.再帰呼び出しを記述する．
+
+ステップ5.で追加したif文のブロックに，以下の再帰呼び出しを記述しましょう．
+
+- `fSize`を2で割った値を引数として渡し，`draw4Squares()`の再帰呼び出しを行う．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+
+  draw4Squares( 400 );
+}
+
+void draw4Squares( float fSize )
+{
+  // 右上の正方形
+  fill( 255, 0, 0 );
+  square( fSize/2, 0, fSize/2 );
+  
+  // 左下の正方形
+  fill( 0, 255, 0 );
+  square( 0, fSize/2, fSize/2 );
+  
+  // 右下の正方形
+  fill( 255, 255, 255 );
+  square( fSize/2, fSize/2, fSize/2 );
+  
+  // 左上の正方形（再帰）
+  if( fSize > 4 )
+  {
+    draw4Squares( fSize / 2 );
+  }
+}
+```
+
+![recursive_4squares_divided](images/recursive/recursive_4squares_divided.png)
+
+この再帰呼び出しによって，<u>左上の正方形のエリア</u>に再帰的に描画が行われる．
+
+右下に再帰的に描画を行いたい場合，以下のように平行移動の命令を追加する必要がある．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+
+  pushMatrix();  // 再帰関数の呼び出しで座標系が変換されるので，念のため保存．
+  draw4Squares( 400 );
+  popMatrix();
+}
+
+void draw4Squares( float fSize  )
+{
+  // 左上の正方形
+  fill( 255, 255, 255 );
+  square( 0, 0, fSize/2 );
+
+  // 右上の正方形
+  fill( 255, 0, 0 );
+  square( fSize/2, 0, fSize/2 );
+  
+  // 左下の正方形
+  fill( 0, 255, 0 );
+  square( 0, fSize/2, fSize/2 );
+  
+  // 右下の正方形（再帰）
+  if( fSize > 4 )
+  {
+    translate( fSize / 2, fSize / 2 );	// 平行移動
+    draw4Squares( fSize / 2 );
+  }
+}
+```
+
+![recursive_4squares_divided_03](images/recursive/recursive_4squares_divided_03.png)
+
+
+
+## 再帰呼び出しを複数回行う
+
+関数内で，再帰呼び出しを複数回同時に行ってもよい．
+**再帰を枝分かれ**させることができる．
+
+```java
+void recursiveFunc(int iLevel)
+{
+  if( iLevel>0 )  //もしiLevelの数値が0より大きければ
+  {
+    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）
+    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）
+    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）
+  }
+}
+```
+
+
+
+## 演習4
+
+曼荼羅のような図形の描画
+シェルピンスキーのカーペット
+
+![recursive_mandara_finish](images/recursive/recursive_mandara_finish.png)
+
+
+
+### 描画を単位で考える
+
+左の図が再帰的に繰り返される．
+
+![recursive_mandara_concept01](images/recursive/recursive_mandara_concept01.png)
+
+
+
+### 1. setup()を記述
+
+- **draw()は今回不要**
+
+- スクリーンサイズ：1000×1000
+- **矩形の座標を中心点で指定**
+  - `rectMode(CENTER)`
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+}
+```
+
+### 2. 再帰関数の定義
+
+再帰関数の定義は，関数定義と同じ書式です．
+ブロック内の命令以外の枠だけ用意しましょう．
+
+- 関数名：drawMandara
+- 仮引数：iLevel
+- 返り値：なし
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+}
+
+void drawMandara( int iLevel )
+{
+}
+```
+
+### 3. setup()から再帰関数を呼ぶ(使う)
+
+setup()内で，作成した再帰関数drawMandara()を呼びましょう．
+
+- 引数：`5`
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+  drawMandara(5);
+}
+
+void drawMandara( int iLevel )
+{
+}
+```
+
+### 4. 再帰の続行条件を設定する
+
+- 関数drawMandara()内で，**再帰呼び出し**を行いましょう．
+  - 引数：`iLevel-1`
+
+- また，この再帰呼び出しを以下の条件の時にしか行わないようにしましょう．
+  - 仮引数`iLevel`の値が0より大きいとき
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+  drawMandara(5);
+}
+
+void drawMandara( int iLevel )
+{
+  if( iLevel>0 )  //もしiLevelの数値が0より大きければ
+  {
+    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）
+  }
+}
+```
+
+### 5. 中心の大きな矩形の描画
+
+![recursive_mandara_unit_center](images/recursive/recursive_mandara_unit_center.png)
+
+スクリーン中心の大きな矩形を描画しましょう．
+スクリーンをX軸方向とY軸方向にそれぞれ**三等分**した領域の真ん中に描画．
+
+**drawMandara()内に記述**
+
+- 変数を用意
+  - `float fRectX = width/2;   // 中央の矩形のX座標値`
+  - ` float fRectY = height/2;   // 中央の矩形のY座標値`
+  - `float fRectWidth = width/3;   // 中央の矩形の幅`
+  - `float fRectHeight = height/3  // 中央の矩形の高さ`
+- 座標，大きさを上記の変数で表しましょう．
+- 矩形の座標を中心点で指定していることに注意
+  - `rectMode(CENTER)`
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+  drawMandara(5);
+}
+
+void drawMandara( int iLevel )
+{
+  float fRectX = width/2;
+  float fRectY = height/2;
+  float fRectWidth = width/3;
+  float fRectHeight = height/3;
+  
+  rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央
+  
+  if( iLevel>0 )  //もしiLevelの数値が0より大きければ
+  {
+    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）
+  }
+}
+```
+
+### 6.  周囲の8つの矩形描画
+
+![recursive_mandara_unit](images/recursive/recursive_mandara_unit.png)
+
+周りの8つの矩形を描画しましょう．
+大きな矩形の範囲を，さらにX軸方向とY軸方向にそれぞれ**三等分**した領域の真ん中に描画．
+
+**drawMandara()内に記述**
+
+- 座標，大きさを先ほどの変数と簡単な数値で表しましょう．
+  - 大きな矩形と相対的な座標・サイズ
+- X軸とY軸のマイナス方向へ向かう際は，値がマイナスになる．
+  - 例: `- fRectWidth` , `- fRectHeight`
+- 難しい人は，紙にメモやグラフ書きながら．
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+  drawMandara(5);
+}
+
+void drawMandara( int iLevel )
+{
+  float fRectX = width/2;
+  float fRectY = height/2;
+  float fRectWidth = width/3;
+  float fRectHeight = height/3;
+  
+  rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央
+  
+  // 周りの8つの矩形の描画
+  rect(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3);           //上
+  rect(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3);            //下
+  rect(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //左
+  rect(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //右
+  rect(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //左上
+  rect(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //右上
+  rect(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //左下
+  rect(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //右下
+  if( iLevel>0 )  //もしiLevelの数値が0より大きければ
+  {
+    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）
+  }
+}
+```
+
+### 7. 再帰呼び出し化の考え方
+
+ここから本格的に再帰呼び出しの仕方を考える．
+
+- 実は小さい矩形描画は，大きい矩形描画の繰り返し
+
+- <u>座標</u>と<u>大きさ</u>が違う
+  - `fRectX`, `fRectY`, `fRectWidth`, `fRectHeight`
+- **（小さな矩形の）座標と大きさを引数として渡す再帰呼び出し**を行えばいいのでは？
+  というように，**イメージできればよい**．
+  - 細かいところまで全て計算済みである必要はない．
+
+![recursive_mandara_program_and_unit](images/recursive/recursive_mandara_program_and_unit.png)
+
+### 8. 再帰関数の引数を追加
+
+- 関数drawMandaraに仮引数を追加．
+
+以下のように書き換えましょう．
+
+```java
+void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel )
+```
+
+これに伴い，以下の部分は消去．
+
+```java
+float fRectX = width/2;
+float fRectY = height/2;
+float fRectWidth = width/3;
+float fRectHeight = height/3;
+```
+
+- また，これらに代入していた初期値（`width/2`など）を， setup()内の関数drawMandara()呼び出しの引数に設定しましょう．
+
+以下のように書き換えましょう．
+
+```java
+drawMandara( width/2, height/2, width/3, height/3, 5);
+```
+
+- 以上の変更を行うと実行ができなくなるので，早めに次のステップに進みましょう．
+
+### 9. 再帰呼び出しの変更
+
+**関数drawMandara内で**
+
+- 周りの8つの矩形の描画を`if( iLevel > 0 )`のブロックに移動させましょう．
+  同時に，`drawMandara(iLevel-1)`は消去しましょう．
+
+```java
+void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel )
+{
+  rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央
+  
+  if( iLevel>0 )  //もしiLevelの数値が0より大きければ
+  {
+    // 周りの8つの矩形の描画
+    rect(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3);           //上
+    rect(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3);            //下
+    rect(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //左
+    rect(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //右
+    rect(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //左上
+    rect(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //右上
+    rect(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //左下 
+    rect(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //右下
+  }
+}
+```
+
+- 周りの8つの矩形の描画におけるrect関数の呼び出しを，drawMandara関数の呼び出しに置き換えましょう
+  - `rect`を`drawMandara`に書き換える
+  - 引数の最後に，仮引数`iLevel`に渡す引数を追加
+    - 値：`iLevel-1`
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  rectMode(CENTER); // 矩形の座標を中心点で指定
+  drawMandara( width/2, height/2, width/3, height/3, 5);
+}
+
+void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel )
+{
+  rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央
+  
+  if( iLevel > 0 )
+  {
+    // 周りの8つの矩形の描画
+    drawMandara(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3, iLevel-1);           //上
+    drawMandara(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1);            //下
+    drawMandara(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3, iLevel-1);             //左 
+    drawMandara(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3, iLevel-1);             //右 
+    drawMandara(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //左上
+    drawMandara(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //右上
+    drawMandara(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //左下 
+    drawMandara(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //右下
+  }
+}
+```
+
+
+
+## 演習5
+
+木のような図形の描画
+
+![recursive_tree_finish](images/recursive/recursive_tree_finish.png)
+
+### 1. setup()を記述
+
+- **draw()は今回不要**
+
+- スクリーンサイズ：1000×1000
+
+下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(1000, 1000);
+}
+```
+
+### 2. 再帰関数の定義
+
+再帰関数の定義は，関数定義と同じ書式です．
+ブロック内の命令以外の枠だけ用意しましょう．
+
+- 関数名：drawTree
+- 仮引数：iLevel
+- 返り値：なし
+
+下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(1000, 1000);
+}
+
+void drawTree( int iLevel )
+{
+}
+```
+
+### 3. setup()から再帰関数を呼ぶ(使う)
+
+setup()内で，作成した再帰関数drawTree()を呼びましょう．
+
+- 引数：`10`
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  drawTree(10);
+}
+
+void drawTree( int iLevel )
+{
+}
+```
+
+### 4. 再帰の続行条件を設定する
+
+- 関数drawTree()内で，**再帰呼び出し**を行いましょう．
+  - 引数：`iLevel-1`
+
+- また，この再帰呼び出しを以下の条件の時にしか行わないようにしましょう．
+  - 仮引数`iLevel`の値が0より大きいとき
+
+下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  drawTree(10);
+}
+
+void drawTree( int iLevel )
+{
+  if( iLevel>0 )
+  {
+    drawTree(iLevel-1);
+  }
+}
+```
+
+### 5. 最初の枝を描画する
+
+#### sin,cos関数を使った線の回転
+
+今回は座標変換よりこちらのほうがシンプルに書けるので，こちらを使います．
+
+![calc_variable_sincos_line](images/calv_variable/calc_variable_sincos_line.png)
+
+#### 最初の枝の考え方
+
+<img src="images/recursive/recursive_tree_first_line.png" alt="recursive_tree_first_line"  />
+
+- 変数を作る
+
+以下のコードを関数drawTree内に記述しましょう．
+
+```java
+float fStartX = width/2;	// 始点X
+float fStartY = height;	// 始点Y
+float fLength = 200;		// 長さ
+float fAngle = -90;		// 角度
+```
+
+- 終点の座標を考える．
+
+以下のように終点座標の変数を用意し，上記の変数を使って座標値の計算式を書いてみましょう．
+
+```JAVA
+float fEndX = /* ここの部分を考えて書いてみましょう */;	// 終点X
+float fEndY = /* ここの部分を考えて書いてみましょう */;	// 終点Y
+```
+
+- 描画関数lineを記述
+
+始点と終点の変数を使って，以下のように描画処理を記述しましょう．
+
+```java
+line( fStartX, fStartY, fEndX, fEndY );
+```
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  drawTree(10);
+}
+
+void drawTree( int iLevel )
+{
+  float fStartX = width/2;
+  float fStartY = height;
+  float fLength = 200;
+  float fAngle = -90;
+  float fEndX = fStartX+fLength*cos(radians(fAngle));
+  float fEndY = fStartY+fLength*sin(radians(fAngle));
+  
+  line( fStartX, fStartY, fEndX, fEndY );
+  
+  if( iLevel>0 )
+  {
+    drawTree(iLevel-1);
+  }
+}
+```
+
+### 6. 2本目以降の枝描画を考える
+
+![recursive_tree_second_lines](images/recursive/recursive_tree_second_lines.png)
+
+- 前回の枝の終点が次の枝の始点になる
+- 長さが0.75倍になる
+- 角度が±20°
+
+以下のように，変数を関数の仮引数へ変更する．
+
+```java
+drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel )
+```
+
+これに伴い，以下の変数の宣言を消去する．
+
+```java
+float fStartX = width/2;
+float fStartY = height;
+float fLength = 200;
+float fAngle = -90;
+```
+
+変数の初期値として代入していた値を，setup関数内での関数呼び出しの引数にする．
+
+```java
+drawTree( width/2, height, 200, -90, 10);
+```
+
+以上の手順により，以下のようになります．
+このままだとエラーで実行できないので，次の手順に進みましょう．
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  drawTree( width/2, height, 200, -90, 10);
+}
+
+void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel )
+{
+  float fEndX = fStartX+fLength*cos(radians(fAngle));
+  float fEndY = fStartY+fLength*sin(radians(fAngle));
+  line( fStartX, fStartY, fEndX, fEndY );
+  if( iLevel>0 )
+  {
+    drawTree( iLevel-1 );
+  }
+}
+```
+
+### 7. 再帰呼び出しの変更
+
+以下の再帰呼び出しの部分も書き換えなければいけないが，どのように書き換えればいいか考えてみましょう．
+
+```java
+drawTree( iLevel-1 );
+```
+
+ヒントとしては
+
+- 再帰呼び出しにより，２本に枝分かれさせる
+
+  - 前回の枝の終点が，次の枝の始点になる．
+  - 長さが0.75倍になる．
+  - 角度が+20°の枝と，-20°の枝に分かれる．
+
+  
+
+下の答えを見る前にやってみましょう．
+
+```java
+void setup()
+{
+  size(1000, 1000);      // 角度:-90°
+  // 長さ:200
+  // 始点X:スクリーンの半分
+  // 始点Y:スクリーン下端 
+  // 再帰の深さ:10まで 
+  drawTree( width/2, height, 200, -90, 10);
+}
+
+void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel )
+{
+  float fEndX = fStartX+fLength*cos(radians(fAngle));
+  float fEndY = fStartY+fLength*sin(radians(fAngle));
+  
+  line( fStartX, fStartY, fEndX, fEndY );
+  
+  if( iLevel>0 )
+  {
+    drawTree( fEndX, fEndY, fLength*0.75, fAngle+20, iLevel-1);
+    drawTree( fEndX, fEndY, fLength*0.75, fAngle-20, iLevel-1);
+  }
+}
+```
+
+### 8. 形状の変化
+
+以下の値を変えることで，形状の変化を操作できる．
+いろいろ試してみましょう．
+
+- 最初の始点の座標値
+  - 初期値: `width/2, height`
+- 最初の枝の角度
+  - 初期値: `90°`
+- 枝の基本の長さ
+  - 初期値: `200`
+- 再帰呼び出し毎にかける長さの倍率
+  - 初期値: `0.75`
+- 再帰呼び出し毎に加算する角度
+  - 初期値: `+20°`, `-20°`
+- 再帰の最大の深さ
+  - 初期値: `10`
+
+#### 例
+
+```java
+void setup()
+{
+  size(1000, 1000);
+  // 角度:-40°
+  // 長さ:400
+  // 始点X:0
+  // 始点Y:スクリーン下端
+  // 再帰の深さ:12まで
+  drawTree( 0, height, 400, -40, 12);
+}
+
+void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel )
+{
+  float fEndX = fStartX+fLength*cos(radians(fAngle));
+  float fEndY = fStartY+fLength*sin(radians(fAngle));
+  
+  line( fStartX, fStartY, fEndX, fEndY );
+  
+  if( iLevel>0 )
+  {
+    drawTree( fEndX, fEndY, fLength*0.65, fAngle+10, iLevel-1);
+    drawTree( fEndX, fEndY, fLength*0.6, fAngle-40, iLevel-1);
+  }
+}
+```
+
+![recursive_tree_param_change](images/recursive/recursive_tree_param_change.png)
+
+
+
+## 身の回りの再帰的現象
+
+<img src="images/recursive/recursive_photo_leaves.jpg" alt="recursive_photo_leaves" style="zoom: 80%;" />
+
+![recursive_photo_leaf](images/recursive/recursive_photo_leaf.jpg)
+
+<img src="images/recursive/recursive_photo_bloodvesselspng.png" alt="recursive_photo_bloodvesselspng" style="zoom:67%;" />
+
+<img src="images/recursive/recursive_photo_coastpng.png" alt="recursive_photo_coastpng" style="zoom:80%;" />
+
+![recursive_photo_snow](images/recursive/recursive_photo_snow.jpg)
+
+![recursive_photo_shell](images/recursive/recursive_photo_shell.jpg)
+
+<img src="images/recursive/recursive_photo_matroskapng.png" alt="recursive_photo_matroskapng" style="zoom:67%;" />
+
+<img src="images/recursive/recursive_photo_mandara.png" alt="recursive_photo_mandara" style="zoom:67%;" />
+
+### フラクタル
+
+フラクタルは再帰的であり，かつ部分と全体が同じ構造となっている．（自己相似）
+
+<img src="images/recursive/recursive_photo_fractal.png" alt="recursive_photo_fractal" style="zoom:150%;" />
+
+<img src="images/recursive/recursive_photo_romanesco01.png" alt="recursive_photo_romanesco01" style="zoom:150%;" />
+
+![recursive_photo_romanesco02](images/recursive/recursive_photo_romanesco02.png)
+
+
+
+### レイトレーシング
+
+CGにおける描画法の一種であるレイトレーシングも再帰呼び出しを用いる．
+
+<img src="images/recursive/recursive_photo_raytracingpng.png" alt="recursive_photo_raytracingpng" style="zoom: 150%;" />
+
+## サンプル集
+
+### 三角形
+
+シェルピンスキーのギャスケットと同様の模様が生成される．
+
+```java
+void setup()
+{
+  size(400,400);
+  recursiveTriangle( width/2, height/1.7, width );
+}
+void draw()
+{  
+}
+void recursiveTriangle( float fX, float fY, float fWidth )
+{
+  if( fWidth < 4 )
+  {
+    return;
+  }
+  
+  float fIncircleRadius = (fWidth/2.0) * tan(radians(30));// 三角形の内接円の半径
+  float fHeight = fWidth * sin(radians(60));// 三角形の高さ
+  
+  // 三角形の描画
+  triangle( fX, fY-(fHeight-fIncircleRadius),
+            fX+fWidth/2.0, fY+fIncircleRadius,
+            fX-fWidth/2.0, fY+fIncircleRadius );
+  
+  // 上，左下，右下に新たに描画.
+  recursiveTriangle( fX, fY- fIncircleRadius, fWidth/2.0 );
+  recursiveTriangle( fX+fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);   recursiveTriangle( fX-fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);
+}
+```
+
+![recursive_triangle_step04](images/recursive/recursive_triangle_step04.png)
+
+### 黄金比
+
+```java
+void setup()
+{
+  size(810,500);
+  drawGoldenRect( height, 10 );
+}
+void draw( )
+{
+}
+/**    黄金長方形を再帰的に描画する
+			 黄金比 1:1.618
+	params      fRectSize: 正方形のサイズ
+							iLevel   : 再帰を行う深さ
+*/
+void drawGoldenRect( float fRectSize, int iLevel )
+{
+  stroke(0,0,0);
+  rect( 0, 0, fRectSize, fRectSize );// 正方形
+  // 90°円弧
+  stroke(0,0,255);
+  arc( fRectSize, fRectSize, 2*fRectSize, 2*fRectSize, radians(180), radians(270), PIE );
+  if( iLevel > 0 )
+  {
+    // 座標変換
+    translate(fRectSize*1.618,0); // X軸方向に正方形のサイズの1.618倍移動する
+    rotate(radians(90));          // 90°回転
+    drawGoldenRect( fRectSize*0.618, iLevel-1 );
+  }
+}
+```
+
+![recursive_golden_rect](images/recursive/recursive_golden_rect.png)
+
+### ハノイの塔
+
+以下のルールに従ってすべての円盤を右端の杭に移動させられれば完成．
+
+- 3本の杭と，中央に穴の開いた大きさの異なる複数の円盤から構成される．
+- 最初はすべての円盤が左端の杭に小さいものが上になるように順に積み重ねられている．
+- 円盤を一回に一枚ずつどれかの杭に移動させることができるが，小さな円盤の上に大きな円盤を乗せることはできない．
+
+```java
+int iDiscHeight = 20;                       // ディスクの高さ.
+int[] iDiscWidth = { 20, 40, 60, 80, 100 }; // 各ディスクの幅.
+int iWaitFrames = 6;                  // アニメーション開始までの待機フレーム数.
+int[][] iQueueDiscs = new int[3][5];  // アニメーション用現在のディスクの位置.
+int[][] iAnimMove = new int[100][2];  // ハノイの塔の動かす手順(回答).
+int iAnimMoveIdx;  // 現在の手順番号.
+int iMoveCount;    // 手順の数. 
+void setup()
+{
+  size(600,400); 
+  colorMode( HSB, 5, 1, 1 );
+  frameRate(1);
+  for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )
+  {
+    for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )
+    {
+      iQueueDiscs[iABC][iDepth] = 0;
+    }
+  }
+  iQueueDiscs[0][0] = 5;
+  iQueueDiscs[0][1] = 4;
+  iQueueDiscs[0][2] = 3;
+  iQueueDiscs[0][3] = 2;
+  iQueueDiscs[0][4] = 1;
+  iAnimMoveIdx = 0;
+  iMoveCount = 0;    // 事前にハノイの塔の回答手順を計算.
+  //   iAnimMove[][]に手順を保存.
+  hanoi( 5, 0, 1, 2 );
+}
+void draw( )
+{
+  // スクリーンリフレッシュ
+  fill(1,0,1);
+  noStroke();
+  rectMode(CORNER);
+  rect(0,0,width,height);
+  // ハノイの塔を描画
+  //  現在の配列iQueueDiscs[][]を元に描画を行う.
+  drawHanoi();
+  if( iWaitFrames > 0 )
+  {
+    // しばらく動かさずに待つ.
+    iWaitFrames--;
+  }
+  else if( iAnimMoveIdx < iMoveCount )// 手順がまだ残っていたら
+  {
+    // ディスクの移動
+    //  実際に配列iQueueDiscs[][]を操作
+    moveDisc( iAnimMove[iAnimMoveIdx][0], iAnimMove[iAnimMoveIdx][1] );        // 手順をすすめる.
+    iAnimMoveIdx++;
+  }
+}
+/** ハノイの塔再帰呼び出し関数
+params      iDiscSizeMove: 動かすディスクサイズ(1~5)
+iFrom:         移動元  左:0, 中:1, 右:2
+iWork:         中継地
+iDest:         目的地
+*/
+int hanoi( int iDiscSizeMove, int iFrom, int iWork, int iDest )
+{
+  // ディスクをiFromからiDest経由でiWorkへ移動させる
+  if(iDiscSizeMove>=2)
+  {
+    hanoi(iDiscSizeMove-1, iFrom, iDest, iWork );
+  }
+  // 手順確定
+  //   ディスクをiFromからiDestへ移動させる
+  iAnimMove[iMoveCount][0]= iFrom;
+  iAnimMove[iMoveCount][1]= iDest;
+  iMoveCount++;      // Move n-1 desks from "work" to "dest" via "from".
+  // ディスクをiWorkからiFrom経由でiDestへ移動させる
+  if(iDiscSizeMove>=2)
+  {
+    hanoi(iDiscSizeMove-1, iWork, iFrom, iDest);
+  }
+  return iMoveCount;
+}
+void drawHanoi()
+{
+  translate( width/4, height/1.5 );
+  rectMode(CENTER);
+  for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )
+  {
+    stroke(0,0,0);
+    strokeWeight(4);
+    line( 0, -iDiscHeight*iDiscWidth.length, 0, iDiscHeight/2-2 );
+    for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )
+    {
+      int iDiscSize = iQueueDiscs[iABC][iDepth];
+      if( iDiscSize > 0 )
+      {
+        fill(iDiscSize,1,1);
+        stroke(0,0,0);
+        strokeWeight(2);
+        rect( 0, 0-iDepth*iDiscHeight, iDiscWidth[iDiscSize-1], iDiscHeight );
+      } 
+    } 
+    translate(width/4,0);
+  }
+}
+void moveDisc( int iABCfrom, int iABCto )
+{
+  int iDiscSizeMoved = 0;    // 動かすディスクを取り外す.
+  int iDepthFrom = iQueueDiscs[iABCfrom].length-1;
+  while( iDepthFrom>=0 )
+  {
+    if( iQueueDiscs[iABCfrom][iDepthFrom] > 0 )
+    {
+      iDiscSizeMoved = iQueueDiscs[iABCfrom][iDepthFrom];
+      iQueueDiscs[iABCfrom][iDepthFrom] = 0;
+      break;
+    }
+    else
+    {
+      iDepthFrom--;
+    }
+  }
+  // ディスクを置く
+  int iDepthTo = iQueueDiscs[iABCto].length-1;
+  while( iDepthTo>=0 )
+  {
+    if( iQueueDiscs[iABCto][iDepthTo] > 0 )
+    {
+      break;
+    }
+    else
+    {
+      iDepthTo--;
+    }
+  }
+  iQueueDiscs[iABCto][iDepthTo+1] = iDiscSizeMoved;
+  for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )
+  {
+    for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )
+    {
+      print( iQueueDiscs[iABC][iDepth] + ", ");
+    }
+    println("");
+  }
+  println("");
+}
+```
+
+![recursive_hanoi](images/recursive/recursive_hanoi.gif)
+
+### 矩形の再帰的分割描画
+
+```java
+final int RECURSIVE_MAX = 10;    // 再帰の最大の深さ
+final float DIVIDE_RANGE = 0.6;  // 分割の振れ幅(0~1)
+final int OFS_X = 10;
+final int OFS_Y = 10;
+void setup()
+{
+  size(600, 600);
+  background(255);
+  noFill();
+  drawRectDivided( OFS_X, OFS_Y, width-2*OFS_X, height-2*OFS_Y, RECURSIVE_MAX );
+}
+// 矩形を分割しながら再帰的に描画
+void drawRectDivided(float iX, float iY, float fWidth, float fHeight, int iLevel )
+{
+  rect( iX, iY, fWidth, fHeight);
+  
+  if (iLevel>0)
+  {
+    if (fWidth>fHeight)
+    {
+      //幅が高さよりも大きい、または幅と高さが等しい場合
+      // 左右に二つに割る
+      // 割った後の左の矩形の幅
+      float fWidthLRect = fWidth*random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );
+      drawRectDivided(iX, iY, fWidthLRect, fHeight, iLevel-1);                    //左側の矩形
+      drawRectDivided(iX+fWidthLRect, iY, fWidth-fWidthLRect, fHeight, iLevel-1); //右側の矩形
+    }
+    else 
+    {
+      //幅が高さよりも小さい場合
+      // 上下に二つに割る
+      // 割った後の上の矩形の高さ
+      float fHeightUpper = fHeight*random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );
+      drawRectDivided(iX, iY, fWidth, fHeightUpper, iLevel-1);                    		//上側の矩形
+      drawRectDivided(iX, iY+fHeightUpper, fWidth, fHeight-fHeightUpper, iLevel-1);   //下側の矩形
+    }
+  }
+}
+```
+
+![recursive_rect_devided](images/recursive/recursive_rect_devided.png)
+
+
+
+### マンデルブロ集合の描画
+
+フラクタル図形の一種
+
+```java
+final float DRAW_OFS_X = -0.7;                           // 描く領域のオフセットX
+final float DRAW_OFS_Y = 0;                              // 描く領域のオフセットY
+final float DRAW_SCALE = 1.4;                            // 描く領域のスケール
+final int RECURSIVE_MAX = 50;                            // 繰り返し上限回数
+final float DRAW_SIZE = 4;                               // 描く領域の一辺の長さ
+
+void setup()
+{
+  size(600,600);
+  colorMode(HSB,RECURSIVE_MAX,1,1);
+  background(0,0,0);
+  
+  // マンデルブロ集合の描画
+  for (int iPixelX = 0; iPixelX < width; iPixelX++)  // x（実部）方向のループ
+  {
+    // 定数Cの実部
+    float fCReal = iPixelX * DRAW_SIZE/( width*DRAW_SCALE) - DRAW_SIZE/(2*DRAW_SCALE) + DRAW_OFS_X; 
+    
+    for (int iPixelY = 0; iPixelY < height; iPixelY++)  // y（虚部）方向のループ
+    {
+      // 定数Cの虚部
+      float fCImaginary = iPixelY * DRAW_SIZE/( height*DRAW_SCALE) - DRAW_SIZE/(2*DRAW_SCALE) + DRAW_OFS_Y; 
+      
+      drawFractal( 0, 0, fCReal, fCImaginary, iPixelX, iPixelY, RECURSIVE_MAX ) ;
+    }
+  }
+}
+
+void drawFractal( float fZReal, float fZImaginary, float fCReal, float fCImaginary, int iPixelX, int iPixelY, int iLevel )
+{
+  float fZRealNew = pow(fZReal,2) - pow(fZImaginary,2) + fCReal;     // z^2+Cの計算（実部）
+  float fZImaginaryNew = 2 * fZReal * fZImaginary + fCImaginary;     // z^2+Cの計算（虚部）
+  
+  if( pow(fZRealNew,2)+pow(fZImaginaryNew,2) > 4 )  // もし絶対値が2を（絶対値の2乗が4を）超えていたら
+  {
+    stroke( iLevel, 1, 1 );             // 再帰の回数を色相へ
+    point(iPixelX,iPixelY);             // (iPixelX,iPixelY)の位置のピクセルをで塗る
+    return;                             // 再帰終了
+  }
+  else if( iLevel > 0 )
+  {
+    drawFractal( fZRealNew, fZImaginaryNew, fCReal, fCImaginary, iPixelX, iPixelY, iLevel-1 );
+  }
+}
+```
+
+![recursive_maandelbrotSet](images/recursive/recursive_maandelbrotSet.png)
+
+### ジュリア集合の描画
+
+フラクタル図形の一種
+
+```java
+final float DRAW_OFS_X = 0;                             // 描く領域のオフセットXf
+inal float DRAW_OFS_Y = 0;                              // 描く領域のオフセットY
+final float DRAW_SCALE = 1.4;                           // 描く領域のスケール
+final int RECURSIVE_MAX = 200;                          // 繰り返し上限回数
+final float DRAW_SIZE = 4;                              // 描く領域の一辺の長さ
+final float C_REAL = -0.3;                              // 定数Cの実部
+final float C_IMAGINARY = -0.63;                        // 定数Cの虚部
+
+void setup()
+{
+  size(600,600);
+  colorMode(HSB,RECURSIVE_MAX,1,1);
+  background(0,0,0);
+  
+  // ジュリア集合の描画
+  for (int iPixelX = 0; iPixelX < width; iPixelX++)  // x（実部）方向のループ
+  {
+    // 変数Zの実部
+    float fZReal = iPixelX * DRAW_SIZE/( width*DRAW_SCALE ) - DRAW_SIZE/( 2*DRAW_SCALE ) + DRAW_OFS_X;
+    
+    for (int iPixelY = 0; iPixelY < height; iPixelY++)  // y（虚部）方向のループ
+    {
+      // 変数Zの虚部
+      float fZImaginary = iPixelY * DRAW_SIZE/( height*DRAW_SCALE ) - DRAW_SIZE/( 2*DRAW_SCALE ) + DRAW_OFS_Y;
+      drawFractal( fZReal, fZImaginary, C_REAL, C_IMAGINARY, iPixelX, iPixelY, RECURSIVE_MAX ) ;
+    }
+  }
+}
+
+void drawFractal( float fZReal, float fZImaginary, float fCReal, float fCImaginary, int iPixelX, int iPixelY, int iLevel )
+{
+  float fZRealNew = pow(fZReal,2) - pow(fZImaginary,2) + fCReal;     // z^2+Cの計算（実部）
+  float fZImaginaryNew = 2 * fZReal * fZImaginary + fCImaginary;     // z^2+Cの計算（虚部）
+  if( pow(fZRealNew,2)+pow(fZImaginaryNew,2) > 4 )  // もし絶対値が2を（絶対値の2乗が4を）超えていたら
+  {
+    stroke( iLevel, 1, 1 );             // 再帰の回数を色相へ
+    point(iPixelX,iPixelY);             // (iPixelX,iPixelY)の位置のピクセルをで塗る
+    return;                             // 再帰終了
+  }
+  else if( iLevel > 0 )
+  {
+    drawFractal( fZRealNew, fZImaginaryNew, fCReal, fCImaginary, iPixelX, iPixelY, iLevel-1 );
+  }
+}
+```
+
+![recursive_juliaSet](images/recursive/recursive_juliaSet.png)
+
+
+
 # 画像・PDF出力
 
 ## 表示ウィンドウの画像を保存する．
@@ -11002,699 +12692,6 @@ save( "sakuhin.png" );	// 表示ウィンドウを，"sakuhin.png"という名�
 ![pdf_05](images/export/pdf_05.png)
 
 
-
-
-
-# 再帰
-
-## 再帰 Recursive
-
-自身が，自分自身を参照してしまうような状態．
-
-### 身の回りの再帰的現象
-
-<img src="images/recursive/recursive_photo_leaves.jpg" alt="recursive_photo_leaves" style="zoom: 80%;" />
-
-![recursive_photo_leaf](images/recursive/recursive_photo_leaf.jpg)
-
-<img src="images/recursive/recursive_photo_bloodvesselspng.png" alt="recursive_photo_bloodvesselspng" style="zoom:67%;" />
-
-<img src="images/recursive/recursive_photo_coastpng.png" alt="recursive_photo_coastpng" style="zoom:80%;" />
-
-![recursive_photo_snow](images/recursive/recursive_photo_snow.jpg)
-
-![recursive_photo_shell](images/recursive/recursive_photo_shell.jpg)
-
-<img src="images/recursive/recursive_photo_matroskapng.png" alt="recursive_photo_matroskapng" style="zoom:67%;" />
-
-<img src="images/recursive/recursive_photo_mandara.png" alt="recursive_photo_mandara" style="zoom:67%;" />
-
-### フラクタル
-
-フラクタルは再帰的であり，かつ部分と全体が同じ構造となっている．（自己相似）
-
-<img src="images/recursive/recursive_photo_fractal.png" alt="recursive_photo_fractal" style="zoom:150%;" />
-
-<img src="images/recursive/recursive_photo_romanesco01.png" alt="recursive_photo_romanesco01" style="zoom:150%;" />
-
-![recursive_photo_romanesco02](images/recursive/recursive_photo_romanesco02.png)
-
-
-
-### レイトレーシング
-
-CGにおける描画法の一種であるレイトレーシングも再帰呼び出しを用いる．
-
-<img src="images/recursive/recursive_photo_raytracingpng.png" alt="recursive_photo_raytracingpng" style="zoom: 150%;" />
-
-
-
-## 再帰呼び出し Recursive Call
-
-- **関数内で自分自身の関数を呼び出す**こと．
-- 無限ループを避けるため，呼び出しを終える**条件式**が必要．
-  - **仮引数**を使って，適切に条件式を記述する必要がある．
-
-### 利点
-
-繰り返し処理をスマートに記述する．
-
-### 大切なこと
-
-- イメージをつかむこと．
-  - 事前に全てを把握して作ることは難しい．
-- シンプルに，どういう処理を繰り返したいかを考える．
-
-### 再帰呼び出し関数の定義
-
-#### 書式1
-
-再帰を**続ける**条件式を記述する方法．
-
-```java
-void 関数名( 仮引数の型 仮引数 ){    // ※ここに図形描画命令文(仮引数を使う)        if( 再帰を続ける条件式 )	// 真(True)なら再帰を続ける    {        関数名( 引数 );	// 関数function内で同じfunctionを呼び出す．    }}
-```
-
-#### 書式2
-
-再帰を**終える**条件式を記述する方法．
-
-```java
-void 関数名( 仮引数の型 仮引数 ){    // ※ここに図形描画命令文(仮引数を使う)        if( 再帰を終える条件式 )	// 真(True)なら再帰を終える    {        return; // return文をこのように書くことで，ここで関数処理を終了できる．    }    関数名( 引数 );	// 関数function内で同じfunctionを呼び出す．}
-```
-
-#### 例
-
-- 関数recursiveFuncが繰り返されるたび，引数が1ずつ減っていく
-- 仮引数が0のとき，再帰呼び出しが終了する．
-
-```java
-/** 関数recursiveFuncの定義 */void recursiveFunc(int iLevel){  if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）  }}
-```
-
-#### 再帰呼び出しを複数回行う
-
-関数内で，再帰呼び出しを複数回同時に行ってもよい．
-**再帰を枝分かれ**させることができる．
-
-```java
-/** 関数recursiveFuncの定義 */void recursiveFunc(int iLevel){  if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）  }}
-```
-
-
-
-### 再帰呼び出し関数の使用
-
-再帰呼び出し関数も関数であるので，setup関数やdraw関数から呼びだして使う必要がある．
-この時の**引数**により，**再帰呼び出しの回数**を変えることができる．
-以下の例だと，**5回**再帰呼び出しを行う．
-
-```java
-void setup(){  recursiveFunc(5);  //関数recursiveFuncの呼び出し（引数5を渡す）}/** 関数recursiveFuncの定義 */void recursiveFunc(int iLevel){  if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）  }}
-```
-
-### ダメな例
-
-再帰を続ける，または終える**条件式を適切に記述しなければ**，
-**無限ループとなりプログラムが暴走してしまう**ので，注意．
-
-```java
-// ※このまま実行するとプログラムが暴走するので，実行しないようにvoid setup(){  recursiveRect(5);}/** 関数recursiveFuncの定義 */void recursiveRect(int iLevel){  rect( 0, 0, 10*iLevel, 10*iLevel ); // 矩形描画    // ※注意　再帰を続ける，または終える条件式を書いていない    recursiveRect();}
-```
-
-### 例
-
-**5段階**まで再帰呼び出しを行う指定をした例である。
-
-```java
-void setup(){  recursiveFunc(5);  //関数recursiveFuncの呼び出し（引数5を渡す）}/** 関数recursiveFuncの定義 */void recursiveFunc(int iLevel){  if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveFunc(iLevel-1);  //関数recursiveFuncの再帰呼び出し（引数iLevel-1）  }}
-```
-
-#### 1. setup()から関数recursiveFunc(5)の呼び出し．
-
-※**コールスタック**とは，関数呼び出しの階層状態を表示したもの．
-
-![recursive_basic_01](images/recursive/recursive_basic_01.png)
-
-#### 2. recursiveFunc(5)内の処理．
-
-![recursive_basic_02](images/recursive/recursive_basic_02.png)
-
-#### 3. recursiveFunc(4)の呼び出し．
-
-![recursive_basic_03](images/recursive/recursive_basic_03.png)
-
-#### 4. recursiveFunc(4)内の処理．
-
-![recursive_basic_04](images/recursive/recursive_basic_04.png)
-
-#### 5. recursiveFunc(3)の呼び出し．
-
-![recursive_basic_05](images/recursive/recursive_basic_05.png)
-
-#### 6. 関数recursiveFuncの呼び出しを繰り返す．（引数~0まで）
-
-![recursive_basic_06](images/recursive/recursive_basic_06.png)
-
-#### 7. recursiveFunc(0)内の処理
-
-![recursive_basic_07](images/recursive/recursive_basic_07.png)
-
-#### 8. recursiveFunc(0)の終了
-
-![recursive_basic_08](images/recursive/recursive_basic_08.png)
-
-#### 9. recursiveFunc(1)~recursiveFunc(5)が順次終了していく．
-
-![recursive_basic_09](images/recursive/recursive_basic_09.png)
-
-#### 10. setup()内の呼び出し元に戻る
-
-![recursive_basic_10](images/recursive/recursive_basic_10.png)
-
-
-
-## 例
-
-### 矩形の再帰的描画
-
-```java
-void setup(){  size(400,400);    recursiveRects(5);  //関数recursiveFuncの呼び出し（引数5を渡す）}/** 関数recursiveRectsの定義 */void recursiveRects(int iLevel){  // iLevelに応じて大きさを変える.  rect( 50, 50, 50*iLevel, 50*iLevel );// 矩形描画.    if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveRects(iLevel-1);  //関数recursiveRectsの再帰呼び出し（引数iLevel-1）  }}
-```
-
-![recursive_rects](images/recursive/recursive_rects.png)
-
-### 楕円の再帰的描画
-
-```java
-void setup(){  background(255);  size(400,400);    translate(width/2,height/2); // 原点をスクリーン中心に移動  recursiveEllipses(18);       // 関数recursiveEllipsesの呼び出し（引数16を渡す）}/** 関数recursiveEllipsesの定義 */void recursiveEllipses(int iLevel){  fill( 60+10*iLevel ); // 色    // iLevelに応じて指数的な増加.  ellipse( pow(1.4,iLevel), 0, 4+pow(1.5,iLevel), 4+pow(1.5,iLevel) );// 楕円描画.    if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    recursiveEllipses(iLevel-1);  //関数recursiveRectsの再帰呼び出し（引数iLevel-1）  }}
-```
-
-![recursive_ellipses](images/recursive/recursive_ellipses.png)
-
-
-
-## 演習1
-
-深度レベル5まで繰り返す再帰呼び出し関数を作り，簡単な描画を試す．
-
-### 1. setup()を記述
-
-- **draw()は今回不要**
-
-- スクリーンサイズ：400×400
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size( 400, 400 );}
-```
-
-### 2. 再帰関数の定義
-
-再帰関数の定義は，関数定義と同じ書式です．
-ブロック内の命令以外の枠だけ用意しましょう．
-
-- 関数名：drawRecursive
-- 仮引数：iLevel
-- 返り値：なし
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size( 400, 400 );}void drawRecursive( int iLevel ){}
-```
-
-### 3. setup()から再帰関数を呼ぶ(使う)
-
-- setup()内で，作成した再帰関数drawRecursive()を呼びましょう．
-  - 引数：`5`
-
-```java
-void setup(){  size( 400, 400 );    drawRecursive( 5 );}void drawRecursive( int iLevel ){}
-```
-
-### 4.再帰の続行条件を設定する
-
-- 関数drawRecursive()内で，**再帰呼び出し**を行いましょう．
-  - 引数：`iLevel-1`
-
-- また，この再帰呼び出しを以下の条件の時にしか行わないようにしましょう．
-  - 仮引数`iLevel`の値が0より大きいとき
-
-下の答えを見る前にやってみましょう．
-
-```java
-// 再帰呼び出しの最もシンプルなテンプレート.void setup(){  size( 400, 400 );      drawRecursive(5);  //関数recursiveFuncの呼び出し（引数5を渡す）}/** 関数drawRecursiveの定義 */void drawRecursive(int iLevel){  // ここで(仮引数を使った)描画を行う.      if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    drawRecursive(iLevel-1);  //drawRecursiveの再帰呼び出し（引数iLevel-1）  }}
-```
-
-### 5.描画
-
-drawRecursive内に何か自由に描画を行ってみましょう．
-
-- 仮引数`iLevel`を座標や大きさの指示に使う．
-- 再帰最大レベルを(5から)より大きな値に変更する．
-
-余裕がある人は
-
-- 仮引数を増やして表現の幅を広げてみましょう
-- 再帰呼び出しを複数行ってみましょう.
-  - drawRecursive内のdrawRecursive呼び出しを複数行う．
-
-#### 例
-
-```java
-void setup(){  size( 400, 400 );  colorMode(HSB,4, 40, 40 );  background( 0, 0, 0 );  drawRecursive(80);  //関数recursiveFuncの呼び出し（引数80を渡す）}void drawRecursive(int iLevel){  // ここで(仮引数を使った)描画を行う.  noStroke();  fill( 2, 40, 50-iLevel );  rectMode(CENTER);  rect( 150+pow( 1.13, iLevel), 50+pow( 1.15, iLevel), 2+pow( 1.16, iLevel), 2+pow( 1.15,iLevel) );      if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    drawRecursive(iLevel-1);  //drawRecursiveの再帰呼び出し（引数iLevel-1）  }}
-```
-
-![recursive_practice_mountain](images/recursive/recursive_practice_mountain.png)
-
-## 演習2
-
-曼荼羅のような図形の描画
-シェルピンスキーのカーペット
-
-![recursive_mandara_finish](images/recursive/recursive_mandara_finish.png)
-
-
-
-### 描画を単位で考える
-
-左の図が再帰的に繰り返される．
-
-![recursive_mandara_concept01](images/recursive/recursive_mandara_concept01.png)
-
-
-
-### 1. setup()を記述
-
-- **draw()は今回不要**
-
-- スクリーンサイズ：1000×1000
-- **矩形の座標を中心点で指定**
-  - `rectMode(CENTER)`
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定}
-```
-
-### 2. 再帰関数の定義
-
-再帰関数の定義は，関数定義と同じ書式です．
-ブロック内の命令以外の枠だけ用意しましょう．
-
-- 関数名：drawMandara
-- 仮引数：iLevel
-- 返り値：なし
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定}void drawMandara( int iLevel ){  }
-```
-
-### 3. setup()から再帰関数を呼ぶ(使う)
-
-setup()内で，作成した再帰関数drawMandara()を呼びましょう．
-
-- 引数：`5`
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定      drawMandara(5);}void drawMandara( int iLevel ){  }
-```
-
-### 4. 再帰の続行条件を設定する
-
-- 関数drawMandara()内で，**再帰呼び出し**を行いましょう．
-  - 引数：`iLevel-1`
-
-- また，この再帰呼び出しを以下の条件の時にしか行わないようにしましょう．
-  - 仮引数`iLevel`の値が0より大きいとき
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定      drawMandara(5);}void drawMandara( int iLevel ){    if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）  }}
-```
-
-### 5. 中心の大きな矩形の描画
-
-![recursive_mandara_unit_center](images/recursive/recursive_mandara_unit_center.png)
-
-スクリーン中心の大きな矩形を描画しましょう．
-スクリーンをX軸方向とY軸方向にそれぞれ**三等分**した領域の真ん中に描画．
-
-**drawMandara()内に記述**
-
-- 変数を用意
-  - `float fRectX = width/2;   // 中央の矩形のX座標値`
-  - ` float fRectY = height/2;   // 中央の矩形のY座標値`
-  - `float fRectWidth = width/3;   // 中央の矩形の幅`
-  - `float fRectHeight = height/3  // 中央の矩形の高さ`
-- 座標，大きさを上記の変数で表しましょう．
-- 矩形の座標を中心点で指定していることに注意
-  - `rectMode(CENTER)`
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定    drawMandara(5);}void drawMandara( int iLevel ){   float fRectX = width/2;  float fRectY = height/2;  float fRectWidth = width/3;  float fRectHeight = height/3;    rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央    if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）  }}
-```
-
-### 6.  周囲の8つの矩形描画
-
-![recursive_mandara_unit](images/recursive/recursive_mandara_unit.png)
-
-周りの8つの矩形を描画しましょう．
-大きな矩形の範囲を，さらにX軸方向とY軸方向にそれぞれ**三等分**した領域の真ん中に描画．
-
-**drawMandara()内に記述**
-
-- 座標，大きさを先ほどの変数と簡単な数値で表しましょう．
-  - 大きな矩形と相対的な座標・サイズ
-- X軸とY軸のマイナス方向へ向かう際は，値がマイナスになる．
-  - 例: `- fRectWidth` , `- fRectHeight`
-- 難しい人は，紙にメモやグラフ書きながら．
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定    drawMandara(5);}void drawMandara( int iLevel ){  float fRectX = width/2;  float fRectY = height/2;  float fRectWidth = width/3;  float fRectHeight = height/3;    rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央    // 周りの8つの矩形の描画  rect(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3);           //上  rect(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3);            //下  rect(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //左  rect(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //右  rect(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //左上  rect(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //右上  rect(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //左下  rect(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //右下      if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    drawMandara(iLevel-1);  //drawMandaraの再帰呼び出し（引数iLevel-1）  }}
-```
-
-### 7. 再帰呼び出し化の考え方
-
-ここから本格的に再帰呼び出しの仕方を考える．
-
-- 実は小さい矩形描画は，大きい矩形描画の繰り返し
-
-- <u>座標</u>と<u>大きさ</u>が違う
-  - `fRectX`, `fRectY`, `fRectWidth`, `fRectHeight`
-- **（小さな矩形の）座標と大きさを引数として渡す再帰呼び出し**を行えばいいのでは？
-  というように，**イメージできればよい**．
-  - 細かいところまで全て計算済みである必要はない．
-
-![recursive_mandara_program_and_unit](images/recursive/recursive_mandara_program_and_unit.png)
-
-### 8. 再帰関数の引数を追加
-
-- 関数drawMandaraに仮引数を追加．
-
-以下のように書き換えましょう．
-
-```java
-void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel )
-```
-
-これに伴い，以下の部分は消去．
-
-```java
-  float fRectX = width/2;  float fRectY = height/2;  float fRectWidth = width/3;  float fRectHeight = height/3;
-```
-
-- また，これらに代入していた初期値（`width/2`など）を， setup()内の関数drawMandara()呼び出しの引数に設定しましょう．
-
-以下のように書き換えましょう．
-
-```java
-drawMandara( width/2, height/2, width/3, height/3, 5);
-```
-
-- 以上の変更を行うと実行ができなくなるので，早めに次のステップに進みましょう．
-
-### 9. 再帰呼び出しの変更
-
-**関数drawMandara内で**
-
-- 周りの8つの矩形の描画を`if( iLevel > 0 )`のブロックに移動させましょう．
-  同時に，`drawMandara(iLevel-1)`は消去しましょう．
-
-```java
-void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel ){  rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央        if( iLevel>0 )  //もしiLevelの数値が0より大きければ  {    // 周りの8つの矩形の描画    rect(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3);           //上    rect(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3);            //下    rect(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //左    rect(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3);             //右    rect(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //左上    rect(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3); //右上    rect(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //左下    rect(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3); //右下  }}
-```
-
-- 周りの8つの矩形の描画におけるrect関数の呼び出しを，drawMandara関数の呼び出しに置き換えましょう
-  - `rect`を`drawMandara`に書き換える
-  - 引数の最後に，仮引数`iLevel`に渡す引数を追加
-    - 値：`iLevel-1`
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);  rectMode(CENTER); // 矩形の座標を中心点で指定    drawMandara( width/2, height/2, width/3, height/3, 5);}void drawMandara( float fRectX, float fRectY, float fRectWidth, float fRectHeight, int iLevel ){    rect(fRectX, fRectY, fRectWidth, fRectHeight); // 中央  if( iLevel > 0 )  {       // 周りの8つの矩形の描画     drawMandara(fRectX, fRectY-fRectHeight, fRectWidth /3, fRectHeight/3, iLevel-1);           //上    drawMandara(fRectX, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1);            //下    drawMandara(fRectX-fRectWidth, fRectY, fRectWidth/3, fRectHeight/3, iLevel-1);             //左    drawMandara(fRectX+fRectWidth, fRectY, fRectWidth/3, fRectHeight/3, iLevel-1);             //右    drawMandara(fRectX-fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //左上    drawMandara(fRectX+fRectWidth, fRectY-fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //右上    drawMandara(fRectX-fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //左下    drawMandara(fRectX+fRectWidth, fRectY+fRectHeight, fRectWidth/3, fRectHeight/3, iLevel-1); //右下  }}
-```
-
-
-
-## 演習3
-
-木のような図形の描画
-
-![recursive_tree_finish](images/recursive/recursive_tree_finish.png)
-
-### 1. setup()を記述
-
-- **draw()は今回不要**
-
-- スクリーンサイズ：1000×1000
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);}
-```
-
-### 2. 再帰関数の定義
-
-再帰関数の定義は，関数定義と同じ書式です．
-ブロック内の命令以外の枠だけ用意しましょう．
-
-- 関数名：drawTree
-- 仮引数：iLevel
-- 返り値：なし
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);}void drawTree( int iLevel ){  }
-```
-
-### 3. setup()から再帰関数を呼ぶ(使う)
-
-setup()内で，作成した再帰関数drawTree()を呼びましょう．
-
-- 引数：`10`
-
-```java
-void setup(){  size(1000, 1000);      drawTree(10);}void drawTree( int iLevel ){  }
-```
-
-### 4. 再帰の続行条件を設定する
-
-- 関数drawTree()内で，**再帰呼び出し**を行いましょう．
-  - 引数：`iLevel-1`
-
-- また，この再帰呼び出しを以下の条件の時にしか行わないようにしましょう．
-  - 仮引数`iLevel`の値が0より大きいとき
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);      drawTree(10);}void drawTree( int iLevel ){    if( iLevel>0 )  {    drawTree(iLevel-1);  }}
-```
-
-### 5. 最初の枝を描画する
-
-#### sin,cos関数を使った線の回転
-
-今回は座標変換よりこちらのほうがシンプルに書けるので，こちらを使います．
-
-![calc_variable_sincos_line](images/calv_variable/calc_variable_sincos_line.png)
-
-#### 最初の枝の考え方
-
-<img src="images/recursive/recursive_tree_first_line.png" alt="recursive_tree_first_line"  />
-
-- 変数を作る
-
-以下のコードを関数drawTree内に記述しましょう．
-
-```java
-  float fStartX = width/2;	// 始点X  float fStartY = height;	// 始点Y  float fLength = 200;		// 長さ   float fAngle = -90;		// 角度
-```
-
-- 終点の座標を考える．
-
-以下のように終点座標の変数を用意し，上記の変数を使って座標値の計算式を書いてみましょう．
-
-```JAVA
-float fEndX = /* ここの部分を考えて書いてみましょう */;	// 終点Xfloat fEndY = /* ここの部分を考えて書いてみましょう */;	// 終点Y
-```
-
-- 描画関数lineを記述
-
-始点と終点の変数を使って，以下のように描画処理を記述しましょう．
-
-```java
-line( fStartX, fStartY, fEndX, fEndY );
-```
-
-以下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);      drawTree(10);}void drawTree( int iLevel ){  float fStartX = width/2;  float fStartY = height;  float fLength = 200;  float fAngle = -90;    float fEndX = fStartX+fLength*cos(radians(fAngle));  float fEndY = fStartY+fLength*sin(radians(fAngle));    line( fStartX, fStartY, fEndX, fEndY );    if( iLevel>0 )  {    drawTree(iLevel-1);  }}
-```
-
-### 6. 2本目以降の枝描画を考える
-
-![recursive_tree_second_lines](images/recursive/recursive_tree_second_lines.png)
-
-- 前回の枝の終点が次の枝の始点になる
-- 長さが0.75倍になる
-- 角度が±20°
-
-以下のように，変数を関数の仮引数へ変更する．
-
-```java
-drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel )
-```
-
-これに伴い，以下の変数の宣言を消去する．
-
-```java
-  float fStartX = width/2;  float fStartY = height;  float fLength = 200;  float fAngle = -90;
-```
-
-変数の初期値として代入していた値を，setup関数内での関数呼び出しの引数にする．
-
-```java
-drawTree( width/2, height, 200, -90, 10);
-```
-
-以上の手順により，以下のようになります．
-このままだとエラーで実行できないので，次の手順に進みましょう．
-
-```java
-void setup(){  size(1000, 1000);      drawTree( width/2, height, 200, -90, 10);}void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel ){  float fEndX = fStartX+fLength*cos(radians(fAngle));  float fEndY = fStartY+fLength*sin(radians(fAngle));    line( fStartX, fStartY, fEndX, fEndY );        if( iLevel>0 )  {    drawTree( iLevel-1 );  }}
-```
-
-### 7. 再帰呼び出しの変更
-
-以下の再帰呼び出しの部分も書き換えなければいけないが，どのように書き換えればいいか考えてみましょう．
-
-```java
-drawTree( iLevel-1 );
-```
-
-ヒントとしては
-
-- 再帰呼び出しにより，２本に枝分かれさせる
-
-  - 前回の枝の終点が，次の枝の始点になる．
-  - 長さが0.75倍になる．
-  - 角度が+20°の枝と，-20°の枝に分かれる．
-
-  
-
-下の答えを見る前にやってみましょう．
-
-```java
-void setup(){  size(1000, 1000);      // 角度:-90°  // 長さ:200  // 始点X:スクリーンの半分  // 始点Y:スクリーン下端  // 再帰の深さ:10まで  drawTree( width/2, height, 200, -90, 10);}/** 木の描画    params    	fStartX :枝の始点座標        fStartY :        fLength :枝の長さ        fAngle  :枝の角度        iLevel  ;再帰の深さ*/void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel ){  float fEndX = fStartX+fLength*cos(radians(fAngle));  float fEndY = fStartY+fLength*sin(radians(fAngle));    line( fStartX, fStartY, fEndX, fEndY );        if( iLevel>0 )  {    drawTree( fEndX, fEndY, fLength*0.75, fAngle+20, iLevel-1);    drawTree( fEndX, fEndY, fLength*0.75, fAngle-20, iLevel-1);  }}
-```
-
-### 8. 形状の変化
-
-以下の値を変えることで，形状の変化を操作できる．
-いろいろ試してみましょう．
-
-- 最初の始点の座標値
-  - 初期値: `width/2, height`
-- 最初の枝の角度
-  - 初期値: `90°`
-- 枝の基本の長さ
-  - 初期値: `200`
-- 再帰呼び出し毎にかける長さの倍率
-  - 初期値: `0.75`
-- 再帰呼び出し毎に加算する角度
-  - 初期値: `+20°`, `-20°`
-- 再帰の最大の深さ
-  - 初期値: `10`
-
-#### 例
-
-```java
-void setup(){  size(1000, 1000);      // 角度:-40°  // 長さ:400  // 始点X:0  // 始点Y:スクリーン下端  // 再帰の深さ:12まで  drawTree( 0, height, 400, -40, 12);}/** 木の描画    params      fStartX :枝の始点座標        fStartY :        fLength :枝の長さ        fAngle  :枝の角度        iLevel  ;再帰の深さ*/void drawTree( float fStartX, float fStartY, float fLength, float fAngle, int iLevel ){  float fEndX = fStartX+fLength*cos(radians(fAngle));  float fEndY = fStartY+fLength*sin(radians(fAngle));    line( fStartX, fStartY, fEndX, fEndY );        if( iLevel>0 )  {    drawTree( fEndX, fEndY, fLength*0.65, fAngle+10, iLevel-1);    drawTree( fEndX, fEndY, fLength*0.6, fAngle-40, iLevel-1);  }}
-```
-
-![recursive_tree_param_change](images/recursive/recursive_tree_param_change.png)
-
-
-
-## サンプル集
-
-### 三角形
-
-シェルピンスキーのギャスケットと同様の模様が生成される．
-
-```java
-void setup(){  size(400,400);    recursiveTriangle( width/2, height/1.7, width );}void draw(){}void recursiveTriangle( float fX, float fY, float fWidth ){  if( fWidth < 4 )  {    return;  }    float fIncircleRadius = (fWidth/2.0) * tan(radians(30));// 三角形の内接円の半径  float fHeight = fWidth * sin(radians(60));// 三角形の高さ    triangle( fX, fY-(fHeight-fIncircleRadius),            fX+fWidth/2.0, fY+fIncircleRadius,            fX-fWidth/2.0, fY+fIncircleRadius );    // 上，左下，右下に新たに描画.  recursiveTriangle( fX, fY- fIncircleRadius, fWidth/2.0 );  recursiveTriangle( fX+fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);  recursiveTriangle( fX-fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);}
-```
-
-![recursive_triangle_step04](images/recursive/recursive_triangle_step04.png)
-
-### 黄金比
-
-```java
-void setup(){  size(810,500);  drawGoldenRect( height, 10 );  }void draw( ){}/**    黄金長方形を再帰的に描画する        黄金比 1:1.618        params          fRectSize: 正方形のサイズ          iLevel   ; 再帰を行う深さ*/void drawGoldenRect( float fRectSize, int iLevel ){  stroke(0,0,0);  rect( 0, 0, fRectSize, fRectSize );// 正方形    // 90°円弧  stroke(0,0,255);  arc( fRectSize, fRectSize, 2*fRectSize, 2*fRectSize, radians(180), radians(270), PIE);    if( iLevel > 0 )  {    // 座標変換    translate(fRectSize*1.618,0); // X軸方向に正方形のサイズの1.618倍移動する    rotate(radians(90));          // 90°回転        drawGoldenRect( fRectSize*0.618, iLevel-1 );  }}
-```
-
-![recursive_golden_rect](images/recursive/recursive_golden_rect.png)
-
-### ハノイの塔
-
-以下のルールに従ってすべての円盤を右端の杭に移動させられれば完成．
-
-- 3本の杭と，中央に穴の開いた大きさの異なる複数の円盤から構成される．
-- 最初はすべての円盤が左端の杭に小さいものが上になるように順に積み重ねられている．
-- 円盤を一回に一枚ずつどれかの杭に移動させることができるが，小さな円盤の上に大きな円盤を乗せることはできない．
-
-```java
-int iDiscHeight = 20;                       // ディスクの高さ.int[] iDiscWidth = { 20, 40, 60, 80, 100 }; // 各ディスクの幅.int iWaitFrames = 6;                  // アニメーション開始までの待機フレーム数. int[][] iQueueDiscs = new int[3][5];  // アニメーション用現在のディスクの位置.int[][] iAnimMove = new int[100][2];  // ハノイの塔の動かす手順(回答).int iAnimMoveIdx;  // 現在の手順番号.int iMoveCount;    // 手順の数. void setup(){  size(600,400);  colorMode( HSB, 5, 1, 1 );  frameRate(1);    for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )  {    for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )    {      iQueueDiscs[iABC][iDepth] = 0;    }  }  iQueueDiscs[0][0] = 5;  iQueueDiscs[0][1] = 4;  iQueueDiscs[0][2] = 3;  iQueueDiscs[0][3] = 2;  iQueueDiscs[0][4] = 1;    iAnimMoveIdx = 0;  iMoveCount = 0;    // 事前にハノイの塔の回答手順を計算.  //   iAnimMove[][]に手順を保存.  hanoi( 5, 0, 1, 2 );  }void draw( ){    // スクリーンリフレッシュ  fill(1,0,1);  noStroke();  rectMode(CORNER);  rect(0,0,width,height);  // ハノイの塔を描画  //  現在の配列iQueueDiscs[][]を元に描画を行う.  drawHanoi();   if( iWaitFrames > 0 )  {    // しばらく動かさずに待つ.         iWaitFrames--;  }  else if( iAnimMoveIdx < iMoveCount )// 手順がまだ残っていたら  {    // ディスクの移動    //  実際に配列iQueueDiscs[][]を操作    moveDisc( iAnimMove[iAnimMoveIdx][0], iAnimMove[iAnimMoveIdx][1] );        // 手順をすすめる.    iAnimMoveIdx++;  }}/** ハノイの塔再帰呼び出し関数        params      iDiscSizeMove: 動かすディスクサイズ(1~5)      iFrom:         移動元  左:0, 中:1, 右:2      iWork:         中継地      iDest:         目的地*/int hanoi( int iDiscSizeMove, int iFrom, int iWork, int iDest ){  // ディスクをiFromからiDest経由でiWorkへ移動させる  if(iDiscSizeMove>=2)  {    hanoi(iDiscSizeMove-1, iFrom, iDest, iWork );  }    // 手順確定  //   ディスクをiFromからiDestへ移動させる  iAnimMove[iMoveCount][0]= iFrom;  iAnimMove[iMoveCount][1]= iDest;  iMoveCount++;      // Move n-1 desks from "work" to "dest" via "from".  // ディスクをiWorkからiFrom経由でiDestへ移動させる  if(iDiscSizeMove>=2)  {    hanoi(iDiscSizeMove-1, iWork, iFrom, iDest);  }    return iMoveCount;}void drawHanoi(){  translate( width/4, height/1.5 );  rectMode(CENTER);  for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )  {    stroke(0,0,0);    strokeWeight(4);    line( 0, -iDiscHeight*iDiscWidth.length, 0, iDiscHeight/2-2 );        for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )    {      int iDiscSize = iQueueDiscs[iABC][iDepth];      if( iDiscSize > 0 )      {        fill(iDiscSize,1,1);        stroke(0,0,0);        strokeWeight(2);        rect( 0, 0-iDepth*iDiscHeight, iDiscWidth[iDiscSize-1], iDiscHeight );      }    }    translate(width/4,0);  }  }void moveDisc( int iABCfrom, int iABCto ){  int iDiscSizeMoved = 0;    // 動かすディスクを取り外す.  int iDepthFrom = iQueueDiscs[iABCfrom].length-1;    while( iDepthFrom>=0 )  {    if( iQueueDiscs[iABCfrom][iDepthFrom] > 0 )    {      iDiscSizeMoved = iQueueDiscs[iABCfrom][iDepthFrom];      iQueueDiscs[iABCfrom][iDepthFrom] = 0;      break;    }    else    {      iDepthFrom--;    }  }    // ディスクを置く  int iDepthTo = iQueueDiscs[iABCto].length-1;  while( iDepthTo>=0 )  {    if( iQueueDiscs[iABCto][iDepthTo] > 0 )    {      break;    }    else    {      iDepthTo--;    }  }  iQueueDiscs[iABCto][iDepthTo+1] = iDiscSizeMoved;  for( int iABC = 0; iABC<iQueueDiscs.length; iABC++ )  {    for( int iDepth = 0; iDepth<iQueueDiscs[iABC].length; iDepth++ )    {      print( iQueueDiscs[iABC][iDepth] + ", ");    }    println("");  }  println("");}
-```
-
-![recursive_hanoi](images/recursive/recursive_hanoi.gif)
-
-### 矩形の再帰的分割描画
-
-```java
-final int RECURSIVE_MAX = 10;    // 再帰の最大の深さfinal float DIVIDE_RANGE = 0.6;  // 分割の振れ幅(0~1)final int OFS_X = 10;final int OFS_Y = 10; void setup(){  size(600, 600);  background(255);  noFill();    drawRectDivided( OFS_X, OFS_Y, width-2*OFS_X, height-2*OFS_Y, RECURSIVE_MAX );}// 矩形を分割しながら再帰的に描画void drawRectDivided(float iX, float iY, float fWidth, float fHeight, int iLevel ){   rect( iX, iY, fWidth, fHeight);    if (iLevel>0)  {        if (fWidth>fHeight)    {      //幅が高さよりも大きい、または幅と高さが等しい場合      // 左右に二つに割る            // 割った後の左の矩形の幅      float fWidthLRect = fWidth*random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );      drawRectDivided(iX, iY, fWidthLRect, fHeight, iLevel-1);                    //左側の矩形      drawRectDivided(iX+fWidthLRect, iY, fWidth-fWidthLRect, fHeight, iLevel-1); //右側の矩形    }    else    {      //幅が高さよりも小さい場合      // 上下に二つに割る            // 割った後の上の矩形の高さ      float fHeightUpper = fHeight*random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );      drawRectDivided(iX, iY, fWidth, fHeightUpper, iLevel-1);                    //上側の矩形      drawRectDivided(iX, iY+fHeightUpper, fWidth, fHeight-fHeightUpper, iLevel-1);    //下側の矩形    }  }}
-```
-
-![recursive_rect_devided](images/recursive/recursive_rect_devided.png)
-
-
-
-### マンデルブロ集合の描画
-
-フラクタル図形の一種
-
-```java
-final float DRAW_OFS_X = -0.7;                           // 描く領域のオフセットXfinal float DRAW_OFS_Y = 0;                              // 描く領域のオフセットYfinal float DRAW_SCALE = 1.4;                            // 描く領域のスケール final int RECURSIVE_MAX = 50;                            // 繰り返し上限回数final float DRAW_SIZE = 4;                               // 描く領域の一辺の長さ void setup(){  size(600,600);  colorMode(HSB,RECURSIVE_MAX,1,1);  background(0,0,0);    // マンデルブロ集合の描画  for (int iPixelX = 0; iPixelX < width; iPixelX++)  // x（実部）方向のループ  {    float fCReal = iPixelX * DRAW_SIZE/( width*DRAW_SCALE) - DRAW_SIZE/(2*DRAW_SCALE) + DRAW_OFS_X;     // 定数Cの実部        for (int iPixelY = 0; iPixelY < height; iPixelY++)  // y（虚部）方向のループ    {      float fCImaginary = iPixelY * DRAW_SIZE/( height*DRAW_SCALE) - DRAW_SIZE/(2*DRAW_SCALE) + DRAW_OFS_Y; // 定数Cの虚部              drawFractal( 0, 0, fCReal, fCImaginary, iPixelX, iPixelY, RECURSIVE_MAX ) ;    }  }}/**  フラクタル図形の描画      内部でZ^2+Cの計算を行い，絶対値が4を超えたピクセルを描画する.  */void drawFractal( float fZReal, float fZImaginary, float fCReal, float fCImaginary, int iPixelX, int iPixelY, int iLevel ){  float fZRealNew = pow(fZReal,2) - pow(fZImaginary,2) + fCReal;     // z^2+Cの計算（実部）  float fZImaginaryNew = 2 * fZReal * fZImaginary + fCImaginary;     // z^2+Cの計算（虚部）    if( pow(fZRealNew,2)+pow(fZImaginaryNew,2) > 4 )  // もし絶対値が2を（絶対値の2乗が4を）超えていたら  {      stroke( iLevel, 1, 1 );             // 再帰の回数を色相へ      point(iPixelX,iPixelY);             // (iPixelX,iPixelY)の位置のピクセルをで塗る      return;                             // 再帰終了  }  else if( iLevel > 0 )  {    drawFractal( fZRealNew, fZImaginaryNew, fCReal, fCImaginary, iPixelX, iPixelY, iLevel-1 );  }}
-```
-
-![recursive_maandelbrotSet](images/recursive/recursive_maandelbrotSet.png)
-
-### ジュリア集合の描画
-
-フラクタル図形の一種
-
-```java
-final float DRAW_OFS_X = 0;                              // 描く領域のオフセットXfinal float DRAW_OFS_Y = 0;                              // 描く領域のオフセットYfinal float DRAW_SCALE = 1.4;                            // 描く領域のスケール final int RECURSIVE_MAX = 200;                           // 繰り返し上限回数final float DRAW_SIZE = 4;                               // 描く領域の一辺の長さfinal float C_REAL = -0.3;                               // 定数Cの実部final float C_IMAGINARY = -0.63;                         // 定数Cの虚部 void setup(){  size(600,600);  colorMode(HSB,RECURSIVE_MAX,1,1);  background(0,0,0);   // ジュリア集合の描画  for (int iPixelX = 0; iPixelX < width; iPixelX++)  // x（実部）方向のループ  {    float fZReal = iPixelX * DRAW_SIZE/( width*DRAW_SCALE ) - DRAW_SIZE/( 2*DRAW_SCALE ) + DRAW_OFS_X;     // 変数Zの実部        for (int iPixelY = 0; iPixelY < height; iPixelY++)  // y（虚部）方向のループ    {      float fZImaginary = iPixelY * DRAW_SIZE/( height*DRAW_SCALE ) - DRAW_SIZE/( 2*DRAW_SCALE ) + DRAW_OFS_Y; // 変数Zの虚部              drawFractal( fZReal, fZImaginary, C_REAL, C_IMAGINARY, iPixelX, iPixelY, RECURSIVE_MAX ) ;    }  }  }/**  フラクタル図形の描画      内部でZ^2+Cの計算を行い，絶対値が4を超えたピクセルを描画する.  */void drawFractal( float fZReal, float fZImaginary, float fCReal, float fCImaginary, int iPixelX, int iPixelY, int iLevel ){  float fZRealNew = pow(fZReal,2) - pow(fZImaginary,2) + fCReal;     // z^2+Cの計算（実部）  float fZImaginaryNew = 2 * fZReal * fZImaginary + fCImaginary;     // z^2+Cの計算（虚部）    if( pow(fZRealNew,2)+pow(fZImaginaryNew,2) > 4 )  // もし絶対値が2を（絶対値の2乗が4を）超えていたら  {      stroke( iLevel, 1, 1 );             // 再帰の回数を色相へ      point(iPixelX,iPixelY);             // (iPixelX,iPixelY)の位置のピクセルをで塗る      return;                             // 再帰終了  }  else if( iLevel > 0 )  {    drawFractal( fZRealNew, fZImaginaryNew, fCReal, fCImaginary, iPixelX, iPixelY, iLevel-1 );  }}
-```
-
-![recursive_juliaSet](images/recursive/recursive_juliaSet.png)
 
 
 
