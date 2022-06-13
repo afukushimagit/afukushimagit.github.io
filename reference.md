@@ -12478,8 +12478,6 @@ void drawGoldenRect( float fRectSize )
 
 ![recursive_golden_rect](images/recursive/recursive_golden_rect.png)
 
-
-
 ### 矩形の再帰的分割描画
 
 矩形の長辺を再帰的にランダム分割する．
@@ -12528,7 +12526,63 @@ void drawRectDivided( float iX, float iY, float fWidth, float fHeight )
 
 ![recursive_rect_devided](images/recursive/recursive_rect_devided.png)
 
+### コッホ曲線
 
+フラクタル図形の一種．
+下図のように，「線を三等分に分割し，正三角形を作る」処理を再帰的に行うことで描画される図形．
+
+![recursive_kochCurve_simple_01](images/recursive/recursive_kochCurve_simple_01.png)
+
+![recursive_kochCurve_simple_02](images/recursive/recursive_kochCurve_simple_02.png)
+
+詳しくは調べてください．
+再帰関数の中で三角関数の加法定理を用いているため，難易度高め．
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  drawKochCurve( width/2, height * 0.1, width * 0.9, height * 3/4 );
+  drawKochCurve( width * 0.9, height * 3/4, width * 0.1, height * 3/4 );
+  drawKochCurve( width * 0.1, height * 3/4, width/2, height * 0.1 );
+}
+
+void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
+{
+  float fLength = sqrt( pow( fEndX - fBeginX, 2 ) + pow( fEndY - fBeginY, 2 ) );
+  
+  if( fLength > 16 )
+  {
+    float[][] fPointXY = new float[3][2];
+    
+    fPointXY[0][0] = fBeginX + ( fEndX - fBeginX ) / 3.0;
+    fPointXY[0][1] = fBeginY + ( fEndY - fBeginY ) / 3.0;
+    fPointXY[2][0] = fBeginX + 2 * ( fEndX - fBeginX ) / 3.0;
+    fPointXY[2][1] = fBeginY + 2 * ( fEndY - fBeginY ) / 3.0;
+    
+    float fNewLength = fLength / 3.0;
+    float fCosO = ( fPointXY[2][0] - fPointXY[0][0] ) / fNewLength;
+    float fSinO = ( fPointXY[2][1] - fPointXY[0][1] ) / fNewLength;
+    float fCos1 = cos( radians( - 60 ) );
+    float fSin1 = sin( radians( - 60 ) );
+    
+    // 三角関数の加法定理より，正三角形の３つ目の点の座標を求める．
+    fPointXY[1][0] = fPointXY[0][0] + fNewLength * ( fCosO * fCos1 - fSinO * fSin1 );
+    fPointXY[1][1] = fPointXY[0][1] + fNewLength * ( fSinO * fCos1 + fCosO * fSin1 );
+    
+    drawKochCurve( fBeginX, fBeginY, fPointXY[0][0], fPointXY[0][1] );
+    drawKochCurve( fPointXY[0][0], fPointXY[0][1], fPointXY[1][0], fPointXY[1][1] );
+    drawKochCurve( fPointXY[1][0], fPointXY[1][1], fPointXY[2][0], fPointXY[2][1] );
+    drawKochCurve( fPointXY[2][0], fPointXY[2][1], fEndX, fEndY );
+  }
+  else
+  {
+    line( fBeginX, fBeginY, fEndX, fEndY );
+  }
+}
+```
+
+![recursive_kochCurve](images/recursive/recursive_kochCurve.png)
 
 ### マンデルブロ集合の描画
 
