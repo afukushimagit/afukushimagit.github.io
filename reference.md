@@ -12150,7 +12150,7 @@ void drawTree( float fLength )
 仮引数`fLength`は**線の長さ**の情報を表す．
 実引数`200`は，**最初の線の長さ**の情報を`drawTree()`に渡す．
 
-### 4. 再帰呼び出しを記述する．
+### 3. 再帰呼び出しを記述する．
 
 再帰呼び出しの度に仮引数`fLength`を小さくしていく予定なので，以下のように記述する．
 
@@ -12172,7 +12172,7 @@ void drawTree( float fLength )
 
 再帰呼び出しの度に，線（枝）の長さを0.75倍していく．
 
-### 5. 必要な仮引数を追加する．
+### 4. 必要な仮引数を追加する．
 
 線を描画するためには，下図の青色の仮引数が必要となる．
 黒色の変数は，仮引数を元に三角比を用いることで算出できる．
@@ -12202,7 +12202,7 @@ void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )  // 
 
 ```
 
-### 6. 終端のXY座標値を記述する．
+### 5. 終端のXY座標値を記述する．
 
 ステップ5でも述べたが，ある線の始点と角度，線の長さの情報があれば，三角比を用いることで終点のXY座標値を算出できる．
 
@@ -12226,7 +12226,7 @@ void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
 }
 ```
 
-### 7. 線の描画命令を記述する．
+### 6. 線の描画命令を記述する．
 
 線の描画命令を記述する．
 
@@ -12255,7 +12255,7 @@ void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
 
 ![recursive_tree_01](images/recursive/recursive_tree_01.png)
 
-### 8. 枝の角度を変える．
+### 7. 枝の角度を変える．
 
 再帰呼び出しの度に，角度を20°増やす．
 
@@ -12284,7 +12284,7 @@ void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
 
 ![recursive_tree_02](images/recursive/recursive_tree_02.png)
 
-### 9. 枝分かれさせる．
+### 8. 枝分かれさせる．
 
 再帰呼び出しをもう一つ追加することで，枝を分けることができる．
 下図のように，もう一本の枝は角度を-20°するとよい．
@@ -12319,7 +12319,7 @@ void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
 
 ![recursive_tree_finish](images/recursive/recursive_tree_finish.png)
 
-### 10. 形状の変化
+### 9. 形状の変化
 
 以下の値を変えることで，形状の変化を操作できる．
 いろいろ試してみましょう．
