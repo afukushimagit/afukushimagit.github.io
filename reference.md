@@ -12405,9 +12405,24 @@ CGにおける描画法の一種であるレイトレーシングも再帰呼び
 
 ## サンプル集
 
+再帰呼び出しのアルゴリズムを一から組み立てるのが難しい場合は，この章に記述されている既存のアルゴリズムを元にプログラミングを始めることも有用である．
+しかし，これら既存のアルゴリズムを利用するためには，それらの仕組みをある程度理解する必要があることに留意．
+
 ### シェルピンスキーのギャスケット
 
 正三角形で構成される模様．
+
+#### 再帰回数:1
+
+![recursive_triangle_step01](images/recursive/recursive_triangle_step01.png)
+
+#### 再帰回数:2
+
+![recursive_triangle_step02](images/recursive/recursive_triangle_step02.png)
+
+#### 再帰回数:3
+
+![recursive_triangle_step03](images/recursive/recursive_triangle_step03.png)
 
 ```java
 void setup()
@@ -12415,31 +12430,79 @@ void setup()
   size(400,400);
   recursiveTriangle( width/2, height/1.7, width );
 }
-void draw()
-{  
-}
 void recursiveTriangle( float fX, float fY, float fWidth )
 {
-  if( fWidth < 4 )
+  if( fWidth > 4 )
   {
-    return;
+    float fInCircleRadius = ( fWidth/2.0 ) * tan( radians(30) );// 三角形の内接円の半径
+    float fHeight = fWidth * sin(radians(60));// 三角形の高さ
+    
+    // 三角形の描画
+    triangle( fX, fY - ( fHeight - fInCircleRadius ),
+              fX + fWidth/2.0, fY + fInCircleRadius,
+              fX - fWidth/2.0, fY + fInCircleRadius );
+    
+    // 上，左下，右下に新たに描画.
+    recursiveTriangle( fX, fY - fInCircleRadius, fWidth/2.0 );
+    recursiveTriangle( fX + fInCircleRadius * cos( radians( 30 ) ), fY + fInCircleRadius * sin( radians( 30 ) ), fWidth/2.0 );
+    recursiveTriangle( fX - fInCircleRadius * cos( radians( 30 ) ), fY + fInCircleRadius * sin( radians( 30 ) ), fWidth/2.0 );
   }
-  
-  float fIncircleRadius = (fWidth/2.0) * tan(radians(30));// 三角形の内接円の半径
-  float fHeight = fWidth * sin(radians(60));// 三角形の高さ
-  
-  // 三角形の描画
-  triangle( fX, fY-(fHeight-fIncircleRadius),
-            fX+fWidth/2.0, fY+fIncircleRadius,
-            fX-fWidth/2.0, fY+fIncircleRadius );
-  
-  // 上，左下，右下に新たに描画.
-  recursiveTriangle( fX, fY- fIncircleRadius, fWidth/2.0 );
-  recursiveTriangle( fX+fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);   recursiveTriangle( fX-fIncircleRadius*cos(radians(30)), fY+fIncircleRadius*sin(radians(30)), fWidth/2.0);
 }
 ```
 
 ![recursive_triangle_step04](images/recursive/recursive_triangle_step04.png)
+
+#### 例
+
+シェルピンスキーのギャスケットを10個敷き詰め，半分は上下反転させる．
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  
+  translate( width/2, height/2 );
+  
+  recursiveTriangle( -232, 267, 464 );  // 左下
+  recursiveTriangle( -464, -133, 464 ); // 左上
+  recursiveTriangle( 0, -133, 464 );    // 上
+  recursiveTriangle( 464, -133, 464 );  // 右上
+  recursiveTriangle( 232, 267, 464 );   // 右下
+  
+  rotate( radians( 180 ) );
+
+  // 逆さ
+  recursiveTriangle( -232, 267, 464 );  // 左上
+  recursiveTriangle( -464, -133, 464 ); // 左下
+  recursiveTriangle( 0, -133, 464 );    // 上
+  recursiveTriangle( 464, -133, 464 );  // 右下
+  recursiveTriangle( 232, 267, 464 );   // 右上
+
+}
+void recursiveTriangle( float fX, float fY, float fWidth )
+{
+  if( fWidth > 4 )
+  {
+    float fInCircleRadius = ( fWidth/2.0 ) * tan( radians(30) );// 三角形の内接円の半径
+    float fHeight = fWidth * sin(radians(60));// 三角形の高さ
+    
+    strokeWeight( 0.5 );
+    
+    // 三角形の描画
+    fill( random( 200, 255 ), random( 10, 65 ), random( 8, 30 ) );
+    triangle( fX, fY - ( fHeight - fInCircleRadius ),
+              fX + fWidth/2.0, fY + fInCircleRadius,
+              fX - fWidth/2.0, fY + fInCircleRadius );
+    
+    // 上，左下，右下に新たに描画.
+    recursiveTriangle( fX, fY - fInCircleRadius, fWidth/2.0 );
+    recursiveTriangle( fX + fInCircleRadius * cos( radians( 30 ) ), fY + fInCircleRadius * sin( radians( 30 ) ), fWidth/2.0 );
+    recursiveTriangle( fX - fInCircleRadius * cos( radians( 30 ) ), fY + fInCircleRadius * sin( radians( 30 ) ), fWidth/2.0 );
+  }
+}
+```
+
+![recursive_triangle_example](images/recursive/recursive_triangle_example.png)
 
 ### 黄金比
 
@@ -12448,35 +12511,96 @@ void recursiveTriangle( float fX, float fY, float fWidth )
 ```java
 void setup()
 {
-  size(810,500);
-  drawGoldenRect( height );
-}
-void draw( )
-{
+  size( 800, 500 );
+  drawGoldenRect( 70, 40, 400 );
 }
 
-void drawGoldenRect( float fRectSize )
+void drawGoldenRect( float fX, float fY, float fRectSize )
 {
   // 正方形
   stroke( 0, 0, 0 );
-  rect( 0, 0, fRectSize, fRectSize );
+  rect( fX, fY, fRectSize, fRectSize );
 
   // 円弧描画
   stroke( 0, 0, 255 );
-  arc( fRectSize, fRectSize, 2*fRectSize, 2*fRectSize, radians(180), radians(270), OPEN );
+  arc( fX + fRectSize, fY + fRectSize, 2 * fRectSize, 2 * fRectSize, radians(180), radians(270), OPEN );
   
-  if( fRectSize > 8 )
+  if( fRectSize > 4 )
   {
-    // 座標変換
-    translate(fRectSize*1.618,0); // X軸方向に正方形のサイズの1.618倍移動する
-    rotate(radians(90));          // 90°回転
+    pushMatrix();
     
-    drawGoldenRect( fRectSize*0.618 );  // 再帰呼び出し
+    // 座標変換
+    translate( fX + fRectSize * 1.618, fY ); // 次の描画位置へ移動
+    rotate( radians( 90 ) );                 // 90°回転
+    
+    drawGoldenRect( 0, 0, fRectSize * 0.618 );  // 再帰呼び出し
+    
+    popMatrix();
   }
 }
 ```
 
 ![recursive_golden_rect](images/recursive/recursive_golden_rect.png)
+
+#### 例
+
+ゼンマイの束状の表現
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  
+  background( 0, 20, 0 );
+  
+  translate( -10, height + 200 );
+  rotate( radians( -80 ) );
+  
+  // 80本ランダム描画
+  for( int iTsuru = 0; iTsuru < 80; iTsuru++ )
+  {
+    pushMatrix();
+    
+    // 揺らす.
+    translate( random( -40, 300 ), random( -80, 200 ) );
+    scale( random( 0.8, 1.0 ) );
+    rotate( radians( random( -4, 4 ) ) );
+    
+    drawGoldenRect( 0, 0, 500 );
+    
+    popMatrix();
+    
+    // 奥行を出すための半透明黒
+    noStroke();
+    fill( 0, 40 );
+    rect( 200, -200, 1000, 1000 );
+  }
+}
+
+void drawGoldenRect( float fX, float fY, float fRectSize )
+{ 
+  // 円弧描画
+  strokeWeight( 20 );
+  noFill();
+  stroke( random( 10, 44 ), random( 255, 200 ) - fRectSize/3.0, random( 40, 84 ) );
+  arc( fX + fRectSize, fY + fRectSize, 2 * fRectSize, 2 * fRectSize, radians(180), radians(270), OPEN );
+  
+  if( fRectSize > 4 )
+  {
+    pushMatrix();
+    
+    // 座標変換
+    translate( fX + fRectSize * 1.618, fY ); // 次の描画位置へ移動
+    rotate( radians( 90 ) );                 // 90°回転
+    
+    drawGoldenRect( 0, 0, fRectSize * 0.618 );  // 再帰呼び出し
+    
+    popMatrix();
+  }
+}
+```
+
+![recursive_golden_rect_example](images/recursive/recursive_golden_rect_example.png)
 
 ### 矩形の再帰的分割描画
 
@@ -12526,14 +12650,216 @@ void drawRectDivided( float iX, float iY, float fWidth, float fHeight )
 
 ![recursive_rect_devided](images/recursive/recursive_rect_devided.png)
 
+#### 例
+
+矩形の代わりにカプセル状の図形で満たす表現
+
+```java
+final float DIVIDE_RANGE = 0.6;  // 分割の振れ幅(0~1)
+final int OFS_X = 10;            // スクリーン左右の空白
+final int OFS_Y = 10;
+void setup()
+{
+  size( 800, 800 );
+  background( 0 );
+  noFill();
+  strokeWeight( 2 );
+  
+  ellipseMode( CORNER );
+  
+  drawRectDivided( OFS_X, OFS_Y, width - 2 * OFS_X, height - 2 * OFS_Y, 10 );
+}
+
+void drawRectDivided( float iX, float iY, float fWidth, float fHeight, int iLevel )
+{
+  if ( iLevel > 0 )
+  {
+    if ( fWidth > fHeight )
+    {
+      // 左右に二つに割る
+      
+      // 割った後の左の矩形の幅
+      float fWidthLRect = fWidth * random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );
+      
+      drawRectDivided( iX, iY, fWidthLRect, fHeight, iLevel - 1 );                        //左側の矩形
+      drawRectDivided( iX + fWidthLRect, iY, fWidth - fWidthLRect, fHeight, iLevel - 1 ); //右側の矩形
+    }
+    else 
+    {
+      // 上下に二つに割る
+      
+      // 割った後の上の矩形の高さ
+      float fHeightUpper = fHeight * random( ( 1 - DIVIDE_RANGE )/2.0, 1 - ( 1 - DIVIDE_RANGE )/2.0 );
+      
+      drawRectDivided( iX, iY, fWidth, fHeightUpper, iLevel - 1 );                          //上側の矩形
+      drawRectDivided( iX, iY + fHeightUpper, fWidth, fHeight - fHeightUpper, iLevel - 1 ); //下側の矩形
+    }
+  }
+  else
+  {
+    if ( fWidth > fHeight )
+    {
+      // 横長カプセル
+      fill( random( 200, 250 ), random( 20, 80 ), random( 10, 20 ) );
+      arc( iX, iY, fWidth, fHeight, radians( 90 ), radians( 270 ), CLOSE );
+      fill( random( 230, 250 ), random( 210, 230 ), random( 200, 230 ) );
+      arc( iX, iY, fWidth, fHeight, radians( 270 ), radians( 450 ), CLOSE );
+    }
+    else
+    {
+      // 縦長カプセル
+      fill( random( 10, 30 ), random( 30, 80 ), random( 200, 250 ) );
+      arc( iX, iY, fWidth, fHeight, radians( 0 ), radians( 180 ), CLOSE );
+      fill( random( 200, 250 ), random( 200, 210 ), random( 200, 220 ) );
+      arc( iX, iY, fWidth, fHeight, radians( 180 ), radians( 360 ), CLOSE );
+    }
+  }
+}
+```
+
+![recursive_rect_devided_example](images/recursive/recursive_rect_devided_example.png)
+
+### ドラゴン曲線
+
+フラクタル図形の一種．
+下図のように，「線を二等分し，角度が90°をなす二本の線を生成する」処理を再帰的に行うことで描画される図形．
+
+#### 再帰回数：0
+
+![recursive_dragoncurve_0](images/recursive/recursive_dragoncurve_0.png)
+
+#### 再帰回数：1
+
+![recursive_dragoncurve_1](images/recursive/recursive_dragoncurve_1.png)
+
+#### 再帰回数：2
+
+![recursive_dragoncurve_2](images/recursive/recursive_dragoncurve_2.png)
+
+#### 再帰回数：3
+
+![recursive_dragoncurve_3](images/recursive/recursive_dragoncurve_3.png)
+
+#### 分割後の点の座標の求め方
+
+![recursive_dragoncurve_model](images/recursive/recursive_dragoncurve_model.png)
+
+上図左のような（グレーの）直角三角形を基準に，幾何学的に分割後の点の座標値`( fNewX, fNewY )`を求めることができる．
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  drawDragonCurve( 200, 200, 700, 500 );
+}
+
+void drawDragonCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
+{
+  // 開始点から終了点への距離
+  float fLength = sqrt( pow( fEndX - fBeginX, 2 ) + pow( fEndY - fBeginY, 2 ) );
+  
+  if( fLength > 10 )
+  {
+    // 直角三角形のX軸方向の大きさ
+    float fTriangleX = ( fEndX - fBeginX ) / 2.0;
+    
+    // 直角三角形のY軸方向の大きさ
+    float fTriangleY = ( fBeginY - fEndY ) /2.0;  // fBeginY方向へ向かうのが正
+    
+    float fBeginToNewX = fTriangleX + fTriangleY;
+    float fEndToNewY = fTriangleX + fTriangleY;
+    
+    // 新たに生成される点のXY座標値
+    float fNewX = fBeginX + fBeginToNewX;
+    float fNewY = fEndY + fEndToNewY; 
+    
+    // 二つの線に再帰的に分割
+    drawDragonCurve( fBeginX, fBeginY, fNewX, fNewY );
+    drawDragonCurve( fEndX, fEndY, fNewX, fNewY );
+  }
+  else
+  {
+    line( fBeginX, fBeginY, fEndX, fEndY );
+  }
+}
+```
+
+![recursive_dragoncurve](images/recursive/recursive_dragoncurve.png)
+
+#### 例
+
+地形図のような模様の描画
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  background( 20, 40, 200 );
+  
+  // 8個のドラゴンカーブ
+  for( int iDragonCurve = 0; iDragonCurve < 8; iDragonCurve++ )
+  {
+    drawDragonCurve( width/5.0, random( height/2 ), width, random( height ) );
+  }
+}
+
+void drawDragonCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
+{
+  // 開始点から終了点への距離
+  float fLength = sqrt( pow( fEndX - fBeginX, 2 ) + pow( fEndY - fBeginY, 2 ) );
+  
+  if( fLength > 10 )
+  {
+    // 直角三角形のX軸方向の大きさ
+    float fTriangleX = ( fEndX - fBeginX ) / 2.0;
+    
+    // 直角三角形のY軸方向の大きさ
+    float fTriangleY = ( fBeginY - fEndY ) /2.0;  // fBeginY方向へ向かうのが正
+    
+    float fBeginToNewX = fTriangleX + fTriangleY;
+    float fEndToNewY = fTriangleX + fTriangleY;
+    
+    // 新たに生成される点のXY座標値
+    float fNewX = fBeginX + fBeginToNewX;
+    float fNewY = fEndY + fEndToNewY; 
+    
+    // 二つの線に再帰的に分割
+    drawDragonCurve( fBeginX, fBeginY, fNewX, fNewY );
+    drawDragonCurve( fEndX, fEndY, fNewX, fNewY );
+  }
+  else
+  {
+    // 線の代わりに円描画
+    float fCenterX = ( fBeginX + fEndX ) / 2.0;
+    float fCenterY = ( fBeginY + fEndY ) / 2.0;
+    noStroke();
+    fill( random( 80, 160 ), random( 100, 255 ), random( 10, 30 ), 180 );
+    circle( fCenterX, fCenterY, fLength/2.0  );
+    //line( fBeginX, fBeginY, fEndX, fEndY );
+  }
+}
+```
+
+![recursive_dragoncurve_example](images/recursive/recursive_dragoncurve_example.png)
+
 ### コッホ曲線
 
 フラクタル図形の一種．
 下図のように，「線を三等分に分割し，正三角形を作る」処理を再帰的に行うことで描画される図形．
 
+#### 再帰回数:1
+
 ![recursive_kochCurve_simple_01](images/recursive/recursive_kochCurve_simple_01.png)
 
+#### 再帰回数:2
+
 ![recursive_kochCurve_simple_02](images/recursive/recursive_kochCurve_simple_02.png)
+
+#### 分割後の３点の座標の求め方
+
+![recursive_kochCurve_model](images/recursive/recursive_kochCurve_model.png)
+
+上図のように，飛び出る点の座標`( fPointXY[1][0], fPointXY[1][1] )`は，二つの角度の合計から求めることができる．
 
 詳しくは調べてください．
 再帰関数の中で三角関数の加法定理を用いているため，難易度高め．
@@ -12542,9 +12868,7 @@ void drawRectDivided( float iX, float iY, float fWidth, float fHeight )
 void setup()
 {
   size( 800, 800 );
-  drawKochCurve( width/2, height * 0.1, width * 0.9, height * 3/4 );
-  drawKochCurve( width * 0.9, height * 3/4, width * 0.1, height * 3/4 );
-  drawKochCurve( width * 0.1, height * 3/4, width/2, height * 0.1 );
+  drawKochCurve( 0, height/2, width, height/2 );
 }
 
 void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
@@ -12553,8 +12877,10 @@ void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
   
   if( fLength > 16 )
   {
+    // 新たに生成される三つの点のXY座標値
     float[][] fPointXY = new float[3][2];
     
+    // 三等分する二つの点の座標
     fPointXY[0][0] = fBeginX + ( fEndX - fBeginX ) / 3.0;
     fPointXY[0][1] = fBeginY + ( fEndY - fBeginY ) / 3.0;
     fPointXY[2][0] = fBeginX + 2 * ( fEndX - fBeginX ) / 3.0;
@@ -12566,7 +12892,10 @@ void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
     float fCos1 = cos( radians( - 60 ) );
     float fSin1 = sin( radians( - 60 ) );
     
-    // 三角関数の加法定理より，正三角形の３つ目の点の座標を求める．
+    // 正三角形の３つ目の飛び出た点の座標を求める．
+    // 加法定理
+    //   cos( a + b ) = cos(a) * cos(b) - sin(a) + sin(b)
+    //   sin( a + b ) = sin(a) * cos(b) + cos(a) * sin(b)
     fPointXY[1][0] = fPointXY[0][0] + fNewLength * ( fCosO * fCos1 - fSinO * fSin1 );
     fPointXY[1][1] = fPointXY[0][1] + fNewLength * ( fSinO * fCos1 + fCosO * fSin1 );
     
@@ -12583,6 +12912,85 @@ void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
 ```
 
 ![recursive_kochCurve](images/recursive/recursive_kochCurve.png)
+
+#### 例
+
+雪の結晶のような模様の表現
+
+```java
+void setup()
+{
+  size( 800, 800 );
+  background( 230, 235, 245 );
+    
+  // 100個の氷の結晶
+  for( int iSnouCrystal = 0; iSnouCrystal < 120; iSnouCrystal++ )
+  {
+    float fSize = random( 60, 160 );
+    drawSnowCrystal( random( width ), random( height ), fSize, fSize );
+  }
+}
+
+void drawSnowCrystal( float fX, float fY, float fWidth, float fHeight )
+{
+  pushMatrix();
+  
+  translate( fX, fY );
+  
+  // 縮小しながら6つ描画
+  for( int iKochCurve = 0; iKochCurve < 6; iKochCurve++ )
+  {
+    scale( 0.8 );
+    drawKochCurve( 0, - fHeight * 0.5, fWidth / 2.0, fHeight * 0.22 );
+    drawKochCurve( fWidth / 2.0, fHeight * 0.22, -fWidth / 2.0, fHeight * 0.22 );
+    drawKochCurve( -fWidth / 2.0, fHeight * 0.22, 0, - fHeight * 0.5 );
+  }
+  popMatrix();
+}
+
+void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
+{
+  float fLength = sqrt( pow( fEndX - fBeginX, 2 ) + pow( fEndY - fBeginY, 2 ) );
+  
+  if( fLength > 10 )
+  {
+    // 新たに生成される三つの点のXY座標値
+    float[][] fPointXY = new float[3][2];
+    
+    // 三等分する二つの点の座標
+    fPointXY[0][0] = fBeginX + ( fEndX - fBeginX ) / 3.0;
+    fPointXY[0][1] = fBeginY + ( fEndY - fBeginY ) / 3.0;
+    fPointXY[2][0] = fBeginX + 2 * ( fEndX - fBeginX ) / 3.0;
+    fPointXY[2][1] = fBeginY + 2 * ( fEndY - fBeginY ) / 3.0;
+    
+    float fNewLength = fLength / 3.0;
+    float fCosO = ( fPointXY[2][0] - fPointXY[0][0] ) / fNewLength;
+    float fSinO = ( fPointXY[2][1] - fPointXY[0][1] ) / fNewLength;
+    float fCos1 = cos( radians( - 60 ) );
+    float fSin1 = sin( radians( - 60 ) );
+    
+    // 正三角形の３つ目の飛び出た点の座標を求める．
+    // 加法定理
+    //   cos( a + b ) = cos(a) * cos(b) - sin(a) + sin(b)
+    //   sin( a + b ) = sin(a) * cos(b) + cos(a) * sin(b)
+    fPointXY[1][0] = fPointXY[0][0] + fNewLength * ( fCosO * fCos1 - fSinO * fSin1 );
+    fPointXY[1][1] = fPointXY[0][1] + fNewLength * ( fSinO * fCos1 + fCosO * fSin1 );
+    
+    drawKochCurve( fBeginX, fBeginY, fPointXY[0][0], fPointXY[0][1] );
+    drawKochCurve( fPointXY[0][0], fPointXY[0][1], fPointXY[1][0], fPointXY[1][1] );
+    drawKochCurve( fPointXY[1][0], fPointXY[1][1], fPointXY[2][0], fPointXY[2][1] );
+    drawKochCurve( fPointXY[2][0], fPointXY[2][1], fEndX, fEndY );
+  }
+  else
+  {
+    strokeWeight( 2 );
+    stroke( random( 40, 80 ), random( 60, 100 ), random( 140, 220 ), 200 );
+    line( fBeginX, fBeginY, fEndX, fEndY );
+  }
+}
+```
+
+![recursive_kochCurve_example](images/recursive/recursive_kochCurve_example.png)
 
 ### マンデルブロ集合の描画
 
