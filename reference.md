@@ -13132,6 +13132,8 @@ void setup()
 
 ![save_image](images/export/save_image.png)
 
+https://processing.org/reference/save_.html
+
 
 
 ## 動画を保存する．
@@ -13286,7 +13288,7 @@ void draw()
 
 特に動画の保存等は，複数の出力ファイルを別フォルダにまとめることができるので活用したい．
 
-
+https://processing.org/reference/saveFrame_.html
 
 ## PDFへ出力
 
@@ -13422,17 +13424,37 @@ https://processing.org/reference/libraries/
 
 # インタラクション
 
+## インタラクションとは
+
+相互作用のこと．
+ここでは，ヒューマンコンピュータインタラクション（ Human-Computer Interaction ）のことを指す．
+本来は**人とコンピュータの相互作用**の仕組みを探求する大きな研究分野．
+
+この章では，ヒューマンコンピュータインタラクションにおける基礎として，マウスやキーボードによる入力方法を学ぶ．
+
 ## マウス
 
-### mouseX, mouseY
+### マウスポインタの座標値
 
-- システム変数
-- 現在のマウスポインタの座標値が格納されている．
+`mouseX`
+
+`mouseY`
 
 #### 例
 
+マウスポインタの位置に円を描画する
+
 ```java
-void setup(){  size(400, 400);}void draw(){  background(126);  ellipse(mouseX, mouseY, 33, 33);}
+void setup()
+{
+  size(400, 400);
+}
+
+void draw()
+{
+  background( 204 );	// 毎フレーム画面をリフレッシュ
+  circle( mouseX, mouseY, 33);
+}
 ```
 
 ![interactin_mouse_xy](images/interaction/interactin_mouse_xy.gif)
@@ -13440,49 +13462,145 @@ void setup(){  size(400, 400);}void draw(){  background(126);  ellipse(mouseX, m
 https://processing.org/reference/mouseX.html
 https://processing.org/reference/mouseY.html
 
-### pmouseX, pmouseY
+### マウスポインタの座標値（前フレーム）
 
-- 直前の描画フレームにおけるマウスポインタの座標値が格納されている．
-- マウスポインタを素早く動かすと，`mouseX`, `mouseY` の値との差が大きくなる
-  - マウスポインタの移動の**速さ**と**方向**を取得できる
+`pmouseX`
 
-#### 例
+`pmouseY`
+
+直前の描画フレームにおけるマウスポインタの座標値が格納されている．
+マウスポインタを素早く動かすと，`mouseX`, `mouseY` の値との差が大きくなる．
+`pmousX`, `pmouseY`との差から，マウスポインタの移動の**速さ**と**方向**を取得できる．
+
+#### 例1
+
+マウスポインタの移動の軌跡の描画．
 
 ```java
-void setup({  size(400,400);  strokeWeight(8);  frameRate(20);}void draw(){  background(204);  line(mouseX, mouseY, pmouseX, pmouseY);}
+void setup()
+{
+  size( 400, 400 );  
+  strokeWeight( 8 );  
+  frameRate( 20 );
+}
+
+void draw()
+{
+  background(204);  
+  line( mouseX, mouseY, pmouseX, pmouseY );
+}
+
 ```
 
 ![interactin_pmouse_xy](images/interaction/interactin_pmouse_xy.gif)
 
+#### 例2
+
+マウスポインタに少し遅れて追従する円の描画．
+
+```java
+void setup()
+{
+  size( 400, 400 );    
+  frameRate( 20 );
+}
+
+void draw()
+{
+  background(204);
+  circle( pmouseX, pmouseY, 30 );
+}
+
+```
+
+![interaction_pmouse_xy_circle](images/interaction/interaction_pmouse_xy_circle.gif)
+
 https://processing.org/reference/pmouseX.html
 https://processing.org/reference/pmouseY.html
 
-### mousePressed
+### マウスボタンが押されているか
 
-- マウスボタンが押されているか，押されていないかの情報が格納されている．
-  - `true` : いずれかのボタンが押されている
-  - `false` : どのボタンも押されていない
+`mousePressed`
+
+いずれかのマウスボタンが押されているか，押されていないかの情報がブール値( true, false )で格納されている．
+- `true` : いずれかのボタンが押されている
+- `false` : どのボタンも押されていない
+
+マウスボタンが押されている間は<u>継続的に</u>trueとなる．
 
 #### 例
 
+マウスボタンを押し続けると色が変わる矩形の描画
+
 ```java
-void draw(){  if (mousePressed == true)  {    fill(0);  }  else  {    fill(255);  }  rect(25, 25, 50, 50);}
+int iColor = 0;
+
+void draw()
+{  
+  if( mousePressed )
+  {
+    iColor+=2;
+  
+    if( iColor > 255 )
+    {
+      iColor = 0;
+    }
+  }
+  
+  fill( iColor );
+  rect( 25, 25, 50, 50 );
+}
 ```
 
-![interaction_pressed](images/interaction/interaction_pressed.gif)
+![interaction_pressed_fade](images/interaction/interaction_pressed_fade.gif)
 
 https://processing.org/reference/mousePressed.html
 
-### mouseButton
+### 押されているマウスボタンの種類
 
-- マウスボタンが押されると，`LEFT`, `RIGHT`, `CENTER`のいずれかの値が格納される．
-- `mousePressed`と組み合わせて使用することが多い
-  - 格納された値はマウスの状態が変化するまで残るため
+`mouseButton`
 
-#### 例
+押されたマウスボタンの種類に応じ，`LEFT`, `RIGHT`, `CENTER`のいずれかの値が格納される．
+`mousePressed`と組み合わせて使用することが多い．
+`mouseButton`の値は，マウスの状態が変化する（ポインタが移動するorマウスボタンが押される）まで残る点に留意．
+
+#### 例1
+
+マウスボタンの種類に応じ，対応する矩形の色を変える．
 
 ```java
-void setup(){  size(200, 100);}void draw(){  if( mousePressed == true && mouseButton == LEFT )  {    fill(0);  }  else  {    fill(255);  }  rect(20, 25, 50, 50);  // 左    if( mousePressed == true && mouseButton == CENTER )  {    fill(0);  }  else  {    fill(255);  }  rect(75, 25, 50, 50);  // 中  if( mousePressed == true && mouseButton == RIGHT )  {    fill(0);  }  else  {    fill(255);  }  rect(130, 25, 50, 50);  // 右}
+void draw()
+{  
+  if ( mousePressed && mouseButton == LEFT )
+  {    
+    fill(0);
+  } 
+  else
+  {    
+    fill(255);
+  }
+  rect( 10, 25, 20, 50 );  // 左
+
+  if( mousePressed && mouseButton == CENTER )
+  {
+    fill(0);
+  }
+  else
+  {
+    fill(255);
+  }
+  rect( 42, 25, 16, 30 );  // 中
+  
+  if( mousePressed && mouseButton == RIGHT )
+  {
+    fill(0);
+  }
+  else
+  {
+    fill(255);
+  }
+  rect( 70, 25, 20, 50 );  // 右
+}
 ```
 
 ![interaction_mouseButton](images/interaction/interaction_mouseButton.gif)
@@ -13491,43 +13609,1102 @@ https://processing.org/reference/mouseButton.html
 
 https://processing.org/tutorials/interactivity/
 
+#### 例2
 
+簡易的なキャンバス
+
+- 左クリックでポインタ位置に円を描画．
+- 右クリックでポインタ位置に背景色の円を描画（消去）
+- ホイールボタンクリックで画面をクリアする．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+  noStroke();
+}
+
+void draw()
+{
+  if( mousePressed )
+  {
+    if( mouseButton == LEFT )
+    {
+      fill( 0 );
+      circle( mouseX, mouseY, 10 );
+    }
+    else if( mouseButton == RIGHT )
+    {
+      fill( 204 );
+      circle( mouseX, mouseY, 10 );
+    }
+    else if( mouseButton == CENTER )
+    {
+      background( 204 );
+    }
+  }
+}
+```
+
+![interaction_canvas_simple](images/interaction/interaction_canvas_simple.gif)
+
+### 演習
+
+例2を自由にアレンジしてみましょう
+
+演習時間：8分程度
+
+#### 作例
+
+![interaction_canvas_sakurei](images/interaction/interaction_canvas_sakurei.gif)
+
+
+
+### 応用例
+
+再帰呼び出し-コッホ曲線のサンプルの雪の結晶を，左クリックしたときのポインタ位置に描画する．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+  background( 230, 235, 245 );
+  
+  frameRate( 10 );
+}
+
+void draw()
+{
+  if( mousePressed )
+  {
+    float fSize = random( 60, 160 );
+    drawSnowCrystal( mouseX, mouseY, fSize, fSize );
+  }  
+}
+
+void drawSnowCrystal( float fX, float fY, float fWidth, float fHeight )
+{
+  pushMatrix();
+  
+  translate( fX, fY );
+  
+  // 縮小しながら6つ描画
+  for( int iKochCurve = 0; iKochCurve < 6; iKochCurve++ )
+  {
+    scale( 0.8 );
+    drawKochCurve( 0, - fHeight * 0.5, fWidth / 2.0, fHeight * 0.22 );
+    drawKochCurve( fWidth / 2.0, fHeight * 0.22, -fWidth / 2.0, fHeight * 0.22 );
+    drawKochCurve( -fWidth / 2.0, fHeight * 0.22, 0, - fHeight * 0.5 );
+  }
+  popMatrix();
+}
+
+void drawKochCurve( float fBeginX, float fBeginY, float fEndX, float fEndY )
+{
+  float fLength = sqrt( pow( fEndX - fBeginX, 2 ) + pow( fEndY - fBeginY, 2 ) );
+  
+  if( fLength > 10 )
+  {
+    // 新たに生成される三つの点のXY座標値
+    float[][] fPointXY = new float[3][2];
+    
+    // 三等分する二つの点の座標
+    fPointXY[0][0] = fBeginX + ( fEndX - fBeginX ) / 3.0;
+    fPointXY[0][1] = fBeginY + ( fEndY - fBeginY ) / 3.0;
+    fPointXY[2][0] = fBeginX + 2 * ( fEndX - fBeginX ) / 3.0;
+    fPointXY[2][1] = fBeginY + 2 * ( fEndY - fBeginY ) / 3.0;
+    
+    float fNewLength = fLength / 3.0;
+    float fCosO = ( fPointXY[2][0] - fPointXY[0][0] ) / fNewLength;
+    float fSinO = ( fPointXY[2][1] - fPointXY[0][1] ) / fNewLength;
+    float fCos1 = cos( radians( - 60 ) );
+    float fSin1 = sin( radians( - 60 ) );
+    
+    // 正三角形の３つ目の飛び出た点の座標を求める．
+    // 加法定理
+    //   cos( a + b ) = cos(a) * cos(b) - sin(a) + sin(b)
+    //   sin( a + b ) = sin(a) * cos(b) + cos(a) * sin(b)
+    fPointXY[1][0] = fPointXY[0][0] + fNewLength * ( fCosO * fCos1 - fSinO * fSin1 );
+    fPointXY[1][1] = fPointXY[0][1] + fNewLength * ( fSinO * fCos1 + fCosO * fSin1 );
+    
+    drawKochCurve( fBeginX, fBeginY, fPointXY[0][0], fPointXY[0][1] );
+    drawKochCurve( fPointXY[0][0], fPointXY[0][1], fPointXY[1][0], fPointXY[1][1] );
+    drawKochCurve( fPointXY[1][0], fPointXY[1][1], fPointXY[2][0], fPointXY[2][1] );
+    drawKochCurve( fPointXY[2][0], fPointXY[2][1], fEndX, fEndY );
+  }
+  else
+  {
+    strokeWeight( 2 );
+    stroke( random( 40, 80 ), random( 60, 100 ), random( 140, 220 ), 200 );
+    line( fBeginX, fBeginY, fEndX, fEndY );
+  }
+}
+```
+
+![interaction_kochcurve_ouyou](images/interaction/interaction_kochcurve_ouyou.gif)
 
 ## キーボード
 
-### keyPressed
+### キーが押されているか
 
-キーが押されているか，押されていないかの情報が格納されている．
+`keyPressed`
+
+キーが押されているか，押されていないかの情報がブール値で格納されている．
 
 - `true` : いずれかのボタンが押されている
 - `false` : どのキーも押されていない
 
-### key
-
-- 直前に使用されたキーの値(英数字)が格納される．
-- 英数字以外の特別なキー（矢印，Alt, Ctrl, Shift など ）が使用された場合，`CODED`の値が格納される．
-
 #### 例
 
+いずれかのキーを押し続けると色が変わる矩形の描画
+
 ```java
-void setup(){  textSize(60);}void draw(){  background(0);  text(key, 20, 75);}
+void draw()
+{
+  if ( keyPressed == true )
+  {
+    fill(0);
+  }
+  else
+  {
+    fill(255);
+  }
+  
+  rect(25, 25, 50, 50);
+}
+```
+
+![interaction_key_pressed](images/interaction/interaction_key_pressed.gif)
+
+### 押されたキーの種類
+
+`key`
+
+直前に使用されたキーの値(英数字)が格納される．
+英数字以外の特別なキー（矢印，Alt, Ctrl, Shift など ）が使用された場合，`CODED`の値が格納される．
+
+#### 例1
+
+押したキーのテキスト描画を行う
+
+```java
+void setup()
+{  
+  textSize( 60);
+}
+void draw() 
+{  
+  background(0);  
+  text( key, 20, 75 );
+}
 ```
 
 ![interaction_key](images/interaction/interaction_key.gif)
 
-### keyCode
+#### 例2
 
-- 英数字以外の特別なキーが押されると，押されたキーの値が格納される．
-  - `UP`, `DOWN`, `LEFT`, `RIGHT`, `ALT`, `CONTROL`, `SHIFT` など
-- 通常，`if( Key == CODED )`を組み合わせて使用することが多い．
-
-#### 例
+WASBキーにより円を移動させる．
 
 ```java
-int iX = 100;int iY = 100;char cKey;void setup(){  size(200,200);  textSize(60);}void draw(){  background(0);    if( keyPressed == true && key == CODED )  {    switch( keyCode )    {      case LEFT:        cKey = '<';        iX--;        break;      case RIGHT:        cKey = '>';        iX++;        break;      case UP:        cKey = '^';        iY--;        break;      case DOWN:        cKey = 'v';        iY++;        break;    }  }  else  {    cKey = 'o';  }    text(cKey, iX, iY);}
+int iX = 100;
+int iY = 100;
+
+void setup()
+{
+  size( 200, 200 );
+}
+
+void draw()
+{
+  background( 204 );
+  
+  if( keyPressed )
+  {
+    if( key == 'a' )
+    {
+      iX--;
+    }
+    else if( key == 'd' )
+    {
+      iX++;
+    }
+    else if( key == 'w' )
+    {
+      iY--;
+    }
+    else if( key == 's' )
+    {
+      iY++;
+    }
+  }
+  
+  circle( iX, iY, 40 );
+}
+```
+
+![interaction_key_circle](images/interaction/interaction_key_circle.gif)
+
+### 特殊なキーの取得
+
+`keyCode`
+
+アロー（矢印）キーや英数字以外の特別なキーが押されると，押されたキーの値が格納される．
+
+- `UP`, `DOWN`, `LEFT`, `RIGHT`, `ALT`, `CONTROL`, `SHIFT` など
+
+#### 例1
+
+押したアロー（矢印）キーの方向に円を移動させる．
+※見た目は一つ前の例と同じ
+
+```java
+int iX = 100;
+int iY = 100;
+
+void setup()
+{
+  size( 200, 200 );
+}
+
+void draw()
+{
+  background( 204 );
+  
+  if( keyPressed )
+  {
+    if( keyCode == LEFT )
+    {
+      iX--;
+    }
+    else if( keyCode == RIGHT )
+    {
+      iX++;
+    }
+    else if( keyCode == UP )
+    {
+      iY--;
+    }
+    else if( keyCode == DOWN )
+    {
+      iY++;
+    }
+  }
+  
+  circle( iX, iY, 40 );
+}
+```
+
+![interaction_key_circle](images/interaction/interaction_key_circle.gif)
+
+#### 例2
+
+押したアロー（矢印）キーの方向にテキストを移動させ，移動方向に対応したテキストを描画する．
+
+```java
+int iX = 100;
+int iY = 100;
+char cKey;	// 文字のデータ型: char
+
+void setup()
+{  
+  size( 200, 200 );  
+  textSize( 60 );
+}
+
+void draw()
+{  
+  background( 0 );
+  
+  if( keyPressed ) 
+  {    
+    if( keyCode == LEFT )
+    {
+      cKey = '<';      // シングルクオーテーション「'」で囲む
+      iX--;
+    }
+    else if( keyCode == RIGHT )
+    {
+      cKey = '>';        
+      iX++;
+    }
+    else if( keyCode == UP )
+    {
+      cKey = '^';        
+      iY--;
+    }
+    else if( keyCode == DOWN )
+    {
+      cKey = 'v';        
+      iY++;
+    }
+  }
+  else 
+  {    
+    cKey = 'o';
+  }
+  
+  text( cKey, iX, iY );
+}
 ```
 
 ![interaction_keycode](images/interaction/interaction_keycode.gif)
+
+
+
+### 演習
+
+以下のプログラムを自由にアレンジしてみましょう
+
+演習時間：8分程度
+
+テキストを描画する簡易キャンバス
+
+- マウスのボタンによってカーソル位置に３種類の形式でテキストを描画する．
+- 描画するテキストは**直前に**押したキー．
+
+```java
+void setup()
+{
+  size( 400, 400 );
+  noStroke();
+}
+
+void draw()
+{
+  if( mousePressed )
+  {
+    if( mouseButton == LEFT )
+    {
+      fill( 0 );
+      textSize( 20 );
+    }
+    else if( mouseButton == CENTER )
+    {
+      fill( 0 );
+      textSize( 60 );  
+    }
+    else if( mouseButton == RIGHT )
+    {
+      fill( 255 );
+      textSize( 40 );      
+    }
+    
+    text( key, mouseX, mouseY );
+  }
+}
+```
+
+![interaction_key_text_canvas](images/interaction/interaction_key_text_canvas.gif)
+
+#### 作例
+
+形式は２種類に減らし，ホイールボタンで消去．
+
+![interaction_key_text_canvas_sakurei](images/interaction/interaction_key_text_canvas_sakurei.gif)
+
+
+
+### 応用例
+
+上下に跳ねるアニメーションをする円をアローキーで左右に移動させる．
+
+```java
+int iDegree = 0;  // アニメーション用
+int iX;
+int iY;
+
+void setup()
+{
+  size( 200, 200 );
+  iX = width / 2;
+  iY = height / 2;
+}
+
+void draw()
+{
+  background( 204 );
+  
+  // 地面
+  fill( 0 );
+  rect( 0, 115, width, 115 );
+  
+  if( keyPressed )
+  {
+    if( keyCode == LEFT )
+    {
+      iX--;
+    }
+    else if( keyCode == RIGHT )
+    {
+      iX++;
+    }
+
+    // キーを押している間だけアニメーションを進める
+    iDegree += 20;
+    if( iDegree > 360 )
+    {
+      iDegree = 0;
+    }
+  }
+  
+  drawAnimCircle( iX, iY );
+}
+
+void drawAnimCircle( float fOfsX, int iOfsY )
+{
+  stroke( 0 );
+  fill( 255 );
+  float fAnimY = iOfsY + 6 * sin( radians( iDegree ) );
+  ellipse( fOfsX, fAnimY, 20, 20 );
+}
+```
+
+![interaction_key_circle_anim](images/interaction/interaction_key_circle_anim.gif)
+
+## イベント
+
+マウスやキーボード入力のような特定の出来事（イベント）が起こった際にコールされる**イベント関数**を定義することができる．
+イベント関数と，イベント関数をコールするイベントの対応は下表のとおり．
+
+| イベント関数名    | イベント                       |
+| ----------------- | ------------------------------ |
+| `mouseClicked()`  | マウスボタンがクリックされた時 |
+| `mousePressed()`  | マウスボタンが押された時       |
+| `mouseReleased()` | マウスボタンが離された時       |
+| `mouseDragged()`  | マウスドラッグが行われている時 |
+| `mouseMoved()`    | マウスが動かされている時       |
+
+Processingにおいては，上表のように特定の名前の**関数を定義する**ことで，イベントが起きたときに**対応するイベント関数のブロック文が実行される**．
+
+```java
+void setup()
+{
+
+}
+
+void draw()
+{
+  
+}
+
+void mouseClicked()
+{
+  // ここにマウスボタンがクリックされた時に行う処理を記述する．
+}
+```
+
+イベント関数を用いることで，入力処理を`setup()`や`draw()`から分割し独立させることができ，メインの描画プログラムがスマートになる．
+ただし，イベント関数に記述する命令は主に**グローバル変数の更新式**であり，**描画命令を記述することは推奨しない**．
+`draw()`でスクリーンのリフレッシュを行うと，イベント関数で実行された描画命令は1フレームしか描画されないため．
+
+
+
+## マウスイベント
+
+### マウスボタンがクリックされた時．
+
+`mouseClicked()`
+
+マウスボタンが<u>押され，離された時</u>に**１度だけ**コールされる関数．
+
+#### 例
+
+マウスボタンがクリックされる毎に矩形の白黒を切り替える．
+
+
+```java
+int iColor = 0;
+
+void draw()
+{
+  fill( iColor );
+  rect( 25, 25, 50, 50 );
+}
+
+void mouseClicked()
+{
+  if( iColor == 0 ) 
+  {
+    iColor = 255;
+  }
+  else
+  {
+    iColor = 0;
+  }
+}
+```
+
+![interaction_mouseClicked](images/interaction/interaction_mouseClicked.gif)
+
+https://processing.org/reference/mouseClicked_.html
+
+### マウスボタンが押された時．
+
+`mousePressed()`
+
+マウスボタンが押された時に**１度だけ**コールされる関数．
+押され<u>続けた</u>時の処理は`mousePressed`が適当．
+
+https://processing.org/reference/mousePressed_.html
+
+### マウスボタンが離された時．
+
+`mouseReleased()`
+
+マウスボタンが離された時に**１度だけ**コールされる関数．
+
+https://processing.org/reference/mouseReleased_.html
+
+#### 例
+
+マウスを押したままポインタを動かし，離すとその間の線を描画する．
+
+```java
+int iStartX;
+int iStartY;
+int iEndX;
+int iEndY;
+
+void setup()
+{
+  size( 400, 400 );
+  iStartX = mouseX;
+  iStartY = mouseY;
+  iEndX = mouseX;
+  iEndY = mouseY;
+}
+
+void draw()
+{
+  strokeWeight( 4 );
+  line( iStartX, iStartY, iEndX, iEndY );
+}
+
+void mousePressed()
+{
+  iStartX = mouseX;
+  iStartY = mouseY;
+}
+
+void mouseReleased()
+{
+  iEndX = mouseX;
+  iEndY = mouseY;
+}
+
+```
+
+![interaction_mousepressed_released](images/interaction/interaction_mousepressed_released.gif)
+
+### マウスドラッグが行われた時．
+
+`mouseDragged()`
+
+マウスボタンが押された状態でポインタが動かされている時に継続的にコールされる関数．
+
+#### 例1
+
+マウスをドラッグすると矩形のグレー値が5ずつ増える．
+
+```java
+int iColor = 0;
+
+void draw()
+{
+  fill( iColor );
+  rect( 25, 25, 50, 50 );
+}
+
+void mouseDragged() 
+{
+  iColor += 5;
+  
+  if ( iColor > 255 ) 
+  {
+    iColor = 0;
+  }
+}
+```
+
+![interaction_mouseDragged](images/interaction/interaction_mouseDragged.gif)
+
+#### 例2
+
+マウスをドラッグするとポインタの座標に円が追従する．
+
+```java
+int iX;
+int iY;
+
+void setup()
+{
+  iX = 25;
+  iY = 25;
+}
+void draw()
+{
+  background( 204 );
+  
+  fill( 255 );
+  circle( iX, iY, 40 );
+}
+
+void mouseDragged() 
+{
+  iX = mouseX;
+  iY = mouseY;
+}
+```
+
+![interaction_mouseDragged_tsuiju](images/interaction/interaction_mouseDragged_tsuiju.gif)
+
+https://processing.org/reference/mouseDragged_.html
+
+### マウスポインタが動いている間に処理を行う．
+
+`mouseMoved()`
+
+マウスポインタが動かされており，<u>かつボタンが押されていない時</u>に継続的にコールされる関数．
+
+
+https://processing.org/reference/mouseMoved_.html
+
+
+
+### 演習
+
+乱数を使った再帰呼び出しによる静止画描画を，マウス左クリックする毎に再度実行されるようにする．
+また，右クリックで画像を保存できるようにする．
+
+#### 元となる再帰呼び出しによる静止画描画
+
+まず，下のプログラムをコピーして実行してみる．
+
+木の描画に乱数を加えたもの．
+
+```java
+void setup()
+{
+  size( 1000, 1000 );
+  background( 204 );
+  drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+```
+
+![interaction_mouseclicked_recursive_01](images/interaction/interaction_mouseclicked_recursive_01.png)
+
+#### 1. 再帰関数の呼び出しをdraw()へ切り出す
+
+`background()`も移動させる必要があることに留意．
+
+```java
+void setup()
+{
+  size( 1000, 1000 );
+}
+
+void draw()
+{
+  background( 204 );
+  drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+```
+
+#### 2. 描画フラグとなるグローバル変数の追加
+
+グローバル変数の宣言文`int iDraw;`を記述する．
+また，`iDraw`は`setup()`において`1`で初期化する．
+
+```java
+int iDraw;  // 描画フラグ(0or1)
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;	// 初期化
+}
+
+void draw()
+{
+  background( 204 );
+  drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+```
+
+#### 3. 描画フラグが1の時だけ描画を行うようにする．
+
+`draw()`ブロック内の描画命令が，`iDraw`の値が`1`の時だけ実行されるようにする．
+
+```java
+int iDraw;  // 描画フラグ(0or1)
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;  // 初期化
+}
+
+void draw()
+{
+  if( iDraw == 1 )
+  {
+    background( 204 );
+    drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+  }
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+```
+
+#### 4. 描画後に，描画フラグを0にする．
+
+静止画における全ての描画命令の後に`iDraw`に`0`を代入する．
+
+```java
+int iDraw;  // 描画フラグ(0or1)
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;  // 初期化
+}
+
+void draw()
+{
+  if( iDraw == 1 )
+  {
+    background( 204 );
+    drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+    
+    iDraw = 0;	// 描画フラグを0へ
+  }
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+```
+
+#### 5. マウス左クリックがされたら描画フラグを1にする
+
+イベント関数`mouseCliced()`を定義し，ブロック文の中で`iDraw`に`1`を代入する．
+
+```java
+int iDraw;  // 描画フラグ(0or1)
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;  // 初期化
+}
+
+void draw()
+{
+  if( iDraw == 1 )
+  {
+    background( 204 );
+    drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+    
+    iDraw = 0;	// 描画フラグを0へ
+  }
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+
+void mouseClicked()
+{
+  if( mouseButton == LEFT )
+  {
+    iDraw = 1;  // 描画フラグをオン
+  }
+}
+```
+
+左クリックをする毎に，再度異なる乱数の値によって描画結果が変わる．
+
+![interaction_mouseclicked_recursive_02](images/interaction/interaction_mouseclicked_recursive_02.gif)
+
+#### 6. 保存する画像の番号用グローバル変数の追加
+
+グローバル変数の宣言文`int iImageNo;`を記述する．
+また，`iImageNo`は`setup()`において`0`で初期化する．
+
+```java
+int iDraw;    // 描画フラグ(0or1)
+int iImageNo; // 画像番号
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;  	// 初期化
+  iImageNo = 0; // 初期化
+}
+
+void draw()
+{
+  if( iDraw == 1 )
+  {
+    background( 204 );
+    drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+    
+    iDraw = 0;  // 描画フラグを0へ
+  }
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+
+void mouseClicked()
+{
+  if( mouseButton == LEFT )
+  {
+    iDraw = 1;  // 描画フラグをオン
+  }
+}
+```
+
+#### 7. 右クリックで画像を保存する機能の追加
+
+イベント関数`mouseClicked()`に，右クリックされたら画像を保存する命令を追加する．
+また，保存後に`iImageNo`に1を加える．
+詳細は下のプログラムを参考のこと．
+
+```java
+int iDraw;    // 描画フラグ(0or1)
+int iImageNo;   // 画像番号
+
+void setup()
+{
+  size( 1000, 1000 );
+  iDraw = 1;  // 初期化
+  iImageNo = 0;
+}
+
+void draw()
+{
+  if( iDraw == 1 )
+  {
+    background( 204 );
+    drawTree( width/2, height, random( 120, 220 ), random( -100, -80 ) );
+    
+    iDraw = 0;  // 描画フラグを0へ
+  }
+}
+
+void drawTree( float fBeginX, float fBeginY, float fLength, float fDegree )
+{
+  // 終端のXY座標値
+  float fEndX = fBeginX + fLength * cos( radians( fDegree ) );
+  float fEndY = fBeginY + fLength * sin( radians( fDegree ) );
+  
+  // 線の描画
+  line( fBeginX, fBeginY, fEndX, fEndY );
+  
+  if( fLength > 2 )
+  {
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree + random( 16, 25) );
+    drawTree( fEndX, fEndY, fLength * random( 0.6, 0.8 ), fDegree - random( 16, 25) );  // 枝分かれ
+  }
+}
+
+void mouseClicked()
+{
+  if( mouseButton == LEFT )
+  {
+    iDraw = 1;  // 描画フラグをオン
+  }
+  else if( mouseButton == RIGHT )
+  {
+    save( "sakuhin" + iImageNo + ".png" );
+    iImageNo++;
+  }
+}
+```
+
+右クリックをすると，連番付きの画像ファイルが保存される．
+乱数を使った静止画において，よりよい画像をピックアップしやすくなる．
+
+![interaction_mouseclicked_recursive_03](images/interaction/interaction_mouseclicked_recursive_03.png)
+
+
+
+## キーイベント
+
+### キーが押された時
+
+`keyPressed()`
+
+いずれかのキー押されている時に**継続的に**コールされる関数．
+
+#### 例
+
+いずれかのキーが押される毎に線が横に移動する．
+
+```java
+int iX;
+
+void draw() 
+{
+  background( 204  );
+  strokeWeight( 4 );
+  line( iX, 0, iX, height );
+}
+
+void keyPressed()
+{
+  iX+=2;
+  
+  if ( iX > width )
+  {
+    iX = 0;
+  }
+}
+```
+
+![interaction_keypressed_line](images/interaction/interaction_keypressed_line.gif)
+
+https://processing.org/reference/keyPressed_.html
+
+### キーが離された時
+
+いずれかのキー離された時に**一度だけ**コールされる関数．
+
+#### 例
+
+キーを押している間に円の大きさを大きくし，キーが離された瞬間に円の大きさをリセットする．
+
+```java
+int iRadius = 4;
+int iColor = 0;
+
+void draw() 
+{
+  background( 204 );
+  
+  fill( iColor );
+  circle( 50, 50, iRadius );
+}
+
+void keyReleased()
+{
+  iRadius = 4;
+  iColor = 0;
+}
+
+void keyPressed()
+{
+  if ( iRadius < 45 )
+  {
+    iColor += 12;
+    iRadius += 2;
+  }
+}
+```
+
+![interaction_keyreleased_circle](images/interaction/interaction_keyreleased_circle.gif)
+
+https://processing.org/reference/keyReleased_.html
 
 
 
@@ -13535,59 +14712,119 @@ int iX = 100;int iY = 100;char cKey;void setup(){  size(200,200);  textSize(60);
 
 ### 概要
 
-- Graphical User Interface
-- コンピュータの画面上に表示されるグラフィックスを元に操作を行うインターフェースのこと
-- 基本の入力（マウスやキーボード）で実現するのは難しいので，ライブラリを頼る
+Graphical User Interface
+コンピュータの画面上に表示されるグラフィックスを元に操作を行うインターフェースのこと．
+基本の入力（マウスやキーボード）で実現するのは難しいので，ライブラリを用いる．
 
 ### 必要なライブラリ
 
-数種類あるのだが，ここでは日本語ドキュメントが豊富なControlP5を使用する．
-
-田所淳（たどころあつし）先生のドキュメントが有名
-[yoppa org](https://yoppa.org/)
-
-- ライブラリ名：ControlP5
-  - Contributed libraries（インストールの必要あり）
+数種類あるが，ここでは日本語ドキュメントが豊富なControlP5を使用する．
+ライブラリ名：ControlP5
+Contributed libraries（インストールの必要あり）
 
 ### 導入方法
 
+1. ライブラリのインストール
+
+   - 「スケッチ 」> 「ライブラリをインポート」 > 「ライブラリを追加」
+
+     ![interaction_gui_lib_install01](images/interaction/interaction_gui_lib_install01.png)
+
+   - 「Contribution Manager」から，ライブラリを検索
+
+     検索窓に`ControlP5`を入力してフィルタリング
+
+     ![interaction_gui_lib_install02](images/interaction/interaction_gui_lib_install02.png)
+
+   - ライブラリを選択後，Installボタンをクリックしインストール開始
+
+     ![interaction_gui_lib_install03](images/interaction/interaction_gui_lib_install03.png)
+
+
+2. ライブラリのインポート
+
+   - 「スケッチ」メニュー ＞ 「ライブラリをインポート」 ＞ ControlP5を選択
+
+     ![interaction_gui_lib_import01](images/interaction/interaction_gui_lib_import01.png)
+
+   - 上記を選択すると，プログラムの一行目に`import ライブラリ名.*;`の一文が追加される．
+
+     ![interaction_gui_lib_import02](images/interaction/interaction_gui_lib_import02.png)
+
+### ControlP5を使う流れ
+
 クラスの概念を理解していないと難しいので，完全に理解する必要はありません．
 
-1. ControlP5を宣言
-   GUIのすべてのパーツを管理するオブジェクト
+1. GUIのすべてのパーツを管理するControlP5オブジェクトを作成する．
 
    `ControlP5 cp5;`
 
-2. GUIパーツを宣言
-   パーツの種類によって宣言の**型**が異なる
-
-   - `Slider slider; // スライダー `
-   - `Slider2D slider2d; // 2Dスライダー `
-   - `Toggle toggle; // トグルスイッチ `
-   - `ColorWheel colowWheel; // カラーホイール `
-
-3. setup関数内で，ControlP5を初期化
-
-   ` cp5 = new ControlP5(this);`
-
-4. setup関数内で，ControlP5にGUIパーツを追加
-   パーツの種類によって書式が異なる
+2. GUIパーツを作成する．
+   パーツの種類によって宣言の型が異なる
 
    ```java
-   slider = cp5.addSlider("ID")	// スライダー    .setRange(0, 255)   		//値の範囲    .setValue(0)        		//初期値    .setPosition(50, 50)		//表示位置    .setSize(200, 24);  		//スライダの大きさ 
+   Slider slider; 					// スライダー
+   Slider2D slider2d;			// 2Dスライダー
+   Toggle toggle;					// トグルスイッチ
+   ColorWheel colowWheel;  // カラーホイール
    ```
 
-   ```java
-   slider2d = cp5.addSlider2D("ID") // スライダー2D    .setMinMax(0, 5, 255, 250)   //値の範囲    .setValue(0,250)             //初期値    .setPosition(50, 50)         //位置    .setSize(100, 100);          //スライダの大きさ }
-   ```
+3. ControlP5を初期化する．
 
    ```java
-   toggle = cp5.addToggle("ANIM") // トグルスイッチ    .setPosition(20, 20)		   //位置    .setSize(24, 24);			   //大きさ
+   cp5 = new ControlP5(this);
    ```
 
+4. ControlP5オブジェクトにGUIパーツを追加する．
+   ※見やすいように改行をしている．
+   パーツの種類によって書式が異なる．
+
+   - スライダー
+
+     ```java
+     slider = cp5.addSlider("ID")
+     .setRange(0, 255)               //値の範囲
+     .setValue(0)                    //初期値
+     .setPosition(50, 50)            //表示位置
+     .setSize(200, 24);              //スライダの大きさ 
+     ```
+
+   - スライダー（2D）
+
+     ```java
+     slider2d = cp5.addSlider2D("ID")
+     .setMinMax(0, 5, 255, 250)      //値の範囲
+     .setValue(0,250)                //初期値
+     .setPosition(50, 50)            //位置
+     .setSize(100, 100);             //スライダの大きさ
+     ```
+
+   - トグルスイッチ
+
+     ```java
+     toggle = cp5.addToggle("ANIM")
+     .setPosition(20, 20)            //位置
+     .setSize(24, 24);               //大きさ
+     ```
+
+   - カラーホイール
+
+     ```java
+     colWheel = cp5.addColorWheel("RECT COLOR")
+     .setPosition(10, 10)     			 //位置
+     .setRGB(color(0,0,0));   			 //初期色
+     ```
+
+5. GUIパーツから値を取得する．
+
+   スライダーの例
+
    ```java
-   colWheel = cp5.addColorWheel("RECT COLOR") // カラーホイール    .setPosition(10, 10)     //位置    .setRGB(color(0,0,0));   //初期値 
+   slider.getValue()
    ```
+
+具体的な使い方は次の項を参照のこと．
+
 
 ### GUIパーツ別の実装方法
 
@@ -13595,18 +14832,91 @@ int iX = 100;int iY = 100;char cKey;void setup(){  size(200,200);  textSize(60);
 
 １つのパラメータを制御できる．
 
-##### 例: 矩形の色を変更
+##### 例1
+
+スライダーで矩形の色を変更する．
 
 ```java
-import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // スライダーを宣言Slider sliderRectColor; // 矩形の色 void setup(){  size(500, 500);    // ControlP5を初期化  cp5 = new ControlP5(this);    // スライダーを追加  sliderRectColor = cp5.addSlider("RECT COLOR")    .setRange(0, 255)   //0~255の間    .setValue(0)        //初期値    .setPosition(50, 50)//位置    .setSize(200, 24);  //スライダの大きさ } void draw(){  background(255);    // スライダーの値を取得し，fill値を設定  fill(sliderRectColor.getValue());  rect(125, 125, 250, 250);}
+import controlP5.*; // ControlP5をcp5として宣言
+
+ControlP5 cp5; 
+
+// スライダーを宣言
+
+Slider sliderRectColor; // 矩形の色
+
+void setup()
+{
+  size( 500, 500 );
+  
+  // ControlP5を初期化
+  cp5 = new ControlP5( this );
+  
+  // ControlP5にスライダーを追加する．
+  sliderRectColor = cp5.addSlider( "RECT COLOR" )
+  .setRange( 0, 255 )   //0~255の間
+  .setValue( 0 )        //初期値
+  .setPosition( 50, 50 )//位置
+  .setSize( 200, 24 );  //スライダの大きさ
+}
+
+void draw()
+{
+  background( 255 ) ;
+  
+  // スライダーの値を取得し，fill値を設定
+  fill( sliderRectColor.getValue() );
+  rect( 125, 125, 250, 250 );
+}
 ```
 
 ![library_gui_slider_single](images/library/library_gui_slider_single.gif)
 
-##### 例: 矩形の色と大きさを変更
+##### 例2
+
+２つのスライダーで矩形の色と大きさを変更する．
 
 ```java
-import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // スライダーを宣言Slider sliderRectColor; // 矩形の色Slider sliderRectSize; // 矩形の大きさ void setup(){  size(500, 500);    // ControlP5を初期化  cp5 = new ControlP5(this);    // スライダーを追加  sliderRectColor = cp5.addSlider("RECT COLOR")    .setRange(0, 255)   //0~255の間    .setValue(0)        //初期値    .setPosition(50, 50)//位置    .setSize(200, 24);  //スライダの大きさ    sliderRectSize = cp5.addSlider("RECT SIZE")    .setRange(5, 250)   //5~250の間    .setValue(250)      //初期値    .setPosition(50, 80)//位置    .setSize(200, 24);  //スライダの大きさ } void draw(){  background(255);    rectMode(CENTER);  // スライダーの値を取得し，fill値を設定  fill(sliderRectColor.getValue());  // スライダーの値を取得し，矩形の大きさを設定  rect(width/2, height/2, sliderRectSize.getValue(), sliderRectSize.getValue());}
+import controlP5.*; // ControlP5をcp5として宣言
+
+ControlP5 cp5; // スライダーを宣言
+
+Slider sliderRectColor; // 矩形の色
+Slider sliderRectSize;  // 矩形の大きさ
+
+void setup()
+{
+  size(500, 500);
+  
+  // ControlP5を初期化
+  cp5 = new ControlP5(this);
+  
+  // スライダーを追加
+  sliderRectColor = cp5.addSlider("RECT COLOR")
+  .setRange( 0, 255 )   //0~255の間
+  .setValue( 0 )        //初期値
+  .setPosition( 50, 50 )//位置
+  .setSize( 200, 24 );  //スライダの大きさ
+  
+  // スライダーを追加
+  sliderRectSize = cp5.addSlider("RECT SIZE")
+  .setRange( 5, 250 )   //5~250の間
+  .setValue( 250 )      //初期値
+  .setPosition( 50, 80 )//位置
+  .setSize( 200, 24 );  //スライダの大きさ
+}
+
+void draw()
+{
+  background(255);
+  rectMode(CENTER);
+
+  // スライダーの値を取得し，fill値を設定
+  fill( sliderRectColor.getValue() );
+  
+  // スライダーの値を取得し，矩形の大きさを設定
+  rect( width/2, height/2, sliderRectSize.getValue(), sliderRectSize.getValue() );
+}
 ```
 
 ![library_gui_slider_double](images/library/library_gui_slider_double.gif)
@@ -13615,34 +14925,141 @@ import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // スライ
 
 ２つのパラメータを制御できる．
 
-##### 例: 矩形の色と大きさを変更
+##### 例
+
+2Dスライダーで矩形の色と大きさを変更する．
 
 ```java
-import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // 2Dスライダーを宣言Slider2D sliderRect; // 矩形の色と大きさ void setup(){  size(500, 500);    // ControlP5を初期化  cp5 = new ControlP5(this);    // スライダーを追加  sliderRect = cp5.addSlider2D("RECT COLOR SIZE")    .setMinMax(0, 5, 255, 250)   // 0~255の間及び5~250の間    .setValue(0,250)             //初期値    .setPosition(50, 50)         //位置    .setSize(100, 100);          //スライダの大きさ } void draw(){  background(255);    rectMode(CENTER);  // スライダーの値を取得し，fill値を設定  fill(sliderRect.getArrayValue()[0]);  // スライダーの値を取得し，矩形の大きさを設定  rect(width/1.5, height/2, sliderRect.getArrayValue()[1], sliderRect.getArrayValue()[1]);}
+import controlP5.*; // ControlP5をcp5として宣言
+
+ControlP5 cp5; // 2Dスライダーを宣言
+
+Slider2D sliderRect; // 矩形の色と大きさ
+
+void setup()
+{
+  size(500, 500);
+  
+  // ControlP5を初期化
+  cp5 = new ControlP5(this);
+
+  // スライダーを追加
+  sliderRect = cp5.addSlider2D("RECT COLOR SIZE")
+  .setMinMax( 0, 5, 255, 250 )   // 0~255の間及び5~250の間
+  .setValue( 0,250 )             //初期値
+  .setPosition( 50, 50 )         //位置
+  .setSize( 100, 100 );          //スライダの大きさ
+}
+
+void draw()
+{
+  background(255);
+  rectMode(CENTER);
+
+  // スライダーの値を取得し，fill値を設定
+  fill( sliderRect.getArrayValue()[0] );
+
+  // スライダーの値を取得し，矩形の大きさを設定
+  rect( width/1.5, height/2, sliderRect.getArrayValue()[1], sliderRect.getArrayValue()[1] );
+}
 ```
 
 ![library_gui_2dslider](images/library/library_gui_2dslider.gif)
 
 #### トグルスイッチ（Toggle）
 
-スイッチのように，オンかオフかの２値を取得できる．
+スイッチのように，オンかオフかの２値(true, false)を取得できる．
 
-##### 例: 矩形の移動アニメーションのオンオフ
+##### 例
+
+トグルスイッチにより，矩形の移動アニメーションのオンオフを行う．
 
 ```java
-import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // トグルボタンを宣言Toggle toggleAnim; // アニメーションのon,off int iPosX; void setup(){  size( 400, 400 );  colorMode( RGB, 1, 1, 1 );  noStroke();  frameRate( 20 );    // ControlP5を初期化  cp5 = new ControlP5(this);    // トグルスイッチを追加  toggleAnim = cp5.addToggle("ANIM")    .setPosition(20, 20)//位置    .setSize(24, 24);  //大きさ    iPosX = 0;      // iPosXの初期化}void draw(){  fill( 1, 1, 1 );  rect( 0, 0, width, height );    // もしトグルスイッチがONだったら  if(toggleAnim.getState() )  {    iPosX += 4;  }    if( iPosX > width ) // もしX座標値がスクリーンの外なら  {    iPosX = 0;        // X座標値を0に戻す  }    fill( 0, 0, 0 );  rect( iPosX, height/2-10, 20, 20 );}
+import controlP5.*; // ControlP5をcp5として宣言
+
+ControlP5 cp5;
+
+// トグルボタンを宣言
+Toggle toggleAnim; // アニメーションのon,off
+
+int iPosX;
+
+void setup()
+{
+  size( 400, 400 );
+
+  noStroke();
+  frameRate( 20 );
+
+  // ControlP5を初期化
+  cp5 = new ControlP5(this);
+  
+  // トグルスイッチを追加
+  toggleAnim = cp5.addToggle("ANIM")
+  .setPosition(20, 20)//位置
+  .setSize(24, 24);   //大きさ
+  
+  iPosX = 0;      // iPosXの初期化
+}
+
+void draw()
+{
+  fill( 204 );
+  rect( 0, 0, width, height );    // もしトグルスイッチがONだったら
+
+  if( toggleAnim.getState() )
+  {
+    iPosX += 4;
+  }
+
+  if( iPosX > width ) // もしX座標値がスクリーンの外なら
+  {
+    iPosX = 0;        // X座標値を0に戻す
+  }
+  
+  fill( 255 );
+  rect( iPosX, height/2-10, 20, 20 );
+}
 ```
 
 ![library_gui_toggle](images/library/library_gui_toggle.gif)
 
 #### カラーホイール(ColorWheel)
 
-2Dスライダーに近い感覚でカラー値をコントロールできる．
+3つのカラー値をコントロールできる．
 
-##### 例: 
+##### 例
+
+カラーホイールで矩形のRGB値を変更する．
 
 ```java
-import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // カラーホイールを宣言ColorWheel colWheelRect; // 矩形の色 void setup(){  size(400, 400);    // ControlP5を初期化  cp5 = new ControlP5(this);    // カラーホイールを追加  colWheelRect = cp5.addColorWheel("RECT COLOR")    .setPosition(10, 10)     //位置    .setRGB(color(0,0,0));   //初期値 } void draw(){  background(155);    // カラーホイールの値を取得し，fill値を設定  fill(colWheelRect.getRGB());  rect(width/1.8, height/1.8, 150, 150);}
+import controlP5.*; // ControlP5をcp5として宣言
+
+ControlP5 cp5; // カラーホイールを宣言
+
+ColorWheel colWheelRect; // 矩形の色
+
+void setup()
+{
+  size(400, 400);
+
+  // ControlP5を初期化
+  cp5 = new ControlP5(this);
+
+  // カラーホイールを追加
+  colWheelRect = cp5.addColorWheel("RECT COLOR")
+  .setPosition(10, 10)     //位置
+  .setRGB(color(0,0,0));   //初期値
+}
+
+void draw()
+{
+  background(155);
+
+  // カラーホイールの値を取得し，fill値を設定
+  fill( colWheelRect.getRGB( ));
+  rect( width/1.8, height/1.8, 150, 150 );
+}
 ```
 
 ![library_gui_colorwheel](images/library/library_gui_colorwheel.gif)
@@ -13651,7 +15068,7 @@ import controlP5.*; // ControlP5をcp5として宣言ControlP5 cp5; // カラー
 
 ### 概要
 
-コンピューターに接続したキャプチャーデバイス（カメラ）からビデオデータを取得し，ムービーを再生する．
+コンピューターに接続したキャプチャーデバイス（カメラ）からビデオデータを取得し，Processing上で再生する．
 
 ### 必要なライブラリ
 
@@ -13670,7 +15087,50 @@ USB Cameras, IEEE 1394 (Firewire) Cameras
 2. 以下のプログラムをProcessingで実行
 
 ```java
-import processing.video.*; Capture cam; void setup(){  size(640, 480);   String[] cameras = Capture.list();    if (cameras.length == 0)  {    println("There are no cameras available for capture.");    exit();  }  else  {    println("Available cameras:");    for (int i = 0; i < cameras.length; i++)    {      print( "cameras["+i+"]: " );      println(cameras[i]);    }        // The camera can be initialized directly using an     // element from the array returned by list():    cam = new Capture(this, cameras[0]);    cam.start();       }      } void draw(){  if (cam.available() == true)  {    cam.read();  }  image(cam, 0, 0);  // The following does the same, and is faster when just drawing the image  // without any additional resizing, transformations, or tint.  //set(0, 0, cam);}
+import processing.video.*;
+
+Capture cam;
+
+void setup()
+{
+  size( 640, 480 );
+
+  String[] cameras = Capture.list();
+
+  if( cameras.length == 0 )
+  {
+      println("There are no cameras available for capture.");
+      exit();
+  }
+  else
+  {
+    println("Available cameras:");
+    for ( int i = 0; i < cameras.length; i++ )
+    {
+      print( "cameras["+i+"]: " );
+      println( cameras[i] );
+    }
+  
+    // The camera can be initialized directly using an
+    // element from the array returned by list():
+    cam = new Capture( this, cameras[0] );
+    cam.start();
+  }
+}
+
+void draw()
+{
+  if( cam.available() == true )
+  {
+    cam.read();
+  }
+  
+  image(cam, 0, 0);
+
+  // The following does the same, and is faster when just drawing the image
+  // without any additional resizing, transformations, or tint.
+  //set(0, 0, cam);
+}
 ```
 
 
@@ -13681,14 +15141,11 @@ import processing.video.*; Capture cam; void setup(){  size(640, 480);   String[
 
 4. 使用したいカメラの要素番号をキャプチャー初期化時に指定するよう，プログラムを書き換える．
 
+   このサンプルの場合，HD Pro Webcam C920を使いたいので，`cameras[1]`
 
-  - このサンプルの場合，HD Pro Webcam C920を使いたいので，`cameras[1]`
-
-    ![library_capture_rewrite](images/library/library_capture_rewrite.png)
+   ![library_capture_rewrite](images/library/library_capture_rewrite.png)
 
 5. 実行して正しくキャプチャーできているか確認する
-
-
 
 https://processing.org/reference/libraries/video/Capture.html
 
@@ -13699,7 +15156,62 @@ https://processing.org/reference/libraries/video/Capture.html
 カメラ画像のピクセル情報を取得してモザイク状に描画する．
 
 ```java
-import processing.video.*; Capture cam; void setup(){  size(640, 480);   String[] cameras = Capture.list();    if (cameras.length == 0)  {    println("There are no cameras available for capture.");    exit();  }  else  {    println("Available cameras:");    for (int i = 0; i < cameras.length; i++)    {      print( "cameras["+i+"]: " );      println(cameras[i]);    }        // The camera can be initialized directly using an     // element from the array returned by list():    cam = new Capture(this, cameras[1]);    cam.start();       }    smooth();  noStroke();} void draw(){  if (cam.available() == true)  {    cam.read();        background(0);    cam.loadPixels();         //カメラ画像のpixel情報をロード    int iDiameter = 20;       //円の直径    // カメラの映像から、円の直径の間隔ごとに色情報を取得し、その色で円を描画    for(int iPixelY = iDiameter / 2 ; iPixelY < height ; iPixelY += iDiameter)    {      for(int iPixelX = iDiameter / 2 ; iPixelX < width ; iPixelX += iDiameter)      {        fill(cam.pixels[iPixelY*width + iPixelX]);        ellipse(iPixelX, iPixelY, iDiameter, iDiameter);      }    }  }}
+import processing.video.*;
+
+Capture cam;
+
+void setup()
+{
+  size( 640, 480 );
+
+  String[] cameras = Capture.list();
+
+  if( cameras.length == 0 )
+  {
+    println("There are no cameras available for capture.");
+    exit();
+  }
+  else
+  {
+    println("Available cameras:");
+  
+    for( int i = 0; i < cameras.length; i++ )
+    {
+      print( "cameras["+i+"]: " );
+      println(cameras[i]);
+    }
+  
+    // The camera can be initialized directly using an
+    // element from the array returned by list():
+    cam = new Capture(this, cameras[1]);
+    cam.start();
+  }
+
+  smooth();
+  noStroke();
+}
+
+void draw()
+{
+  if( cam.available() == true )
+  {
+    cam.read();
+    background(0);
+    cam.loadPixels();         //カメラ画像のpixel情報をロード
+    
+    int iDiameter = 20;       //円の直径
+  
+    // カメラの映像から、円の直径の間隔ごとに色情報を取得し、その色で円を描画
+    for( int iPixelY = iDiameter / 2 ; iPixelY < height ; iPixelY += iDiameter )
+    {
+      for(int iPixelX = iDiameter / 2 ; iPixelX < width ; iPixelX += iDiameter)
+      {
+        fill( cam.pixels[iPixelY*width + iPixelX] );
+        ellipse(iPixelX, iPixelY, iDiameter, iDiameter);
+      }
+    }
+  }
+}
 ```
 
 ![library_capture_sample_ss](images/library/library_capture_sample_ss.gif)
