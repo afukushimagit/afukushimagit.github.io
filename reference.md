@@ -15220,394 +15220,252 @@ void draw()
 
 # クラス
 
-## クラスとは
+## 概要
 
-プログラムにおいて，現実世界の物体（オブジェクト）を抽象化した設計図のようなもの
+### クラスとは
 
-## なぜクラスを学ぶのか
+- intやfloatといった「型」と基本的には同じもの．
+- 関数を自分で作ったように，**自分で作る（定義する）ことができる「型」**である．
+- **データと関数が共存**して構造体のようにひとまとまりになったもの．
+  - 構造体とは，複数のデータをひとまとめにしたデータ構造の一種．
+- オブジェクト指向プログラミング独特で，かつ中心的な概念．
+
+「Human」クラスの定義の例
+
+```java
+class Human
+{
+  Human( int iTall, int iWeight )
+  {
+    m_iAge = 0;
+    m_iTall = iTall;
+    m_iWeight = iWeight;
+  }
+  
+  void grow()
+  {
+    m_iTall += 2;
+    m_iAge ++;
+    m_iWeight += 3;
+  }
+  
+  int m_iAge;    // 年齢
+  int m_iTall;   // 身長
+  int m_iWeight; // 体重
+}
+```
+
+#### オブジェクト指向プログラミング
+
+object-oriented programming (OOP)
 
 - 現在のソフトウェア開発のメインストリーム
-  - **オブジェクト指向プログラミング**
   - C++, C#, Java, Delphi, Smalltalkなど
-  
-- Processingに限らず，ライブラリの多くはクラスを使用している
-  - ControlP5, Capture はクラスである
-- プログラミングで，より高度なことを洗練された方法で行いたいなら推奨
+
+- オブジェクト指向的にシステムの仕様をとらえ，それをプログラムに落としていく独特の手法
+- プログラミングで，より高度なことを洗練された方法で行える
   - クラスを使わなければ，プログラムがより複雑に見づらくなっていく
 
-## オブジェクト指向プログラミング
+### 実行時の動き
 
- object-oriented programming (OOP)
+- クラスは「型」であるため，宣言文を記述して**クラスの実体**を生成する必要がある．
+- そのよう実体を**インスタンス**と呼ぶ．
+- **インスタンスの関数をコールする**ことでプログラムの処理を進めていく．
 
-### 概念
+「Human」クラスの実行の例
 
-「犬」を対象とした例
+```java
+Human me;
 
-1. （現実世界における）オブジェクトのひな型を定義する．（抽象化）
-   - 状態
-   
-     - 毛並み
-   
-     - 耳の形
-   
-     - 尻尾の形
-   
-   - 振る舞い
-   
-     - 走る
-   
-     - 吠える
-   
-     - 食べる
-   
-     - 寝る
+void setup()
+{
+  me = new Human( 170, 60 );  // インスタンスの生成．
+}
 
-![class_concept_dog_abstract](images/class/class_concept_dog_abstract.png)
+void draw()
+{
+  me.grow();  // インスタンスの関数をコールする．
+}
 
-2. インスタンスを作成（具象化）する．
-   - 状態
-     - 毛並み：イエロー，クリーム，ブラウン，ブラック
-     - 耳の形：立ち耳，垂れ耳，折れ耳
-     - 尻尾の形：巻き尾，立ち尾，垂れ尾，リス尾，ボブ
+class Human
+{
+  Human( int iTall, int iWeight )
+  {
+    m_iAge = 0;
+    m_iTall = iTall;
+    m_iWeight = iWeight;
+  }
+  
+  void grow()
+  {
+    m_iTall += 2;
+    m_iAge ++;
+    m_iWeight += 3;
+  }
+  
+  
+  int m_iAge;    // 年齢
+  int m_iTall;   // 身長
+  int m_iWeight; // 体重
+}
+```
 
-![class_concept_dogs_concrete](images/class/class_concept_dogs_concrete.png)
+## クラスの定義
 
+`class`
 
+### クラスの要素
 
-3. インスタンスの振る舞いを実行する．
-   - 振る舞い
-     - 走る
-     - 吠える
-     - 食べる
-     - 寝る
+クラスは以下の要素で構成される
 
-![class_concept_dogs_behavior](images/class/class_concept_dogs_behavior.png)
+- フィールド
+  - 変数や配列
+- メソッド
+  - 関数
+- コンストラクタ
+  - 初期化用関数
 
-### キーワード
+「Human」クラスの定義の例
 
-以下がクラスを習得するのに理解しなければならないキーワード．
+![class_youso](images/class/class_youso.png)
 
-- **クラス** `Class`
-  - **フィールド** `Field`
-  - **メソッド** `Method`
-    - **コンストラクタ** `Constructor`
+このように，<u>クラスの持つ</u>データや関数は特別な呼称となっている．
+主なプログラミング言語別の呼称は下の表のとおり．
 
-- **インスタンス** `Instance`
+| クラスの持つ要素     | Java       | C#         | C++        |
+| -------------------- | ---------- | ---------- | ---------- |
+| データ（変数や配列） | フィールド | フィールド | メンバ変数 |
+| 関数                 | メソッド   | メソッド   | メンバ関数 |
 
-### 概念とキーワードの対応
-
-各キーワードは，前述の概念と下記のように対応している．
-
-- **クラス** `Class`：<u>オブジェクトのひな型</u>
-  - **フィールド** `Field`：<u>状態</u>
-  - **メソッド** `Method`：<u>振る舞い</u>
-    - **コンストラクタ** `Constructor`：<u>状態の初期化</u>
-
-- **インスタンス** `Instance`：<u>具象化されたオブジェクト</u>
-
-
-
-### クラス「人」の例
-
-#### クラス「人」を定義
-
-![class_concept_human_abstract](images/class/class_concept_human_abstract.jpg)
-
-##### フィールド
-
-- 身長
-- 体重
-- 性別
-- 血液型．．．
-
-##### メソッド
-
-- 喜ぶ，褒める，照れる，指さす，書く．．．
-
-#### インスタンスを作成
-
-インスタンスは，具象化された特定の人を指す.
-
-![class_concept_human_concrete](images/class/class_concept_human_concrete.png)
-
-
-
-##### フィールド
-
-- 身長: 168cm
-- 体重: 62kg
-- 性別: 男
-- 血液型: A
-
-#### インスタンスのメソッドを実行
-
-メインプログラムから任意のタイミングでメソッドを実行する．
-
-##### メソッド
-
-- 喜ぶ，褒める，照れる，指さす，書く．．．
-
-![class_concept_human_concrete_behaviors](images/class/class_concept_human_concrete_behaviors.png)
-
-https://processing.org/tutorials/objects/
-https://docs.oracle.com/javase/tutorial/java/concepts/index.html
-
-
-
-## class
-
-### 概要
-
-- クラスを宣言，定義するためのキーワード．
-
-- クラスは以下のもので構成される
-  - フィールド
-    - データ（変数や配列）
-  - メソッド
-    - 関数
-    - コンストラクタ（初期化用関数）
-- クラスを使うための手順
-  1. クラスの定義を行う
-  2. クラスのインスタンスを作成する．
-  3. インスタンスを初期化する．
-  4. インスタンスのメソッドを呼ぶ（Call）
+ProcessingはJavaをベースとしているので，本授業ではJava準拠の呼称を用いる．
 
 ### クラスの定義
 
-##### 書式（全体）
+#### 書式
 
-クラス名は**一文字目を必ず大文字**に
+クラス名は**一文字目を必ず大文字**にする必要がある．
 
 ```java
 class クラス名
-{
-  /* フィールドの変数を宣言 */
-  変数の型 変数名;
- 	
-  /* コンストラクタの定義 */
+{	
+  /* コンストラクタ */
   クラス名( 仮引数 )
   {
-    // すべてのフィールドの変数を初期化する命令
+
   }
   
-  /* メソッドの定義 */
+  /* メソッド */
   void メソッド名( 仮引数 )
   {
-    // (命令)文
-    //   フィールドの変数にアクセス可  
+    
   }
+  
   返り値の型 メソッド名( 仮引数 )
   {
-    // (命令)文
-    //   フィールドの変数にアクセス可
   
     return 返り値;
   }
-}
-```
-
-##### フィールドの変数を宣言
-
-- 従来の変数や配列の宣言文と同様
-- 複数の変数を宣言可能
-
-```java
-変数の型 変数名;
-```
-
-##### コンストラクタの定義
-
-- **クラス名をそのまま関数名**として関数を定義する．
-- 関数の**返り値**（voidなど）**の記述を行わない**．
-
-- フィールドの全ての変数を初期化する命令文を記述する．
-- 仮引数は任意の数(0個もOK)を指定できる．
-
-```java
-クラス名( 仮引数 )
-{
-  // すべてのフィールドの変数を初期化する命令
-}
-```
-
-##### メソッドの定義
-
-- 従来の関数の定義と同様
-
-- フィールドの変数にアクセスできる．
-- 仮引数は任意の数(0個もOK)を指定できる．
-- メソッドの複数定義可
-
-```java
-void メソッド名( 仮引数 )
-{
-  // (命令)文
-  //   フィールドの変数にアクセス可  
-}
-
-返り値の型 メソッド名( 仮引数 )
-{
-  // (命令)文
-  //   フィールドの変数にアクセス可
-    
-  return 返り値;
-}
-```
-
-#### 「Car」クラスの例
-
-##### 定義全体
-
-```java
-class Car
-{ 
-  float m_fPosX;    // 座標値X
-  float m_fPosY;    // 座標値Y
-  float m_fSpeedX;  // スピードX
-  int   m_iColorHue;// 色(Hue)
   
-  // コンストラクタ（初期化）
-  Car ( int iColorHue )
-  {  
-    m_fPosX = width/2;
-    m_fPosY = height/2;
-    m_iColorHue = iColorHue;
-    m_fSpeedX = 1;
-  } 
-  
-  // 車を表示する
-  void display()
-  { 
-    pushMatrix();
-    translate( m_fPosX, m_fPosY );
-    
-    // body
-    fill( m_iColorHue, 255, 255 );
-    rect( 0, 0, 40, 20 );
-    
-    // tires
-    fill( 0, 0, 20 );
-    circle( 5, 20, 10 );
-    circle( 35, 20, 10 );
-    
-    popMatrix();
-  }
-  
-  // 車を進める
-  void drive()
+  /* フィールド */
+  変数の型 変数名;
+}
+```
+
+#### フィールド
+
+```java
+// Humanクラスの例
+
+  int m_iAge;    // 年齢
+  int m_iTall;   // 身長
+  int m_iWeight; // 体重
+```
+
+従来の変数や配列の宣言文と同様の記述方法．
+
+#### コンストラクタ
+
+クラス特有のため，少し独特の記述方法．
+
+```java
+// Humanクラスの例
+
+  Human( int iTall, int iWeight )
   {
-    m_fPosX += m_fSpeedX;
-    if( m_fPosX > width )
-    {
-      m_fPosX = 0;
-    }
-  }
-} 
-```
-
-##### フィールド
-
-- 従来の変数や配列の定義と同様
-- この例ではフィールドを通常の変数と区別しやすくするため，初めに`m_`を付けている．
-
-```java
-  float m_fPosX;    // 座標値X
-  float m_fPosY;    // 座標値Y
-  float m_fSpeedX;  // スピードX
-  int   m_iColorHue;// 色(Hue)
-```
-
-##### メソッド（コンストラクタ）
-
-- **クラス名をそのまま関数名**として関数を定義する．
-- 関数の**返り値**（voidなど）**の記述を行わない**．
-
-- フィールドの全ての変数を初期化する必要がある．
-- 仮引数は任意の数(0個もOK)を指定できる．
-  - この例では `int iColorHue`の１つ
-
-```java
-  // コンストラクタ（初期化）
-  Car ( int iColorHue )
-  {  
-    m_fPosX = width/2;
-    m_fPosY = height/2;
-    m_iColorHue = iColorHue;
-    m_fSpeedX = 1;
+    m_iAge = 0;
+    m_iTall = iTall;
+    m_iWeight = iWeight;
   }
 ```
 
-##### メソッド
+- クラス名と同じ名前の関数を定義する．
+- voidの記述を行わない．
 
-- フィールドの変数にアクセスできる．
+- ブロック文に，フィールドの全ての変数を初期化する命令文を記述する．
 - 仮引数は任意の数(0個もOK)を指定できる．
 
+#### メソッド
+
 ```java
-  // 車を表示する
-  void display()
-  { 
-    pushMatrix();
-    translate( m_fPosX, m_fPosY );
-    
-    // body
-    fill( m_iColorHue, 255, 255 );
-    rect( 0, 0, 40, 20 );
-    
-    // tires
-    fill( 0, 0, 20 );
-    circle( 5, 20, 10 );
-    circle( 35, 20, 10 );
-    
-    popMatrix();
-  }
-  
-  // 車を進める
-  void drive()
+  void grow()
   {
-    m_fPosX += m_fSpeedX;
-    if( m_fPosX > width )
-    {
-      m_fPosX = 0;
-    }
+    m_iTall += 2;
+    m_iAge ++;
+    m_iWeight += 3;
   }
 ```
 
-### クラスのインスタンスを作成する
+- 従来の関数の定義と同様の記述方法．
+  - 返り値のあるメソッドも可
+- 複数定義可．
+- ブロック文の中で，フィールドの変数を読み書きできる．
 
-- クラスを使うには，クラスのインスタンスを作成し，さらに初期化する必要がある．
-  - クラスの定義はあくまでひな型の作成
+## クラスを使用する
 
-#### インスタンスの作成
+クラスの定義後，クラスを使用するには以下のステップへ経る必要がある．
 
+- （クラスの）インスタンスの宣言
+- インスタンスの生成
+- メソッドのコール
+
+「Human」クラスの実行の例
+
+![class_instance_works](images/class/class_instance_works.png)
+
+### インスタンスの宣言
+
+前述の通りクラスは「型」であるため，クラスを使うにはクラスのインスタンス（実体）を作成する必要がある．
 基本的には関数ブロックの外（プログラムの最初）に記述する．
 
-##### 書式
+#### 書式
 
 ```java
 クラス名 インスタンスの名前;
 ```
 
-```java
-クラス名[] インスタンス配列の名前 = new クラス名[要素数];	// １次元配列に複数のインスタンスを作成
-```
+#### 書式（配列）
 
-- インスタンス名は任意の名前を付けることができる
-  - 変数名の時と同様
-- クラス名が，<u>変数宣言時における型と同じような働きをしている</u>ことに注目
-- この手順により，**コンピュータのメモリ上にインスタンス毎のデータ（フィールドの変数）が保持**される．
-  - インスタンス毎に固有のデータを持つことになる．
-
-##### 「Car」クラスの例
+インスタンスを複数作成する場合は，配列形式で宣言すると便利．
 
 ```java
-Car myCar;	// Carインスタンスを宣言
+クラス名[] インスタンス配列の名前 = new クラス名[要素数];
+```
+
+インスタンス名は任意の名前を付けることができる．
+
+#### 例
+
+「Human」クラスのインスタンスの宣言
+
+```java
+Human me;
 ```
 
 ```java
-Car[] myCars = new Car[8];	// Carインスタンス配列を宣言（8つ）
+Human[] people = new Human[8];
 ```
 
-### インスタンスの初期化
+### インスタンスの生成
 
 基本的にはsetup関数内に記述する．
 
@@ -15617,50 +15475,175 @@ Car[] myCars = new Car[8];	// Carインスタンス配列を宣言（8つ）
 インスタンス名 = new クラス名( 引数 );
 ```
 
-- インスタンスに対し，**コンストラクタが実行される**．
-  - コンストラクタ内でフィールドの変数が初期化される．
-- 引数は，コンストラクタの仮引数に渡される．
-  - 引数の数は，コンストラクタの仮引数の数に合わせる必要がある．
-  - 引数がフィールドの初期値に今日を与える．
+- インスタンスの生成と同時に初期化を行う．
+- インスタンスの初期化とは，**フィールドの変数を初期化**することである．
+- `クラス名( 引数 )`の記述がコンストラクタの定義と一致する必要がある．
+  - つまり，コンストラクタに渡す引数をここに記述する．
+  - コンストラクタのブロック内で，**渡された引数を元にフィールドの変数が初期化される**．
 
-##### 「Car」クラスの例
+
+#### 例
+
+「Human」クラスのインスタンスの生成
 
 ```java
-myCar = new Car( 240 );	// マイカーを初期化
+me = new Human( 170, 60 );
 ```
 
-- 引数の240は，車の色（色相）の指定を行っている．
+引数の`170, 60`は，身長と体重の初期値となる．
 
-### インスタンスのメソッドを呼ぶ
+### インスタンスのコール
 
 基本的にはdraw関数内に記述する．
 
 #### 書式
 
 ```java
-インスタンス名.メソッド名( 引数 );							// メソッドを実行
-
-/*  式に */ インスタンス名.メソッド名( 引数 ) /* 組み込む */	// メソッド(返り値あり)を実行
+インスタンス名.メソッド名( 引数 );
 ```
 
 - インスタンス名に続き'.'（ドット）+メソッド名( 引数 ) というように記述する．
-- インスタンスに対し，メソッドが実行される．
 - 返り値のあるメソッドは，関数の時と同様に式に組み込むことができる．
 
-##### 「Car」クラスの例
+#### 例
+
+「Human」クラスのメソッドのコール
 
 ```java
-// マイカーのメソッドを呼ぶ 
-myCar.drive();  // 車を進める
-myCar.display();// 車を描画する
+me.grow();
 ```
 
-### クラスの使用の例
+### 例
 
-#### 「Car」クラスの例
+「Human」クラスを使った，年齢を重ねた人のバイオデータのアニメーション．
+
+![class_biodata](images/class/class_biodata.gif)
 
 ```java
-// マイカー（インスタンス）を作成
+Human me;
+
+void setup()
+{
+  me = new Human( 170, 60 );  // インスタンスの生成．
+  
+  frameRate( 1 );
+}
+
+void draw()
+{
+  me.grow();  // インスタンスの関数をコールする．
+  
+  me.printBioData();
+}
+
+class Human
+{
+  Human( int iTall, int iWeight )
+  {
+    m_iAge = 0;
+    m_iTall = iTall;
+    m_iWeight = iWeight;
+  }
+  
+  void grow()
+  {
+    m_iTall += 2;
+    m_iAge ++;
+    m_iWeight += 3;
+  }
+  
+  void printBioData()
+  {
+    println( "AGE:" + m_iAge + "  TALL:" + m_iTall + "  WEIGHT:" + m_iWeight );
+  }
+  
+  int m_iAge;    // 年齢
+  int m_iTall;   // 身長
+  int m_iWeight; // 体重
+}
+```
+
+https://processing.org/tutorials/objects/
+https://docs.oracle.com/javase/tutorial/java/concepts/index.html
+
+
+
+## 演習
+
+直前の「Human」クラスのプログラムを元に，「Human」クラスにバイオデータ（フィールド）を追加し，さらにコンソールに表示されるように変更を加える．
+
+追加するフィールドや，`grow()`メソッドによる更新式は自由．
+
+追加するバイオデータの例
+
+- 足の長さ `int m_iLeg`
+
+- 髪の長さ `int m_iHair`
+- 体脂肪率  `float m_fFat`
+
+演習時間：10分程度
+
+
+
+## クラスを使った描画
+
+クラスの設計は自由だが，描画を行うための典型的な設計の仕方を紹介する．
+まず，以下のようにメソッドを設計する．
+
+- 描画を行うメソッド `draw()`
+  - これまで`draw()`で行っていた**描画をこのメソッドに記述**する．
+
+- アニメーション用の更新を行うメソッド `update()`
+  - アニメーション用の**グローバル変数を廃止し，代わりにフィールド**を用いる．
+  - 1フレーム毎のフィールドの更新式をこのメソッドに記述する．
+
+これらのメソッドに必要なフィールドを逐次追加する．
+
+つまり，以下ようなテンプレートになる．
+
+```java
+ClassName instance;
+
+void setup()
+{
+  instance = new ClassName();
+}
+
+void draw()
+{
+  instance.update();  // アニメーションの更新
+  instance.draw();    // 描画
+}
+
+class ClassName
+{
+  ClassName()
+  {
+    // ここでフィールドを初期化する．
+  }
+  
+  void update()
+  {
+  	// ここにフィールドの更新式を記述する．
+  }
+  
+  void draw()
+  {
+  	// ここに描画命令を記述する．
+  }
+  
+  int iField;
+  float fField;
+}
+```
+
+### 例
+
+「Car」クラスを使った車のアニメーション
+
+![class_example_car](images/class/class_example_car.gif)
+
+```java
 Car myCar;
  
 void setup()
@@ -15670,25 +15653,20 @@ void setup()
   
   // マイカーを初期化
   myCar = new Car( 240 );	// 240:色相
-}    
+}
+
 void draw()
 {    
   background(255);
   
-  // マイカーのメソッドを呼ぶ 
-  myCar.drive();  // 車を進める
-  myCar.display();// 車を描画する
-}      
+  myCar.update();  // 車を進める
+  myCar.draw();		// 車を描画する
+}
+
 /** Carクラスの定義 */
 class Car
-{ 
-  // フィールド
-  float m_fPosX;    // 座標値X
-  float m_fPosY;    // 座標値Y
-  float m_fSpeedX;  // スピードX
-  int   m_iColorHue;// 色(Hue)
-  
-  // コンストラクタ（初期化）
+{  
+  // コンストラクタ
   Car( int iColorHue )
   {  
     m_fPosX = width/2;
@@ -15697,10 +15675,8 @@ class Car
     m_fSpeedX = 1;
   }
   
-  /* 以下，メソッド */
-  
-  // 車を表示する
-  void display()
+  // 車を描画する
+  void draw()
   { 
     pushMatrix();
     translate( m_fPosX, m_fPosY );
@@ -15718,7 +15694,7 @@ class Car
   }
   
   // 車を進める
-  void drive()
+  void update()
   {
     m_fPosX += m_fSpeedX;
     if( m_fPosX > width )
@@ -15726,12 +15702,524 @@ class Car
       m_fPosX = 0;
     }
   }
+  
+  // フィールド
+  float m_fPosX;    // 座標値X
+  float m_fPosY;    // 座標値Y
+  float m_fSpeedX;  // スピードX
+  int   m_iColorHue;// 色(Hue)
 } 
 ```
 
-![class_example_car](images/class/class_example_car.gif)
 
-演習
+
+## 演習
+
+### 概要
+
+- Faceクラスを定義する．
+
+- 4つのFaceインスタンスを作成し，描画を行う．
+
+![class_face_draw_clear](images/class/class_face_draw_clear.png)
+
+### 1. setup関数を用意する．
+
+```java
+void setup()
+{
+  size(400,300);
+}
+```
+
+### 2. Faceクラス定義の枠を作る．
+
+「Face」の一文字目は大文字であることに注意
+
+```java
+void setup()
+{
+  size(400,300);
+}
+
+class Face
+{
+}
+```
+
+### 3. フィールドを宣言する．
+
+顔ごとに個性が現れるデータを変数として宣言する．
+
+- 目の大きさ
+- 目の間隔
+- 目と口の距離
+- 口の幅
+
+本来は入念に設計する必要があるが，今回は割愛．
+
+```java
+void setup()
+{
+  size(400,300);
+}
+
+class Face
+{
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 4. コンストラクタの枠を作成する．
+
+コンストラクタはフィールドを初期化するための特別なメソッド．
+
+```java
+void setup()
+{
+  size(400,300);
+}
+
+class Face
+{
+  Face()
+  {
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 5. コンストラクタを定義する．
+
+コンストラクタの中でフィールドをランダム値で初期化します．
+
+```java
+void setup()
+{
+  size(400,300);
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 6. テスト用Faceインスタンスを作成する．
+
+テスト用なので「faceTest」という名前
+
+```java
+Face faceTest; // テスト用Faceインスタンスを作成
+
+void setup()
+{
+  size(400,300);
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 7. Faceインスタンスを初期化する．
+
+```java
+Face faceTest; // テスト用Faceインスタンスを作成
+
+void setup()
+{
+  size(400,300);
+  
+  faceTest = new Face(); // Faceインスタンスを初期化
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 8. 描画のためのメソッドの枠を作成する．
+
+「draw」という名前でFaceクラスにメソッドを定義する．
+ブロック内の命令は空のまま
+
+```java
+Face faceTest; // テスト用Faceインスタンスを作成
+ 
+void setup()
+{
+  size(400,300);
+  
+  faceTest = new Face(); // Faceインスタンスを初期化
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 4, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 16, 30 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 9. drawメソッドをコールする
+
+setup()の中でテスト用インスタンスのメソッドをコールする．
+また，顔を画面中心に描画するために座標変換命令も追加します．
+
+```java
+Face faceTest; // テスト用Faceインスタンスを作成
+ 
+void setup()
+{
+  size(400,300);
+  
+  faceTest = new Face(); // Faceインスタンスを初期化
+  
+  translate(width/2,height/2);
+  faceTest.draw(); // Faceインスタンスの描画
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 4, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 16, 30 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 10. drawメソッドに描画命令を追加する．
+
+drawメソッドの中でフィールドの変数を使い，描画を行う．
+
+```java
+Face faceTest; // テスト用Faceインスタンスを作成
+
+void setup()
+{
+  size(400,300);
+  
+  faceTest = new Face(); // Faceインスタンスを初期化
+  
+  translate(width/2,height/2);
+  faceTest.draw(); // Faceインスタンスの描画
+}
+
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+    // 輪郭
+    circle( 0, 0, 60 );
+    // 左目
+    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 右目
+    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 口
+    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+![class_face_first_draw](images/class/class_face_first_draw.png)
+
+### 11. インスタンスを4つ作成する
+
+1. 以下の2つの文はテスト用だったので削除します．
+   - `Face faceTest; // テスト用Faceインスタンスを作成`
+   - `translate(width/2,height/2);`
+2. Faceクラスのインスタンス配列を作成します．
+   - 配列名: `faces`
+   - 要素数: 4
+
+※この段階ではエラーでプログラムは未だ実行できません．
+
+```java
+Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
+
+void setup()
+{
+  size(400,300);
+  
+  faceTest = new Face(); // Faceインスタンスを初期化
+  
+  faceTest.draw(); // Faceインスタンスの描画
+}
+class Face
+{
+   Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+    // 輪郭
+    circle( 0, 0, 60 );
+    
+    // 左目
+    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 右目
+    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 口
+    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 12. インスタンスの初期化を書き換える
+
+4つのインスタンスは配列に格納されているので，初期化の記述も書き換えましょう．
+配列の初期化方法を思い出してください．
+
+※この段階ではエラーでプログラムは未だ実行できません．
+
+```java
+Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
+
+void setup()
+{
+  size(400,300);
+  
+  // Faceインスタンスを初期化
+  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
+  {
+    faces[ iFaceIdx ] = new Face();
+  }
+  
+  faceTest.draw();
+}
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+    // 輪郭
+    circle( 0, 0, 60 );
+    
+    // 左目
+    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 右目
+    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 口
+    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+### 13. 描画メソッドのコールを書き換える
+
+```java
+Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
+
+void setup()
+{
+  size(400,300);
+  
+  // Faceインスタンスを初期化
+  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
+  {
+    faces[ iFaceIdx ] = new Face();
+  }
+  
+  // Faceインスタンスの描画
+  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
+  {
+    faces[ iFaceIdx ].draw();
+  }
+}
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+    // 輪郭
+    circle( 0, 0, 60 );
+    
+    // 左目
+    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 右目
+    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 口
+    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+実行すると，画面左上に４つの顔が重なって表示されてしまう．
+
+### 14. 4つのインスタンスを並べて表示する
+
+Faceインスタンスの描画命令周りに座標変換を使い，並べて表示するよう変更します．
+
+```java
+Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
+
+void setup()
+{
+  size(400,300);
+  
+  // Faceインスタンスを初期化
+  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
+  {
+    faces[ iFaceIdx ] = new Face();
+  }
+  
+  translate( width/8, height/2 ); // １つ目の顔の描画位置に移動.
+  
+  // Faceインスタンスの描画
+  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
+  {
+    faces[ iFaceIdx ].draw();
+    translate( width/faces.length, 0 ); // X軸方向に顔の間隔分移動
+  }
+}
+class Face
+{
+  Face()
+  {
+    m_fEyeSize = random( 2, 8 );
+    m_fEyeInterval = random( 16, 28 ); 
+    m_fEyeToMouthDistance = random( 20, 36 );
+    m_fMouthWidth = random( 8, 24 );
+  }
+  
+  void draw()
+  {
+    // 輪郭
+    circle( 0, 0, 60 );
+    
+    // 左目
+    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 右目
+    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
+    // 口
+    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
+  }
+  
+  float m_fEyeSize;            // 目の大きさ
+  float m_fEyeInterval;        // 目の間隔
+  float m_fEyeToMouthDistance; // 目と口の距離
+  float m_fMouthWidth;         // 口の幅
+}
+```
+
+![class_face_draw_clear](images/class/class_face_draw_clear.png)
+
+
 
 ## クラスファイルの分割
 
@@ -15739,7 +16227,79 @@ class Car
 - **クラス毎に，クラス定義を別のpdeファイルへ分割**して記述すると，プログラムが見やすくなる．
   - クラス名をそのままファイル名とすると分かりやすい．
 
-### 「Car」クラスの例
+## 演習
+
+演習を通して以下のプログラムをクラスファイルに分割してみましょう．
+
+「Car」クラスを使った車のアニメーション（前述と同じ）
+
+```java
+Car myCar;
+ 
+void setup()
+{
+  size(400,200);
+  colorMode(HSB);
+  
+  // マイカーを初期化
+  myCar = new Car( 240 );	// 240:色相
+}
+
+void draw()
+{    
+  background(255);
+  
+  myCar.update();  // 車を進める
+  myCar.draw();		// 車を描画する
+}
+
+/** Carクラスの定義 */
+class Car
+{  
+  // コンストラクタ
+  Car( int iColorHue )
+  {  
+    m_fPosX = width/2;
+    m_fPosY = height/2;
+    m_iColorHue = iColorHue;
+    m_fSpeedX = 1;
+  }
+  
+  // 車を描画する
+  void draw()
+  { 
+    pushMatrix();
+    translate( m_fPosX, m_fPosY );
+    
+    // body
+    fill( m_iColorHue, 255, 255 );
+    rect( 0, 0, 40, 20 );
+    
+    // tires
+    fill( 0, 0, 20 );
+    circle( 5, 20, 10 );
+    circle( 35, 20, 10 );
+    
+    popMatrix();
+  }
+  
+  // 車を進める
+  void update()
+  {
+    m_fPosX += m_fSpeedX;
+    if( m_fPosX > width )
+    {
+      m_fPosX = 0;
+    }
+  }
+  
+  // フィールド
+  float m_fPosX;    // 座標値X
+  float m_fPosY;    // 座標値Y
+  float m_fSpeedX;  // スピードX
+  int   m_iColorHue;// 色(Hue)
+} 
+```
 
 1. （分割する前の）スケッチを保存する
 
@@ -15754,7 +16314,9 @@ class Car
 ![class_divide_new_tab](images/class/class_divide_new_tab.png)
 
 4. 新しく作成するクラス用のファイル名を入力
-   この例では「Car」
+   - クラスをファイルにする場合には，ファイル名は必ずクラス名と同じにしなければならない．
+   - この例では「Car」
+
 
 ![class_divide_file_name](images/class/class_divide_file_name.png)
 
@@ -15775,566 +16337,21 @@ class Car
 
 ![class_divide_directry](images/class/class_divide_directry.png)
 
-## オブジェクト指向プログラミングの利点
 
-- モジュール性（再利用性）
-  - クラス定義ファイルの流用
-- 情報の隠蔽
-  - メインプログラムから行えることが制限されている
-    - メソッドの使用（コール）のみ
-    - クラスのフィールドには直接アクセスできない
-- 不具合の発見，修正の容易さ
-  - クラスの挙動に不具合があった場合，クラスファイルのみを調査すればよい
 
-## オブジェクト指向分析・設計
+## クラスによる高度な描画
 
-複数のクラスを用いた，より複雑なプログラムの設計を行う際は，オブジェクト指向的な設計能力が求められる．
-実装（プログラミング）の前準備だが，重要な工程
+### 例
 
-#### クラスの設計
-
-- 何をクラスにするのか
-- 何をフィールドにするのか
-- 何をメソッドにするか
-
-#### 重要な考え方，心構え
-
-クラスの設計を行う際に重要な考え方，心構えは従来のエンジニア的な思考とは異なる．
-
-- オブジェクト指向的にシステムの仕様をとらえる
-- それをどのようにコードに落としていくかという方針を決定する
-
-#### 求められる資質
-
-**物事の構造や本質を見抜き，洞察する能力** > 旧来のエンジニアリング知識，コーディング能力
-
-## 演習
-
-### 概要
-
-- Faceクラスを定義する．
-
-- 4つのインスタンスを作成し，描画を行う．
-
-![class_face_draw_clear](images/class/class_face_draw_clear.png)
-
-### 1. setup関数を用意する
-
-```java
-void setup()
-{
-  size(400,300);
-}
-```
-
-### 2. Faceクラス定義の枠を作る
-
-「Face」の一文字目は大文字であることに注意
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-void setup()
-{
-  size(400,300);
-}
-class Face
-{
-}
-```
-
-### 3. フィールドを宣言する
-
-顔ごとに個性が現れるデータを変数として宣言する．
-
-- 目の大きさ
-- 目の間隔
-- 目と口の距離
-- 口の幅
-
-下の答えから，正しい範囲をコピーしてプログラムに挿入しましょう．
-
-```java
-void setup()
-{
-  size(400,300);
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-}
-```
-
-### 4. コンストラクタの枠を作成する
-
-コンストラクタはフィールドを初期化するための特別なメソッド．
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-void setup()
-{
-  size(400,300);
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-  }
-}
-```
-
-### 5. コンストラクタを定義する
-
-コンストラクタの中でフィールドをランダム値で初期化します．
-
-下の答えから，正しい範囲をコピーしてプログラムに挿入しましょう．
-
-```java
-void setup()
-{
-  size(400,300);
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 2, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 20, 36 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-}
-```
-
-### 6. テスト用Faceインスタンスを作成する
-
-テスト用なので「faceTest」という名前
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-Face faceTest; // テスト用Faceインスタンスを作成
-
-void setup()
-{
-  size(400,300);
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 2, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 20, 36 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-}
-```
-
-### 7. Faceインスタンスを初期化する
-
-仮引数は無いので，引数の記述は必要無し
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-Face faceTest; // テスト用Faceインスタンスを作成
-
-void setup()
-{
-  size(400,300);
-  
-  faceTest = new Face(); // Faceインスタンスを初期化
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 4, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 16, 30 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-}
-```
-
-### 8. 描画のためのメソッドの枠を作成する
-
-「display」という名前でFaceクラスにメソッドを定義する．
-ブロック内の命令は空のまま
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-Face faceTest; // テスト用Faceインスタンスを作成
- 
-void setup()
-{
-  size(400,300);
-  
-  faceTest = new Face(); // Faceインスタンスを初期化
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 4, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 16, 30 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-  }
-}
-```
-
-### 9. displayメソッドを使う
-
-setup関数の中でテスト用インスタンスのメソッドを使ってみましょう．
-また，顔を画面中心に描画するために座標変換命令も追加します．
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-Face faceTest; // テスト用Faceインスタンスを作成
- 
-void setup()
-{
-  size(400,300);
-  
-  faceTest = new Face(); // Faceインスタンスを初期化
-  
-  translate(width/2,height/2);
-  faceTest.display(); // Faceインスタンスの描画
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 4, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 16, 30 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-  }
-}
-```
-
-### 10. displayメソッドに描画命令を追加
-
-displayメソッドの中でフィールドの変数を使い，描画を行います．
-
-下の答えから，正しい範囲をコピーしてプログラムに挿入しましょう．
-
-```java
-Face faceTest; // テスト用Faceインスタンスを作成
-
-void setup()
-{
-  size(400,300);
-  
-  faceTest = new Face(); // Faceインスタンスを初期化
-  
-  translate(width/2,height/2);
-  faceTest.display(); // Faceインスタンスの描画
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 2, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 20, 36 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-    // 輪郭
-    circle( 0, 0, 60 );
-    // 左目
-    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 右目
-    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 口
-    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
-  }
-}
-```
-
-![class_face_first_draw](images/class/class_face_first_draw.png)
-
-### 11. インスタンスを4つ作成
-
-1. 以下はテスト用だったので削除します．
-   - `Face faceTest; // テスト用Faceインスタンスを作成`
-   - `translate(width/2,height/2);`
-2. Faceクラスのインスタンス配列を作成します．
-   - 配列名: `faces`
-   - 要素数: 4
-
-下の答えを見ながらでいいので，書いてみましょう．
-※この段階ではエラーでプログラムは未だ実行できません．
-
-```java
-Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
-
-void setup()
-{
-  size(400,300);
-  
-  faceTest = new Face(); // Faceインスタンスを初期化
-  
-  faceTest.display(); // Faceインスタンスの描画
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 2, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 20, 36 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-    // 輪郭
-    circle( 0, 0, 60 );
-    
-    // 左目
-    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 右目
-    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 口
-    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
-  }
-}
-```
-
-### 12. インスタンスの初期化を書き換える
-
-4つのインスタンスは配列に格納されているので，初期化の記述も書き換えましょう．
-配列の初期化方法を思い出してください．
-
-下の答えを見ながらでいいので，書いてみましょう．
-※この段階ではエラーでプログラムは未だ実行できません．
-
-```java
-Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
-
-void setup()
-{
-  size(400,300);
-  
-  // Faceインスタンスを初期化
-  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
-  {
-    faces[iFaceIdx] = new Face();
-  }
-  
-  faceTest.display();
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 2, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 20, 36 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-    // 輪郭
-    circle( 0, 0, 60 );
-    
-    // 左目
-    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 右目
-    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 口
-    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
-  }
-}
-```
-
-### 13. メソッドを使う命令を書き換える
-
-下の答えを見ながらでいいので，書いてみましょう．
-
-```java
-Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
-
-void setup()
-{
-  size(400,300);
-  
-  // Faceインスタンスを初期化
-  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
-  {
-    faces[iFaceIdx] = new Face();
-  }
-  
-  // Faceインスタンスの描画
-  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
-  {
-    faces[iFaceIdx].display();
-  }
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 4, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 16, 30 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-    // 輪郭
-    circle( 0, 0, 60 );
-    
-    // 左目
-    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 右目
-    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 口
-    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
-  }
-}
-```
-
-### 14. 4つのインスタンスを並べて表示する
-
-Faceインスタンスの描画命令周りに座標変換を使い，並べて表示するよう変更します．
-
-下の答えから，正しい範囲をコピーしてプログラムに挿入しましょう．
-
-```java
-Face[] faces = new Face[4]; // Faceインスタンスを4つ作成
- 
-void setup()
-{
-  size(400,300);
-  
-  // Faceインスタンスを初期化
-  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
-  {
-    faces[iFaceIdx] = new Face();
-  }
-  
-  // Faceインスタンスの描画
-  translate( width/8, height/2 ); // １つ目の顔の描画位置に移動.
-  for( int iFaceIdx=0; iFaceIdx < faces.length; iFaceIdx++ )
-  {
-    faces[iFaceIdx].display();
-    translate( width/faces.length, 0 ); // X軸方向に顔の間隔分移動
-  }
-}
-class Face
-{
-  float m_fEyeSize;            // 目の大きさ
-  float m_fEyeInterval;        // 目の間隔
-  float m_fEyeToMouthDistance; // 目と口の距離
-  float m_fMouthWidth;         // 口の幅
-  
-  Face()
-  {
-    m_fEyeSize = random( 4, 8 );
-    m_fEyeInterval = random( 16, 28 ); 
-    m_fEyeToMouthDistance = random( 16, 30 );
-    m_fMouthWidth = random( 8, 24 );
-  }
-  
-  void display()
-  {
-    // 輪郭
-    circle( 0, 0, 60 );
-    
-    // 左目
-    circle( -m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 右目
-    circle(  m_fEyeInterval/2.0, -m_fEyeToMouthDistance/2.0, m_fEyeSize );
-    // 口
-    line( -m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0, m_fMouthWidth/2.0, m_fEyeToMouthDistance/2.0 );
-  }
-}
-```
-
-![class_face_draw_clear](images/class/class_face_draw_clear.png)
-
-## サンプル集
-
-### 複数の犬が走るアニメーション
+複数の犬が走るアニメーション
 
 - 個体ごとに個性を持たせる
   - 色，尻尾の長さ，耳の角度，走る速さ
-- インスタンスを配列で複数作成する．
+- 犬インスタンスを配列で複数作成する．
 
-#### dog_run.pde (メインプログラム)
+![class_sample_dogs_run](images/class/class_sample_dogs_run.gif)
+
+#### Dog_run.pde (メインプログラム)
 
 ```java
 final float MARGIN_TOP_BOTTOM = 10;  // 犬の配置の上下マージン
@@ -16363,24 +16380,18 @@ void draw()
   // Dogのメソッドを呼ぶ 
   for( int iDogIdx = 0; iDogIdx < myDogs.length; iDogIdx++ )
   {
-    myDogs[iDogIdx].run();    // 犬を進める
-    myDogs[iDogIdx].display();// 犬を描画する
+    myDogs[iDogIdx].update();  // 犬を進める
+    myDogs[iDogIdx].draw();    // 犬を描画する
   }
 }
 ```
-#### dog.pde
+
+#### Dog.pde（クラスファイル）
+
 ```java
 /** Dogクラスの定義 */
 class Dog
 { 
-  float m_fPosX;      // 座標値X
-  float m_fPosY;      // 座標値Y
-  float m_fSpeedX;    // スピードX
-  float m_fAnimPhase; // アニメーションの動作位相(0~360)
-  int   m_iColorHue;  // 色(Hue)
-  float m_fTailLength;// 尻尾の長さ
-  float m_fEarDeg;    // 耳の角度
-  
   // コンストラクタ（初期化）
   Dog ( float fPosY )
   {  
@@ -16393,8 +16404,7 @@ class Dog
     m_fEarDeg = random(140);
   } 
   
-  // 表示する
-  void display()
+  void draw()
   { 
     pushMatrix();
     translate( m_fPosX, m_fPosY );
@@ -16438,8 +16448,7 @@ class Dog
     popMatrix();
   }
   
-  // 走る
-  void run()
+  void update()
   {
     m_fPosX += m_fSpeedX*abs(sin(radians(m_fAnimPhase/2.0)-QUARTER_PI));
     if( m_fPosX > width )
@@ -16452,10 +16461,190 @@ class Dog
       m_fAnimPhase = 0;
     }
   }
+  
+  float m_fPosX;      // 座標値X
+  float m_fPosY;      // 座標値Y
+  float m_fSpeedX;    // スピードX
+  float m_fAnimPhase; // アニメーションの動作位相(0~360)
+  int   m_iColorHue;  // 色(Hue)
+  float m_fTailLength;// 尻尾の長さ
+  float m_fEarDeg;    // 耳の角度
 }
 ```
 
-![class_sample_dogs_run](images/class/class_sample_dogs_run.gif)
+
+
+## 演習
+
+自由にクラスを使った静止画描画プログラムを作ってみましょう．
+クラスを使った課題がないため，ここで試行錯誤してもらうのが狙い．
+時間内に完成する必要はない．
+
+演習時間：20分程度
+
+以下のテンプレートを使うのもよい．
+
+正方形と円を描画するクラスをランダムな位置に配置するプログラム
+
+```java
+ClassName[] InstanceArray = new ClassName[20];	// インスタンス20個
+
+void setup()
+{
+  size( 800, 800 );
+  background( 0 );
+  
+  // 全てのインスタンスを初期化
+  for( int iInstanceIdx=0; iInstanceIdx < InstanceArray.length; iInstanceIdx++ )
+  {
+    InstanceArray[ iInstanceIdx ] = new ClassName( random( width ), random( height ) );
+  }
+  
+  // 全てのインスタンスを描画
+  for( int iInstanceIdx=0; iInstanceIdx < InstanceArray.length; iInstanceIdx++ )
+  {
+    InstanceArray[ iInstanceIdx ].draw();
+  }
+}
+
+class ClassName
+{
+  ClassName( float fX, float fY )
+  {
+    m_fX = fX;
+    m_fY = fY;
+  }
+    
+  void draw()
+  {   
+    pushMatrix();
+    
+    translate( m_fX, m_fY );
+    
+    square( 0, 0, 40 );
+    circle( 0, 0, 40 );
+    
+    popMatrix();
+  }
+  
+  float m_fX;
+  float m_fY;
+}
+```
+
+![class_jiyuu_enshuu_template](images/class/class_jiyuu_enshuu_template.png)
+
+### 作例
+
+![class_dango_sakurei](images/class/class_dango_sakurei.png)
+
+```java
+Dango[] dangoAll = new Dango[24];
+
+void setup()
+{
+  size( 200, 800 );
+  background( 40 );
+  
+  // インスタンスを初期化
+  for( int iInstanceIdx=0; iInstanceIdx < dangoAll.length; iInstanceIdx++ )
+  {
+    dangoAll[ iInstanceIdx ] = new Dango( random( 90, 120 ), iInstanceIdx * 35 );
+  }
+  
+  // インスタンスを描画
+  for( int iInstanceIdx=0; iInstanceIdx < dangoAll.length; iInstanceIdx++ )
+  {
+    dangoAll[ iInstanceIdx ].draw();
+  }
+}
+
+class Dango
+{
+  Dango( float fX, float fY )
+  {
+    m_fX = fX;
+    m_fY = fY;
+    m_fHue = new float[3];
+    m_fHue[0] = random( 100, 160 );
+    m_fHue[1] = random( 30, 45 );
+    m_fHue[2] = random( 315, 350 );
+  }
+    
+  void draw()
+  {
+    colorMode( HSB, 360, 100, 100 );
+    ellipseMode( CENTER );
+    
+    pushMatrix();
+    
+    translate( m_fX, m_fY );
+    
+    // 串
+    stroke( 0, 30, 80 );
+    strokeWeight( 4 );
+    line( -80, 0, 20, 0 );
+    
+    // 団子３つ
+    strokeWeight( 1.5 );
+    stroke(  0, 20, 50 );
+    fill( m_fHue[0], 60, 90 );
+    circle( -38, 0, 40 );
+    fill( m_fHue[1], 30, 95 );
+    circle( 0, 0, 40 );
+    fill( m_fHue[2], 60, 92 );
+    circle( 38, 0, 40 );
+    
+    popMatrix();
+  }
+  
+  float m_fX;
+  float m_fY;
+  float[] m_fHue;  // 3色
+}
+```
+
+
+
+## オブジェクト指向プログラミングの利点
+
+- モジュール性（再利用性）
+  - クラス定義ファイルを作成し，プログラム資産を蓄積できる．
+- 情報の隠蔽
+  - メインプログラムから行えることが制限されている
+    - メソッドの使用（コール）のみ
+    - クラスのフィールドには直接アクセスできない
+  - 煩雑な処理をクラスにまとめることができる．
+- 不具合の発見，修正の容易さ
+  - クラスの挙動に不具合があった場合，クラスファイルのみを調査すればよい
+
+
+
+## オブジェクト指向分析・設計
+
+複数のクラスを用いた，より複雑なプログラムの設計を行う際は，オブジェクト指向的な設計能力が求められる．
+実装（プログラミング）の前準備だが，重要な工程
+
+### クラスの設計
+
+- 何をクラスにするのか
+- 何をフィールドにするのか
+- 何をメソッドにするか
+
+### 重要な考え方，心構え
+
+クラスの設計を行う際に重要な考え方，心構えは従来のエンジニア的な思考とは異なる．
+
+- オブジェクト指向的にシステムの仕様をとらえる
+- それをどのようにコードに落としていくかという方針を決定する
+
+### 求められる資質
+
+**物事の構造や本質を見抜き，洞察する能力** > 旧来のエンジニアリング知識，コーディング能力
+
+つまり，誰でもクラスを用いたプログラミング能力が向上する可能性がある．
+
+
 
 # デバッグ
 
